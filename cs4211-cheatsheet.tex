@@ -1,0 +1,512 @@
+\documentclass[10pt, landscape]{article}
+\usepackage[scaled=0.92]{helvet}
+\usepackage{calc}
+\usepackage{multicol}
+\usepackage[a4paper,margin=3mm,landscape]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{color,graphicx,overpic}
+\usepackage{hyperref}
+\usepackage{newtxtext} 
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{mathtools}
+\usepackage[normalem]{ulem}
+\usepackage{graphbox}
+\setlist{nosep}
+% for including images
+\graphicspath{ {./images/} }
+
+\pdfinfo{
+  /Title (CS4211.pdf)
+  /Creator (TeX)
+  /Producer (pdfTeX 1.40.0)
+  /Author (Kevin Toh)
+  /Subject (CS4211)
+/Keywords (CS4211, nus,cheatsheet,pdf)}
+
+% Turn off header and footer
+\pagestyle{empty}
+
+% redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+  {-1ex plus -.5ex minus -.2ex}%
+  {0.5ex plus .2ex}%x
+{\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+  {-1explus -.5ex minus -.2ex}%
+  {0.5ex plus .2ex}%
+{\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+  {-1ex plus -.5ex minus -.2ex}%
+  {1ex plus .2ex}%
+{\normalfont\small\bfseries}}%
+\makeatother
+
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand\rmdefault{\sfdefault}
+%  makes nested numbering (e.g. 1.1.1, 1.1.2, etc)
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+\renewcommand\labelitemii{•}
+\renewcommand\labelitemiii{•}
+
+\definecolor{mathblue}{cmyk}{1,.72,0,.38}
+\everymath\expandafter{\the\everymath \color{mathblue}}
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+%% adjust spacing for all itemize/enumerate
+\setlength{\leftmargini}{0.5cm}
+\setlength{\leftmarginii}{0.5cm}
+\setlist[itemize,1]{leftmargin=2mm,labelindent=1mm,labelsep=1mm}
+\setlist[itemize,2]{leftmargin=3mm,labelindent=1mm,labelsep=1mm}
+\setlist[itemize,3]{leftmargin=3mm,labelindent=1mm,labelsep=1mm}
+
+% adding my commands
+\input{commands/style-helpers.tex}
+\input{commands/code.tex}
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+
+% set lst style
+\lstset{style=mySQL}
+
+% -----------------------------------------------------------------------
+
+\begin{document}
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+  % multicol parameters
+  \setlength{\columnseprule}{0.25pt}
+
+  \begin{center}
+    \fbox{%
+      \parbox{0.8\linewidth}{\centering \textcolor{black}{
+          {\Large\textbf{CS4211}}
+        \\ \normalsize{AY24/25 SEM 1}}
+        % \\ {\footnotesize \textcolor{gray}{github/jovyntls}}
+      }%
+    }
+  \end{center}
+  \section{01. THEORY}
+  \subsection{Keys}
+  \begin{itemize}
+    \item \definition{Superkey} A subset of attributes that uniquely identifies a tuple (all attributes) in a relation.
+    \item \definition{Key} A minimal \textbf{superkey}. (Cannot be made smaller)
+    \item \definition{Candidate Keys} The set of all \textbf{keys} of a given relation.
+    \item \definition{Primary Key} The selected \textbf{candidate key}.
+    \item \definition{Foreign Key} A subset of attributes of relation $R_1$ that refers to the \textbf{primary key} of relation $R_2$. It can contain \texttt{NULL} values.
+  \end{itemize}
+
+  \section{02. ER DIAGRAMS}
+  \subsection{Cardinality Constraints}
+  \begin{itemize}
+    % \item Many to Many \includegraphics[scale=0.35, align=c]{03_many_to_many.png}
+    % \item Many to One \includegraphics[scale=0.35, align=c]{03_many_to_one.png}
+    % \item One to One \includegraphics[scale=0.35, align=c]{03_one_to_one.png}
+    \item Example item
+  \end{itemize}
+  \subsection{Participation Constraints}
+  \begin{itemize}
+    \item Example item
+    % \item Unconstrained \includegraphics[scale=0.4, align=c]{03_unconstrained.jpeg}
+    % \item At most one (Key Constraint) \includegraphics[scale=0.4, align=c]{03_key_constrain.jpeg}
+    % \item At least one (Total Participation) \includegraphics[scale=0.4, align=c]{03_total_part.jpeg}
+    % \item Exactly one (Key + Total Participation) \includegraphics[scale=0.4, align=c]{03_key_total_part.jpeg}
+    % \item Weak entity + Indentifying Relationship \includegraphics[scale=0.4, align=c]{03_weak_entity.jpeg}
+    
+  \end{itemize}
+
+  \subsection{ISA Hierachies}
+  % \includegraphics[scale=0.35]{03_isa.jpeg}
+  \subsection{Aggregation}
+  % \includegraphics[scale=0.35]{03_aggregate.png}
+  \section{03. SQL}
+  \subsection{Three-valued logic}
+  \begin{itemize}
+    \item SQL uses \texttt{True}, \texttt{False} and \texttt{NULL}.
+    \item Suppose $x$ is \texttt{NULL}
+    \begin{enumerate}
+      \item \texttt{x IS NULL} $\rightarrow$ \texttt{True}
+      \item \texttt{x IS NOT NULL} $\rightarrow$ \texttt{False}
+      \item \texttt{x IS DISTINCT FROM y}
+      \begin{itemize}
+        \item $y$ is \texttt{NULL} $\rightarrow$ \texttt{False}
+        \item $y$ is \textbf{not} \texttt{NULL} $\rightarrow$ \texttt{True}
+      \end{itemize}
+      \item \texttt{x IS NOT DISTINCT FROM y}
+    \end{enumerate}
+  \end{itemize}
+  \begin{fixedbox}[0.9]
+  Note: \texttt{NULL <> NULL} $\rightarrow$ \texttt{NULL}
+  \end{fixedbox}
+  \subsection{Constraints}
+  \definition{Unique} \texttt{r1.column <> r2.column}
+  
+  \textbf{Named constraints: } \texttt{id INT CONSTRAINT nn\_id NOT NULL}
+
+  \textbf{Foreign Key Constraints: } \texttt{ON DELETE <ACTION> / ON UPDATE <ACTION>}
+  \begin{itemize}
+    \item \texttt{NO ACTION}: Reject if it violates constraints
+    \item \texttt{RESTRICT}: Can't be deferred
+    \item \texttt{CASCADE}
+    \item \texttt{SET DEFAULT}
+    \item \texttt{SET NULL}
+  \end{itemize}
+
+  \textbf{Check Constraint}
+  \begin{itemize}
+    \item Single Column: \texttt{CHECK(hours > 0)}
+    \item Multiple Columns: \texttt{CHECK(start\_year <= end\_year)}
+  \end{itemize}
+  \subsection{Pattern Matching}
+  \begin{itemize}
+    \item \texttt{\_} matches any single character.
+    \item \texttt{\%} matches a sequence of 0 or more characters.
+  \end{itemize}
+  \subsection{Set Operations}
+  \definition{Union Compatible} Two relations $R$ and $S$ are \textbf{union compatible}
+  \begin{enumerate}
+    \item $R$ and $S$ have the same number of attributes
+    \item The corresponding attributes have the same data type / compatible domains.
+  \end{enumerate}
+  \begin{itemize}
+    \item \texttt{Q1 UNION Q2} $\implies Q_1 \cup Q_2$
+    \item \texttt{Q1 INTERSECT Q2} $\implies Q_1 \cap Q_2$
+    \item \texttt{Q1 EXCEPT Q2} $\implies Q_1 - Q_2$
+  \end{itemize}
+  \subsection{SQL Conceptual Evaluation}
+  \begin{enumerate}
+    \item \texttt{FROM}
+    \item \texttt{WHERE}
+    \item \texttt{GROUP BY}
+    \item \texttt{HAVING}
+    \item \texttt{SELECT}
+    \item \texttt{ORDER BY}
+    \item \texttt{LIMIT / OFFSET}
+  \end{enumerate}
+
+  \section{04. RELATIONAL ALGEBRA}
+  \subsection{Unary Operators}
+  \begin{itemize}
+    \item \textbf{Selection} $\sigma_{[c]}(R)$ Selects all tuples from a relation $R$ that satisfy the condition $c$ based on the \textbf{principle of acceptance}.
+    \item \textbf{Projection} $\pi_{[\ell]}(R)$ Keeps only the columns specified in the ordered list $\ell$ and in the same order.
+    \item \textbf{Renaming} $\rho_{[\mathbb{R}]}(R)$ Rename all the attributes mentioned in $\mathbb{R}$ such that for each renaming $B_i \leftarrow A_i$, the attribute $A_i$ is renamed to $B_i$.
+  \end{itemize}
+
+  \subsection{Binary Operators}
+  \begin{itemize}
+    \item \textbf{Union} $\cup$
+    \item \textbf{Intersect} $\cap$
+    \item \textbf{Except} $-$
+    \item \textbf{Cross Product} $\times$
+  \end{itemize}
+
+
+  \subsection{SQL in RA}
+  \begin{fixedbox}[0.9]
+    $\pi_{[attributes]}(\sigma_{[condition](R_1 \times R_2)})$
+  \end{fixedbox}
+  \begin{itemize}
+    \item $\pi$ Projection $\rightarrow$ \texttt{SELECT}
+    \item $\times$ Cross Product $\rightarrow$ \texttt{FROM}
+    \item $\sigma$ Selection $\rightarrow$ \texttt{WHERE}
+  \end{itemize}
+
+  \subsection{Joins}
+  \begin{itemize}
+    \item \textbf{Inner Join} $\bowtie_{[\theta]}$
+    \item \textbf{Equi Join} $\bowtie_{[=]}$
+    \item \textbf{Natural Join} $\bowtie$ If there is no common attributes then it is a cartesian join.
+    \item \textbf{Left Outer Join}
+    \item \textbf{Right Outer Join} 
+    \item \textbf{Full Outer Join} 
+  \end{itemize}
+
+
+  \section{05. FUNCTIONS, PROCEDURES, TRIGGERS}
+
+  \subsection{Functions}
+  \begin{itemize}
+    \item Function parameters can also serve as variables using the \texttt{IN} and \texttt{OUT} keyword, for example \texttt{FUNCTION swap(INOUT val1 INT, INOUT val2 INT)} and \texttt{FUNCTION sum\_to\_x(IN x INT, OUT s INT)}
+    \item The \texttt{return\_type} can be an atomic value like \texttt{INTEGER}, \texttt{CHAR(10)} or a tuple such as \texttt{RECORD} or other table's names like \texttt{Scores} or even tables like \texttt{TABLE(name TEXT, mark INT, gap INT)}
+  \end{itemize}
+\begin{lstlisting}[language=SQL]
+CREATE OR REPLACE FUNCTION func_name(val INT)
+RETURNS return_type AS $$
+  DECLARE
+  -- local variables
+  BEGIN
+  -- implementation
+  END;
+$$ LANGUAGE plpgsql;
+\end{lstlisting}
+
+  \subsection{Procedures}
+  \begin{itemize}
+    \item Procedures have no return type.
+    \item Example procedure usage: \texttt{CALL transfer('Alice', 'Bob', 100)}
+  \end{itemize}
+\begin{lstlisting}[language=SQL]
+CREATE OR REPLACE PROCEDURE p_name(val INT)
+AS $$
+  DECLARE
+  -- local variables
+  BEGIN
+  -- implementation
+  END;
+$$ LANGUAGE plpgsql;
+\end{lstlisting}
+
+  \subsection{Control Structures}
+  \begin{itemize}
+    \item \texttt{IF... THEN... ELSE... ENDIF}
+    \item \texttt{LOOP... END LOOP}
+    \item \texttt{EXIT... WHEN...}
+    \item \texttt{WHILE... LOOP... END LOOP}
+    \item \texttt{FOR... IN... LOOP... END LOOP}
+  \end{itemize}
+
+  \subsection{Cursors}
+  Cursors enable us to access each individual row returned by a \texttt{SELECT} statement.
+
+  Flow: Declare $\rightarrow$ Open $
+  \rightarrow$ Fetch $\rightarrow$ Not Found $\rightarrow$ Close
+
+  \subsubsection{Cursor Movement}
+  \begin{itemize}
+    \item \texttt{FETCH curs INTO r} $\rightarrow$ Next tuple
+    \item \texttt{FETCH PRIOR FROM curs INTO r} $\rightarrow$ Prior tuple
+    \item \texttt{FETCH FIRST FROM curs INTO r} $\rightarrow$ First tuple
+    \item \texttt{FETCH LAST FROM curs INTO r} $\rightarrow$ Last tuple
+    \item \texttt{FETCH ABSOLUTE 3 FROM curs INTO r} $\rightarrow$ 3rd tuple
+  \end{itemize}
+
+  \subsection{Triggers}
+\begin{lstlisting}[language=SQL]
+CREATE OR REPLACE TRIGGER func_name()
+RETURNS TRIGGER AS $$
+  -- implementation
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER foo_trigger AFTER INSERT ON Table
+FOR EACH ROW EXECUTE FUNCTION func_name();
+\end{lstlisting}
+\subsubsection{NEW and OLD keywords}
+
+\begin{itemize}
+  \item \texttt{NEW}: Insert and Update 
+  \item \texttt{OLD}: Update and Delete
+\end{itemize}
+
+\subsubsection{Before and After keywords}
+
+\begin{itemize}
+  \item \texttt{BEFORE}: Executed before the \texttt{TG\_OP} 
+  \item \texttt{AFTER}: Executed after the \texttt{TG\_OP} 
+  \item \texttt{INSTEAD OF}: Trigger function is executed instead of \texttt{TG\_OP}
+\end{itemize}
+
+\subsubsection{Row and Statement level Triggers}
+\begin{itemize}
+  \item \texttt{FOR EACH ROW}: Execute trigger function for every tuple encountered. 
+  \item \texttt{FOR EACH STATEMENT}: Execute trigger function once per statement. 
+\end{itemize}
+
+\subsubsection{Order of Trigger Activation}
+\begin{enumerate}
+  \item Before Statement Triggers
+  \item Before Row Triggers
+  \item After Row Triggers
+  \item After Statement Triggers
+\end{enumerate}
+
+\subsubsection{Deferred Trigger}
+\begin{lstlisting}[language=SQL]
+CREATE CONSTRAINT TRIGGER bal_check_trigger 
+AFTER INSERT OR UPDATE OR DELETE ON Account
+DEFERRABLE INITIALLY DEFERRED 
+FOR EACH ROW EXECUTE FUNCTION bal_check_func();
+\end{lstlisting}
+\begin{itemize}
+  \item Deferred triggers only work for \texttt{AFTER} and \texttt{FOR EACH ROW}.
+  \item Use \texttt{BEGIN TRANSACTION} and \texttt{COMMIT} to defer a deferrable trigger.
+\end{itemize}
+
+
+\section{06. NORMALIZATION}
+
+  \subsubsection{Functional Dependency}
+  \begin{itemize}
+    \item $\{A\} \rightarrow \{B\}$ denotes that attribute $A$ uniquely decides another attribute $B$.
+    \item Two objects that have the \textbf{same} $A$ value should have the \textbf{same} $B$ value.
+  \end{itemize}
+  
+  \subsubsection{Determining FDs from requirements}
+  \begin{itemize}
+    \item Suppose we have a requirement \textit{no two shops should sell the \textbf{same product} to the \textbf{same customer} at the \textbf{same day} at \textbf{two different prices}}.
+    \item Identify the attributes involved: \textit{ShopID}, \textit{ProductID}, \textit{CustomerID}, \textit{Date} and \textit{Price}.
+    \item Create a tuple that violates the requirements.
+    
+    \begin{tabular}{c c c c c}
+      ShopID & ProductID & CustomerID & Date & Price \\
+      $S_1$ & $P_1$ & $C_1$ & 16/4/2024 & $P_1$ \\
+      $S_1$ & $P_1$ & $C_1$ & 16/4/2024 & $P_2$ \\
+    \end{tabular}
+
+    \item The attribute that is \textbf{different} in this case the \textit{price} should be uniquely decided by the attributes that remain the \textbf{same} which are \textit{ShopID}, \textit{ProductID}, \textit{CustomerID} and \textit{Date}.
+
+
+  \end{itemize}
+
+  \subsubsection{Armstrong's Axioms}
+  \begin{enumerate}
+    \item \textbf{Reflexivity: } $\{A, B\} \rightarrow \{A\}$
+    \item \textbf{Augmentation: } $\{A\} \rightarrow \{B\} \implies \{A, C\} \rightarrow \{B, C\}$
+    \item \textbf{Transitivity: } $\{A\} \rightarrow \{B\}$ and $\{B\} \rightarrow \{C\}\implies \{A\} \rightarrow \{C\}$
+    
+  \end{enumerate}
+
+  \subsubsection{Additional Rules}
+  \begin{itemize}
+    \item \textbf{Rule of Decomposition: } 
+    
+    $\{A\} \rightarrow \{B, C\} \implies \{A\} \rightarrow \{B\}$ and $\{A\} \rightarrow \{C\}$
+    \item \textbf{Rule of Union: } $\{A\} \rightarrow \{B\}$ and $\{A\} \rightarrow \{C\}\implies \{A\} \rightarrow \{B, C\}$ 
+  \end{itemize}
+
+  \subsubsection{Computing Closures}
+  Given $\{A_1, A_2, \ldots A_n\}$, the closure $\{A_1, A_2, \ldots A_n\}^{+}$ can be computed by:
+  \begin{enumerate}
+    \item Initialize the closure to $\{A_1, A_2, \ldots A_n\}$.
+    \item If there is a FD $A_i, A_j, \ldots A_m \rightarrow B$ such that $A_i, A_j, \ldots A_m$ is in the closure, then put $B$ in the closure.
+    \item Repeat step 2 until we cannot find any new attribute to put in the closure.
+  \end{enumerate}
+  \subsubsection{Keys, Superkeys, Prime Attributes}
+  \begin{itemize}
+    \item \definition{Superkey: }A set of attribute(s) in a table that decides all other attributes.
+    \item \definition{Key: }A superkey that is minimal.
+    \item \definition{Prime Attribute: }If an attribute appears as part of a key, it is a prime attribute.
+    \begin{fixedbox}[0.95]
+      Example: $\{A, B\}$ and $\{D\}$ are keys for $R(A, B, C, D)$ then the prime attributes for the table are $A$, $B$ and $D$.
+    \end{fixedbox}
+  \end{itemize}
+  \subsubsection{Tricks to find keys}
+  \begin{enumerate}
+    \item Check small attribute sets first.
+    \item If an attribute $A_i$ does not appear on the RHS of any FD then $A_i$ must be part of a key.
+  \end{enumerate}
+
+  \subsubsection{BCNF Definitions}
+  \begin{itemize}
+    \item \definition{Decomposed FD: }An FD whose \textit{right hand side} has only \textbf{one attribute}
+    \item \definition{Trivial FD: }An FD whose attribute(s) on the \textit{RHS} appears on the \textit{LHS}.
+    \item \definition{Non-trivial FD: }An FD whose attribute(s) on \textit{RHS} \textbf{do not appear} on \textit{LHS}. 
+  \end{itemize}
+
+  \subsubsection{BCNF}
+  A table $R$ is in BCNF if \textbf{every non-trivial and decomposed FD} has a \textbf{superkey} on its \textit{left hand side}.
+
+  \subsubsection{BCNF Simplified Check}
+  Compute the closure of each attribute subset in $R$ and check if there exists a \textbf{more but not all} closure. If such a closure exists then $R$ is not in BCNF.
+
+  \subsubsection{BCNF Decomposition}
+  Input: A table $R$
+  \begin{enumerate}
+    \item Find a subset $X$ of attributes in $R$ such that its closure $\{X\}^{+}$ contains \textbf{more attributes} than $X$ but \textbf{does not contain all attributes} in $R$.
+    \item Decompose $R$ into two tables $R_1$ and $R_2$, such that
+    \begin{itemize}
+      \item $R_1$ contain all attributes in $\{X\}^{+}$
+      \item $R_2$ contains all attributes in $X$ as well as the attributes not in $\{X\}^{+}$.
+    \end{itemize}
+    \item If $R_1$ is not in BCNF, further decompose $R_1$.
+    \item If $R_2$ s not in BCNF, further decompose $R_2$.
+  \end{enumerate}
+
+  \begin{fixedbox}[0.95]
+    Notes:
+    \begin{itemize}
+      \item BCNF decomposition is a binary decomposition.
+      \item The BCNF decomposition of a table may not be unique.
+      \item If a table only has two attributes then it is in BCNF.
+    \end{itemize}
+  \end{fixedbox}
+
+  \subsubsection{Checking if a Decomposed Table is in BCNF}
+  \begin{itemize}
+    \item Suppose we decomposed a table $R$ into $R_1$ and $R_2$. If we want to check of the decomposition $\delta$ is in BCNF, then we need to individually check that both $R_1$ and $R_2$ are in BCNF.
+    \item Here is how to check if one decomposed table $R_i$ is in BCNF.
+    
+    \begin{enumerate}
+      \item Enumerate the attribute subsets of $R_i$.
+      \item Derive the closures of these attribute subsets on $R$, \item Project these closures onto $R_i$ by removing attributes not in $R_i$.
+    \end{enumerate}
+  \end{itemize}
+
+  \subsubsection{Lossless Join Decomposition}
+  \begin{itemize}
+    \item When we decompose a table $R$ into $R_1$ and $R_2$, it is a \textbf{lossless-join decomposition} if the common attributes $R_1 \cap R_2$ constitute a \textbf{superkey} for either $R_1$ or $R_2$.
+    \item To determine if the relations $R_i, R_j$ in a decomposition $\delta$ is a \textbf{lossless-join decomposition}, give an example, where for all $R_i, R_j \in \delta$, $R_i \cap R_j$ constitute a \textbf{superkey} for either $R_i$ or $R_j$.
+    \item BCNF guarantees lossless-join decomposition.
+  \end{itemize}
+
+  \subsubsection{3NF}
+  A table satisifies 3NF if and only if for every non-trivial and decomposed FD, either the \textbf{left hand side is a superkey} or the \textbf{right hand side is a prime attribute}.
+
+  \subsubsection{Dependency Preservation}
+  \begin{itemize}
+    \item Let $S$ be the given set of FDs on the original table.
+    \item Let $S'$ be the given set of FDs on the decomposed tables.
+    \item The decomposition preserves all FDs if and only if $S$ and $S'$ are equivalent.
+  \end{itemize}
+
+  \subsubsection{Dependency Preserving Decomposition}
+  Given a set of FDs $\sum$ and decomposition $\delta$:
+  \begin{enumerate}
+    \item Enumerate the attribute subsets of each decomposed table $R_i$ in $\delta$.
+    \item Derive the closures of these attribute subsets on $R$, \item Project these closures onto $R_i$ by removing attributes not in $R_i$.
+    \item Convert the closures in step 3 into non-trivial FDs and combine all the FDs for each $R_i$ into a set $S$.
+    \item Check if $\sum$ and $S$ are equivalent, if not identify the FDs that are not preserved.
+  \end{enumerate}
+
+
+  \subsubsection{Minimal Basis}
+  \begin{itemize}
+    \item Let $S$ be a set of FDs
+    \item The minimal basis $M$ is a set of FDs such that
+    \begin{enumerate}
+      \item Every FD in $S$ can be derived from $M$ and vice versa.
+      \item Every FD in $M$ is a non-trivial and decomposed FD.
+      \item If any FD is removed from $M$, then some FD in $S$ cannot be derived from $M$.
+      \item For any FD in $M$, if we remove an attribute from its left hand side, the FD cannot be derived by $S$.
+    \end{enumerate}
+    \item \textbf{Minimal Basis Algorithm}
+    \begin{enumerate}
+      \item Transform the FDs such that each RHS \textbf{only contains one attribute.}
+      \item Examine FDs which have more than one attribute on the LHS and remove redundant attributes on the LHS.
+      \item Remove redundant FDs.
+      \begin{itemize}
+        \item Pretending to remove one FD at a time from the remaining FDs in $S$. Compute the closure of the LHS and check if the RHS is still in the closure.
+        \item Check for transitivity in the existing FDs.
+      \end{itemize}
+    \end{enumerate}
+  \end{itemize}
+  \begin{fixedbox}[0.95]
+    A \textbf{canonical cover} is formed by using the rule of union on FDs in the minimal basis that have the same LHS.
+  \end{fixedbox}
+  \subsubsection{3NF Decomposition}
+  Input: A table $R$ with a set of FDs.
+  \begin{enumerate}
+    \item Find a minimal basis of the FDs.
+    \item Combine the FDs whose left hand sides are the same.
+    \item For each FD, construct a table that contains all atributes in the FD.
+    \item Check if any table contains a key for $R$. If not create a table that contains a key for $R$.
+    \item Remove subsumed tables.
+  \end{enumerate}
+
+\end{multicols*}
+\end{document}

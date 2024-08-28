@@ -1,0 +1,283 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath}
+
+% The listings package supports many different programming languages
+\usepackage{listings}
+
+% Listings Configuration
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+backgroundcolor=\color{backcolour},   
+commentstyle=\color{codegreen},
+keywordstyle=\color{magenta},
+numberstyle=\tiny\color{codegray},
+stringstyle=\color{codegreen},
+basicstyle=\ttfamily\footnotesize,
+breakatwhitespace=false,         
+breaklines=true,                 
+captionpos=b,                    
+keepspaces=true,                 
+numbers=left,                    
+numbersep=5pt,                  
+showspaces=false,                
+showstringspaces=false,
+showtabs=false,                  
+tabsize=2
+}
+
+\usetheme{Madrid}
+\definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667}
+\usecolortheme[named=UBCblue]{structure}
+
+\title{CS4211: Formal Methods for Software Engineering}
+\subtitle{Lecture Notes}
+\author{Kevin Toh}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Introduction to Formal Methods}
+    \begin{itemize}
+        \item Requirements are difficult to define because its written in \textbf{Natural Language} which can be imprecise and ambiguous at times.
+        \item As we cannot anticipate the ways a system may be used, written test cases only covers a small subset of use cases.
+        \item We want to verify if a system always satisify a certain property, in possible all cases.
+        \item In Formal Methods, we use \textbf{Mathematics} to define the \textbf{structure} and \textbf{behaviour} of our software because it is \textbf{precise} and \textbf{unambiguous}
+        \item Eventually, we can use a model checker to automatically verify the software by checking if a certain property holds in all cases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{The Z Specification Language}
+    \begin{itemize}
+        \item Based on set theory and mathematical logic
+        \begin{itemize}
+            \item We will be doing a recap on predicates, set theory, functions and relations next.
+        \end{itemize}
+        \item Uses schemas to declare object properties
+        \begin{itemize}
+            \item Schemas are similar to defining the structure of a class and its properties in an Object-Oriented Programming Language.
+        \end{itemize}
+        \item Uses operations to describe state transitions
+        \begin{itemize}
+            \item Each object has a state representing the values it's properties hold at a certain moment in time.
+            \item Operations are similar to methods of a class. 
+            \item Operations modify the state of an object.
+            \item We use predicates to describe state transitions in an operation.
+        \end{itemize}
+        \item We can then proof that a certain property holds manually
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Recap on Predicates and Logic}
+    \begin{block}{Predicate}
+        A statement that is either true or false.
+        \begin{enumerate}
+            \item There are 365 days in 2024. (\textbf{false})
+            \item Let $P(x, y)$ be $x + y = 9$
+            \begin{itemize}
+                \item $P(4, 5)$ is \textbf{true}.
+                \item $P(3, 7)$ is \textbf{false}.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    \begin{block}{Logic Operators}
+        \begin{enumerate}
+            \item Not ($\neg$) Eg: 
+            \item And ($\wedge$)
+            \item Or ($\vee$)
+            \item Implies ($\Rightarrow$)
+            \item Equivalence ($\Leftrightarrow$)
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Recap on Quantifiers}
+    \begin{enumerate}
+        \item Universal Quantifier ($\forall$)
+        \begin{itemize}
+            \item Example: All natural numbers are greater than -1.
+            \item Mathematically, we would write $\forall n \in \mathbb{N}, n > -1$
+            \item In Z Specification, we would write $\forall n : \mathbb{N} \bullet n > -1$
+            \item $\forall n : \mathbb{N} \bullet n > 0$
+            \item In general, $\exists x : X \bullet P(x)$ abbreviates $P(a) \wedge P(b) \wedge P(c) \wedge \ldots$
+        \end{itemize}
+        \item Existential Quantifier ($\exists$)
+        \begin{itemize}
+            \item Example: There exists a natural number more than 0.
+            \item In Z Specification, we would write $\exists n : \mathbb{N} \bullet n > 0$
+            \item In general, $\exists x : X \bullet P(x)$ abbreviates $P(a) \vee P(b) \vee P(c) \vee \ldots$
+        \end{itemize}
+    \end{enumerate}
+    \begin{block}{Differences between Mathematical Notations and Z Specification}
+        \begin{itemize}
+            \item In Mathemical Notation, : or $\mid$ means "such that" when used in Set Expressions.
+            \item In Z Specification, : means "belongs to".
+            \begin{itemize}
+                \item The difference between : and $\in$ will be explained later.
+            \end{itemize}
+            \item In Z Specification, $\bullet$ means "such as" when writing predicates.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Recap on Set Theory}
+    \begin{itemize}
+        \item A set is a collection of elements (or members)
+        \begin{itemize}
+            \item Elements are not ordered: $\{a, b, c\} = \{b, a, c\}$
+            \item Elements are not repeated" $\{a, a, b\}= \{a, b\}$
+            \item Given Sets
+            \begin{itemize}
+                \item $\mathbb{N} = \{0, 1, 2, 3, \ldots \}$ (The set of all natural numbers)
+                \item $\mathbb{N}_{1} = \{1, 2, 3, \ldots \}$
+                \item $\mathbb{Z} = \{0, 1, -1, 2, -2, \ldots \}$ (The set of all integers)
+                \item $\mathbb{R}$ (The set of all real numbers)
+                \item $\emptyset$ (Empty Set: The set with no elements)
+            \end{itemize}
+        \end{itemize}
+        \item Membership: $x \in \mathbb{X}$ is a predicate which is
+        \begin{itemize}
+            \item true if x is in the set $\mathbb{X}$. Eg: $a \in \{a, b, c\}$
+            \item false if x is not in the set $\mathbb{X}$. Eg: $d \in \{a, b, c\}$
+        \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Difference between ':' and '$\in$'}
+        Example: $\forall x : \mathbb{Z} \bullet x > 5 \implies x \in \mathbb{N}$
+        \begin{itemize}
+            \item $x : \mathbb{Z}$ declares a new variable $x$ of type $\mathbb{Z}$
+            \item $x \in \mathbb{N}$ is a predicate which is either true or false depending on the value of the declared $x$.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Recap on Set Theory}
+    \begin{itemize}
+        \item Set Expressions
+        \begin{itemize}
+            \item We can express a set by listing its elements if the set is finite and small.
+            \begin{itemize}
+                \item $\{a, b, c, d\}$ is a finite set.
+            \end{itemize}
+            \item If a set is large or infinite, we can definite a set by giving a predicate which specifies precisely those elements in a set.
+            \begin{itemize}
+                \item $\mathbb{N}$ is an infinite set.
+                \item The set of natural numbers less than 99 is $\{n : \mathbb{N} \mid n < 99\}$
+                \item In general the set $\{x : \mathbb{X} \mid P(x)\}$ is the set of elements of $\mathbb{X}$ for which predicate $P$ is true.
+            \end{itemize}
+        \end{itemize}
+        \item Set Examples
+        \begin{itemize}
+            \item The set of even integers is $\{z : \mathbb{Z} \mid \exists k : \mathbb{Z} \bullet z = 2k\}$
+            \item The set of natural numbers which when divided by 7 leave a remaineder of 4 is $\{n : \mathbb{N} \mid \exists m : \mathbb{N} \bullet n = 7m + 4 \}$
+            \item $\mathbb{N}$ is the set $\{z : \mathbb{Z} \mid z \geq 0\}$
+            \item $\mathbb{N}_{1}$ is the set $\{n : \mathbb{N} \mid n \geq 1\}$
+            \item If $a, b$ are any natural numbers, then $a .. b$ is defined as the set of all natural numbers between a and b inclusive.
+            \begin{itemize}
+                \item $a..b$ is the set $\{n : \mathbb{N} \mid a \leq n \leq b\}$
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Recap on Set Theory}
+    \begin{itemize}
+        \item Subset ($\subseteq$): If $\mathbb{S}$ and $\mathbb{T}$ are sets, $\mathbb{S} \subset \mathbb{T}$ is a predicate equivalent to $\forall s : \mathbb{S} \bullet s \in \mathbb{T}$.
+        \begin{itemize}
+            \item The following predicates are true:
+            \begin{itemize}
+                \item $\{0, 1, 2\} \subseteq \mathbb{N}$
+                \item $2..3 \subseteq 1..5$
+                \item $\{a, b\} \subseteq \{a, b, c\}$
+                \item $\emptyset \subseteq \mathbb{X}$ for any set $\mathbb{X}$
+                \item $\{x\} \subseteq \mathbb{X} \Leftrightarrow x \in \mathbb{X}$
+            \end{itemize}
+        \end{itemize}
+        \item Proper Subset ($\subset$): If $\mathbb{S}$ and $\mathbb{T}$ are sets, $\mathbb{S} \subset \mathbb{T}$ is a predicate equivalent to $\mathbb{S} \subseteq \mathbb{T} \wedge \mathbb{S} \neq \mathbb{T}$.
+        \item Power Set ($\mathcal{P}$): If $\mathbb{X}$ is a set, $\mathcal{P}$ $\mathbb{X}$ (the power set of $\mathbb{X}$) is the set of all subsets of $\mathbb{X}$.
+        \begin{itemize}
+            \item $\mathbb{A} \in$ $\mathcal{P}$ $\mathbb{B}$ $= \mathbb{A} \subseteq \mathbb{B}$ 
+            \item The following predicates are true:
+            \begin{itemize}
+                \item $\mathcal{P}\{a, b\} = \{\emptyset, \{a\}, \{b\}, \{a, b\}\}$
+                \item $\mathcal{P}$ $\emptyset$ $= \{\emptyset\} \neq \emptyset$
+                \item $1 .. 5 \in \mathcal{P}$ $\mathbb{N}$
+                \item $2 .. 5 \in \mathcal{P}(1 .. 5)$
+            \end{itemize}
+            \item If $\mathbb{X}$ has $k$ elements, then $\mathcal{P}$ $\mathbb{X}$ has $2^{k}$ elements.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Recap on Set Theory}
+    \begin{itemize}
+        \item Set Operations
+        \begin{itemize}
+            \item Set Union
+            \item Set Intersection
+            \item Set Difference
+            \item Cartesian Product: If $A$ and $B$ are sets, then $A \times B$ is the set of all ordered pairs $(a, b)$ with $a \in A$ and $b \in B$.
+            \begin{itemize}
+                \item $\{a, b\} \times \{a, c\} = \{(a, a), (a, c), (b, a), (b, c)\}$
+            \end{itemize}
+            \item Cardinality: $\#X$ is a natural number denoting the cardinality of (number of elements in) a finite set $X$.
+            \begin{itemize}
+                \item $\#\{a, b, c\} = 3$
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Recap on Relations}
+    \begin{itemize}
+        \item A relation $R$ from sets $A$ to $B$, is declared as $R : A \leftrightarrow B$ is a subset of $A \times B$
+        \item Example: $R = \{(c, x), (c, z), (d, x), (d, y), (d, z)\}$
+        \begin{itemize}
+            \item The following predicates are equivalent
+            \begin{enumerate}
+                \item $(c, z) \in R$
+                \item $c \rightarrow z \in R$
+                \item $cRz$
+            \end{enumerate}
+        \end{itemize}
+        \item \textbf{Domain:} $dom R$ is the set $\{a : A \mid \exists b : B \bullet a R b\}$
+        \item \textbf{Range:} $ran R$ is the set $\{b : B \mid \exists a : A \bullet a R b\}$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Types in Z Specification}
+    \begin{itemize}
+        \item Z specification language is \textbf{strongly typed}.
+        \item Every expression is given a type.
+        \item Any set can be used as a type.
+        \item The following are equivalent declarations of variables $x$ and $y$ of types $A$ and $B$ respectively. 
+        \begin{itemize}
+            \item $(x, y) : A \times B$
+            \item $x: A, y: B$
+            \item $x, y : A$ (only when $B = A$)
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Z Specification State Schema}
+    % \begin{lstlisting}
+    %     |-State------
+    %     | var: type
+    % \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Recap on Functions}
+\end{frame}
+
+\begin{frame}{Sequences}
+    
+\end{frame}
+
+\end{document}
