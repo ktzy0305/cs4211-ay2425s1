@@ -57,10 +57,6 @@ tabsize=2
     }}%
 }
 
-% Define the U+2987 and U+2988 character
-\newunicodechar{⦇}{\ensuremath{\langle\!\langle}} % or any other substitute
-\newunicodechar{⦈}{\ensuremath{\rangle\!\rangle}} % Substitute with any symbol you prefer
-
 \title{CS4211: Formal Methods for Software Engineering}
 \subtitle{Lecture Notes}
 \author{Kevin Toh}
@@ -103,6 +99,25 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Latex Setup}
+\begin{itemize}
+\item The Latex package that we will be using is \texttt{zed-csp}
+\item \textbf{Setup Code: }
+\begin{lstlisting}[language=tex]
+% For latex document
+\documentstyle[12pt,zed]{article}
+
+% For beamer slides
+\usepackage{zed-csp}  
+
+\begin{document}
+\end{document}
+\end{lstlisting}
+\item \href{https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}{Reference: https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Recap on Predicates and Logic}
     \begin{block}{Predicate}
         A statement that is either true or false.
@@ -120,8 +135,8 @@ tabsize=2
             \item Not ($\neg$) Eg: 
             \item And ($\wedge$)
             \item Or ($\vee$)
-            \item Implies ($\Rightarrow$)
-            \item Equivalence ($\Leftrightarrow$)
+            \item Implies ($\implies$)
+            \item Equivalence ($\iff$)
         \end{enumerate}
     \end{block}
 \end{frame}
@@ -131,15 +146,15 @@ tabsize=2
         \item Universal Quantifier ($\forall$)
         \begin{itemize}
             \item Example: All natural numbers are greater than -1.
-            \item Mathematically, we would write $\forall n \in \mathbb{N}, n > -1$
-            \item In Z Specification, we would write $\forall n : \mathbb{N} \bullet n > -1$
-            \item $\forall n : \mathbb{N} \bullet n > 0$
+            \item Mathematically, we would write $\forall n \in \nat, n > -1$
+            \item In Z Specification, we would write $\forall n : \nat \bullet n > -1$
+            \item $\forall n : \nat \bullet n > 0$
             \item In general, $\exists x : X \bullet P(x)$ abbreviates $P(a) \wedge P(b) \wedge P(c) \wedge \ldots$
         \end{itemize}
         \item Existential Quantifier ($\exists$)
         \begin{itemize}
             \item Example: There exists a natural number more than 0.
-            \item In Z Specification, we would write $\exists n : \mathbb{N} \bullet n > 0$
+            \item In Z Specification, we would write $\exists n : \nat \bullet n > 0$
             \item In general, $\exists x : X \bullet P(x)$ abbreviates $P(a) \vee P(b) \vee P(c) \vee \ldots$
         \end{itemize}
     \end{enumerate}
@@ -163,9 +178,9 @@ tabsize=2
             \item Elements are not repeated" $\{a, a, b\}= \{a, b\}$
             \item Given Sets
             \begin{itemize}
-                \item $\mathbb{N} = \{0, 1, 2, 3, \ldots \}$ (The set of all natural numbers)
-                \item $\mathbb{N}_{1} = \{1, 2, 3, \ldots \}$
-                \item $\mathbb{Z} = \{0, 1, -1, 2, -2, \ldots \}$ (The set of all integers)
+                \item $\nat = \{0, 1, 2, 3, \ldots \}$ (The set of all natural numbers)
+                \item $\nat_{1} = \{1, 2, 3, \ldots \}$
+                \item $\num = \{0, 1, -1, 2, -2, \ldots \}$ (The set of all integers)
                 \item $\mathbb{R}$ (The set of all real numbers)
                 \item $\emptyset$ (Empty Set: The set with no elements)
             \end{itemize}
@@ -178,10 +193,10 @@ tabsize=2
     \end{itemize}
 
     \begin{block}{Difference between ':' and '$\in$'}
-        Example: $\forall x : \mathbb{Z} \bullet x > 5 \implies x \in \mathbb{N}$
+        Example: $\forall x : \num \bullet x > 5 \implies x \in \nat$
         \begin{itemize}
-            \item $x : \mathbb{Z}$ declares a new variable $x$ of type $\mathbb{Z}$
-            \item $x \in \mathbb{N}$ is a predicate which is either true or false depending on the value of the declared $x$.
+            \item $x : \num$ declares a new variable $x$ of type $\num$
+            \item $x \in \nat$ is a predicate which is either true or false depending on the value of the declared $x$.
         \end{itemize}
     \end{block}
 \end{frame}
@@ -196,20 +211,20 @@ tabsize=2
             \end{itemize}
             \item If a set is large or infinite, we can definite a set by giving a predicate which specifies precisely those elements in a set.
             \begin{itemize}
-                \item $\mathbb{N}$ is an infinite set.
-                \item The set of natural numbers less than 99 is $\{n : \mathbb{N} \mid n < 99\}$
+                \item $\nat$ is an infinite set.
+                \item The set of natural numbers less than 99 is $\{n : \nat \mid n < 99\}$
                 \item In general the set $\{x : \mathbb{X} \mid P(x)\}$ is the set of elements of $\mathbb{X}$ for which predicate $P$ is true.
             \end{itemize}
         \end{itemize}
         \item Set Examples
         \begin{itemize}
-            \item The set of even integers is $\{z : \mathbb{Z} \mid \exists k : \mathbb{Z} \bullet z = 2k\}$
-            \item The set of natural numbers which when divided by 7 leave a remaineder of 4 is $\{n : \mathbb{N} \mid \exists m : \mathbb{N} \bullet n = 7m + 4 \}$
-            \item $\mathbb{N}$ is the set $\{z : \mathbb{Z} \mid z \geq 0\}$
-            \item $\mathbb{N}_{1}$ is the set $\{n : \mathbb{N} \mid n \geq 1\}$
-            \item If $a, b$ are any natural numbers, then $a .. b$ is defined as the set of all natural numbers between a and b inclusive.
+            \item The set of even integers is $\{z : \num \mid \exists k : \num \bullet z = 2k\}$
+            \item The set of natural numbers which when divided by 7 leave a remaineder of 4 is $\{n : \nat \mid \exists m : \nat \bullet n = 7m + 4 \}$
+            \item $\nat$ is the set $\{z : \num \mid z \geq 0\}$
+            \item $\nat_1$ is the set $\{n : \nat \mid n \geq 1\}$
+            \item If $a, b$ are any natural numbers, then $a \upto b$ is defined as the set of all natural numbers between a and b inclusive.
             \begin{itemize}
-                \item $a..b$ is the set $\{n : \mathbb{N} \mid a \leq n \leq b\}$
+                \item $a \upto b$ is the set $\{n : \nat \mid a \leq n \leq b\}$
             \end{itemize}
         \end{itemize}
     \end{itemize}
@@ -221,25 +236,25 @@ tabsize=2
         \begin{itemize}
             \item The following predicates are true:
             \begin{itemize}
-                \item $\{0, 1, 2\} \subseteq \mathbb{N}$
-                \item $2..3 \subseteq 1..5$
+                \item $\{0, 1, 2\} \subseteq \nat$
+                \item $2 \upto 3 \subseteq 1 \upto 5$
                 \item $\{a, b\} \subseteq \{a, b, c\}$
                 \item $\emptyset \subseteq X$ for any set $X$
-                \item $\{x\} \subseteq X \Leftrightarrow x \in X$
+                \item $\{x\} \subseteq X \iff x \in X$
             \end{itemize}
         \end{itemize}
         \item Proper Subset ($\subset$): If $S$ and $T$ are sets, $S \subset T$ is a predicate equivalent to $S \subseteq T \wedge S \neq T$.
-        \item Power Set ($\mathcal{P}$): If $X$ is a set, $\mathcal{P}$ $X$ (the power set of $X$) is the set of all subsets of $X$.
+        \item Power Set ($\power$): If $X$ is a set, $\power$ $X$ (the power set of $X$) is the set of all subsets of $X$.
         \begin{itemize}
-            \item $A \in$ $\mathcal{P}$ $B$ $= A \subseteq B$ 
+            \item $A \in$ $\power$ $B$ $= A \subseteq B$ 
             \item The following predicates are true:
             \begin{itemize}
-                \item $\mathcal{P}\{a, b\} = \{\emptyset, \{a\}, \{b\}, \{a, b\}\}$
-                \item $\mathcal{P}$ $\emptyset$ $= \{\emptyset\} \neq \emptyset$
-                \item $1 .. 5 \in \mathcal{P}$ $\mathbb{N}$
-                \item $2 .. 5 \in \mathcal{P}(1 .. 5)$
+                \item $\power\{a, b\} = \{\emptyset, \{a\}, \{b\}, \{a, b\}\}$
+                \item $\power$ $\emptyset$ $= \{\emptyset\} \neq \emptyset$
+                \item $1 .. 5 \in \power$ $\nat$
+                \item $2 .. 5 \in \power(1 .. 5)$
             \end{itemize}
-            \item If $\mathbb{X}$ has $k$ elements, then $\mathcal{P}$ $X$ has $2^{k}$ elements.
+            \item If $X$ has $k$ elements, then $\power$ $X$ has $2^{k}$ elements.
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -248,25 +263,25 @@ tabsize=2
     \begin{itemize}
         \item Set Operations
         \begin{itemize}
-            \item Set Union: Suppose $S, T : \mathcal{P} X$ or $S \subseteq X, T \subseteq X$, then $S \cup T = \{x : X \mid x \in S \vee x \in T\}$
+            \item Set Union: Suppose $S, T : \power X$ or $S \subseteq X, T \subseteq X$, then $S \cup T = \{x : X \mid x \in S \vee x \in T\}$
             \begin{itemize}
                 \item $\{a, b, c\} \cup \{b, g, h\} = \{a, b, c,g, h\}$
                 \item $A \cup \emptyset = A$ (for any set $A$)
             \end{itemize}
-            \item Set Intersection: Suppose $S, T : \mathcal{P} X$, then $S \cap T = \{x : X \mid x \in S \wedge x \in T\}$ 
+            \item Set Intersection: Suppose $S, T : \power X$, then $S \cap T = \{x : X \mid x \in S \wedge x \in T\}$ 
             \begin{itemize}
                 \item $\{a, b\} \cap \{b, c\} = \{b\}$
                 \item $\{a, b, c\} \cap \{d, g\} = \emptyset$ (disjoint sets)
                 \item $A \cap \emptyset = \emptyset$ (for any set $A$)
             \end{itemize}
-            \item Set Difference: Suppose $S, T : \mathcal{P} X$, then $S - T = \{x : X \mid x \in S \wedge x \not \in T\}$ 
+            \item Set Difference: Suppose $S, T : \power X$, then $S - T = \{x : X \mid x \in S \wedge x \not \in T\}$ 
             \begin{itemize}
                 \item $\{a, b, c\} - \{b, g, h\} = \{a, c\}$
-                \item $\mathbb{N}_{1} = \mathbb{N} = \{0\}$
+                \item $\nat_{1} = \nat = \{0\}$
             \end{itemize}
-            \item Cartesian Product: If $A$ and $B$ are sets, then $A \times B$ is the set of all ordered pairs $(a, b)$ with $a \in A$ and $b \in B$.
+            \item Cartesian Product: If $A$ and $B$ are sets, then $A \cross B$ is the set of all ordered pairs $(a, b)$ with $a \in A$ and $b \in B$.
             \begin{itemize}
-                \item $\{a, b\} \times \{a, c\} = \{(a, a), (a, c), (b, a), (b, c)\}$
+                \item $\{a, b\} \cross \{a, c\} = \{(a, a), (a, c), (b, a), (b, c)\}$
             \end{itemize}
             \item Cardinality: $\#X$ is a natural number denoting the cardinality of (number of elements in) a finite set $X$.
             \begin{itemize}
@@ -278,18 +293,18 @@ tabsize=2
 
 \begin{frame}{Recap on Relations}
     \begin{itemize}
-        \item A relation $R$ from sets $A$ to $B$, is declared as $R : A \leftrightarrow B$ is a subset of $A \times B$
+        \item A relation $R$ from sets $A$ to $B$, is declared as $R : A \rel B$ is a subset of $A \cross B$
         \item Example: $R = \{(c, x), (c, z), (d, x), (d, y), (d, z)\}$
         \begin{itemize}
             \item The following predicates are equivalent
             \begin{enumerate}
                 \item $(c, z) \in R$
-                \item $c \rightarrow z \in R$
+                \item $c \fun z \in R$
                 \item $cRz$
             \end{enumerate}
         \end{itemize}
-        \item \textbf{Domain:} $dom R$ is the set $\{a : A \mid \exists b : B \bullet a R b\}$
-        \item \textbf{Range:} $ran R$ is the set $\{b : B \mid \exists a : A \bullet a R b\}$
+        \item \textbf{Domain:} $\dom R$ is the set $\{a : A \mid \exists b : B \bullet a R b\}$
+        \item \textbf{Range:} $\ran R$ is the set $\{b : B \mid \exists a : A \bullet a R b\}$
     \end{itemize}
 \end{frame}
 
@@ -302,7 +317,7 @@ tabsize=2
         \item Any set can be used as a type.
         \item The following are equivalent declarations of variables $x$ and $y$ of types $A$ and $B$ respectively. 
         \begin{itemize}
-            \item $(x, y) : A \times B$
+            \item $(x, y) : A \cross B$
             \item $x: A, y: B$
             \item $x, y : A$ (only when $B = A$)
         \end{itemize}
@@ -320,19 +335,19 @@ tabsize=2
 \end{enumerate}
 \item \textbf{Example \#1:} We can define the relation \textbf{divides} between two natural numbers.
 
-\texttt{| divides: $\mathbb{N}_1 \leftrightarrow \mathbb{N}$ \\
+\texttt{| divides: $\nat_1 \rel \nat$ \\
 | ----------------------------------------- \\
-| $\forall x : \mathbb{N}_1; y: \mathbb{N} \bullet x$ \underline{divides} $y \Leftrightarrow \exists k : \mathbb{N} \bullet x \cdot k = y$}
+| $\forall x : \nat_1; y: \nat \bullet x$ \underline{divides} $y \iff \exists k : \nat \bullet x \cdot k = y$}
 
 Usage: 3 \underline{divides} 6, $\lnot$ (3 \underline{divides} 7)
 
 \item \textbf{Example \#2:} We can define the relation $\leq$ between two natural numbers.
 
-\texttt{| $\_<=\_$: $\mathbb{N} \leftrightarrow \mathbb{N}$ \\
+\texttt{| $\_<=\_$: $\nat \rel \nat$ \\
 | ----------------------------------------- \\
-| $\forall x, y: \mathbb{N} \bullet x <= y \Leftrightarrow \exists k : \mathbb{N} \bullet x + k = y$}
+| $\forall x, y: \nat \bullet x <= y \iff \exists k : \nat \bullet x + k = y$}
 
-The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\mathbb{N}$.
+The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \\$\{(0, 0), (0, 1), (1, 1), (0, 2) (1, 2), (2, 2), \ldots \}$
 \end{itemize}
 \end{frame}
@@ -342,16 +357,16 @@ The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\m
     \item Let $A, B, R, S, T$ be sets.
     \item $A$ is the domain set, $B$ is the range set and $R$ is the relation set.
     \item Note that $S$ is a subset of the domain set and $T$ is the subset of the range set.
-    \item Suppose $R: A \leftrightarrow B, S \subseteq A$ and $T \subseteq B$.
+    \item Suppose $R: A \rel B, S \subseteq A$ and $T \subseteq B$.
     \begin{itemize}
-        \item \textbf{Domain Restriction:} $S \vartriangleleft R$ is the set $\{(a, b): R \mid a \in S\}$
-        \item \textbf{Range Restriction:} $R \vartriangleright T$ is the set $\{(a, b): R \mid b \in T\}$
+        \item \textbf{Domain Restriction:} $S \dres R$ is the set $\{(a, b): R \mid a \in S\}$
+        \item \textbf{Range Restriction:} $R \rres T$ is the set $\{(a, b): R \mid b \in T\}$
     \end{itemize}
-    \item Notice that both $S \vartriangleleft R \in A \leftrightarrow B$ and $R \vartriangleright T \in A \leftrightarrow B$, meaning that both domain restriction and range restrictions are relations from sets $A$ to $B$.
-    \item If has\_sibling: People $\leftrightarrow$ People then
+    \item Notice that both $S \dres R \in A \rel B$ and $R \rres T \in A \rel B$, meaning that both domain restriction and range restrictions are relations from sets $A$ to $B$.
+    \item If has\_sibling: People $\rel$ People then
     \begin{itemize}
-        \item female $\vartriangleleft$ has\_sibling is the relationship is\_sister\_of.
-        \item has\_sibling $\vartriangleright$ female is the relationship has\_sister.
+        \item female $\dres$ has\_sibling is the relationship is\_sister\_of.
+        \item has\_sibling $\rres$ female is the relationship has\_sister.
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -361,19 +376,19 @@ The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\m
     \item Let $A, B, R, S, T$ be sets.
     \item $A$ is the domain set, $B$ is the range set and $R$ is the relation set.
     \item Note that $S$ is a subset of the domain set and $T$ is the subset of the range set.
-    \item Suppose $R: A \leftrightarrow B, S \subseteq A$ and $T \subseteq B$.
+    \item Suppose $R: A \rel B, S \subseteq A$ and $T \subseteq B$.
     \begin{itemize}
         \item \textbf{Domain Subtraction:} $S \lefttrianglebar R$ is the set $\{(a, b): R \mid a \not \in S\}$
         \item \textbf{Range Subtraction:} $R \righttrianglebar T$ is the set $\{(a, b): R \mid b \not \in T\}$
     \end{itemize}
     \item The following predicates are true.
     \begin{itemize}
-        \item $S \lefttrianglebar R = (A - S) \vartriangleleft R$
-        \item $R \righttrianglebar T = R \vartriangleright (B - T)$
-        \item $S \lefttrianglebar R \in A \leftrightarrow B$
-        \item $R \righttrianglebar T \in A \leftrightarrow B$
+        \item $S \lefttrianglebar R = (A - S) \dres R$
+        \item $R \righttrianglebar T = R \rres (B - T)$
+        \item $S \lefttrianglebar R \in A \rel B$
+        \item $R \righttrianglebar T \in A \rel B$
     \end{itemize}
-    \item If has\_sibling: People $\leftrightarrow$ People then
+    \item If has\_sibling: People $\rel$ People then
     \begin{itemize}
         \item female $\lefttrianglebar$ has\_sibling is the relationship is\_brother\_of.
         \item has\_sibling $\righttrianglebar$ female is the relationship has\_brother.
@@ -383,13 +398,13 @@ The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\m
 
 \begin{frame}{Relational Image}
 \begin{itemize}
-    \item Suppose the relation $R : A \leftrightarrow B$ and $S \subseteq A$
+    \item Suppose the relation $R : A \rel B$ and $S \rel A$
     \item $R \limg S \rimg = \{b : B \mid \exists a : S \bullet a R b\}$
-    \item $R \limg S \rimg \subseteq B$
+    \item $R \limg S \rimg \rel B$
     \item Example
     \begin{itemize}
-        \item $divides \limg \{8, 9\} \rimg = \{x : \mathbb{N} \mid \exists k : \mathbb{N} \bullet x = 8 \cdot k \vee 9 \cdot k \} = \{0, 8, 9, 16, 18, \ldots\}$
-        \item $<= \limg {3, 7, 21} \rimg = \{x : \mathbb{N} \mid x >= 3\}$ 
+        \item $divides \limg \{8, 9\} \rimg = \{x : \nat \mid \exists k : \nat \bullet x = 8 \cdot k \vee 9 \cdot k \} = \{0, 8, 9, 16, 18, \ldots\}$
+        \item $<= \limg {3, 7, 21} \rimg = \{x : \nat \mid x >= 3\}$ 
     \end{itemize}
     \item In summary, the relational image returns the set of all elements $b \in B$ such that there exists an $a \in S$ with $(a, b) \in R$.
     \item The difference between relational image and range restriction is that range restriction returns the subset of $R$ which are ordered pairs of $(a, b)$ where $a \in A$ and $b \in B$ and the first element $a$ of the ordered pair is in $S$. The relational image simply just returns the set of all second elements $b$.
@@ -399,21 +414,21 @@ The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\m
 
 \begin{frame}{Inverse and Relational Composition}
     \begin{itemize}
-        \item \textbf{Inverse:} $R^{-1}$ is the set $\{(b, a) : B \times A \mid a R b \}$ or $R^{-1} \in B \leftrightarrow A$
+        \item \textbf{Inverse:} $R^{-1}$ is the set $\{(b, a) : B \cross A \mid a R b \}$ or $R^{-1} \in B \rel A$
         \begin{itemize}
             \item $has\_sibling^{-1} = has\_sibling$ 
             \item $divisor^{-1} = has\_divisor$ 
         \end{itemize}
         \item Example: $succ^{-1}$ = pred
-        \\ \texttt{| succ: $\mathbb{N} \leftrightarrow \mathbb{N}$
+        \\ \texttt{| succ: $\nat \rel \nat$
         \\|--------------------------------------
-        \\| $\forall x, y : \mathbb{N} \bullet x$ \underline{succ} $y \Leftrightarrow x + 1 = y$ 
+        \\| $\forall x, y : \nat \bullet x$ \underline{succ} $y \rel x + 1 = y$ 
         }
         \item \textbf{Relational Composition ($\comp$)}
         \begin{itemize}
-            \item Suppose $R: A \leftrightarrow B$ and $S: B \leftrightarrow C$ are two relations.
-            \item $R \comp S = \{(a, c) : A \times C \mid \exists b : B \mid a R b \wedge b S c\}$
-            \item $R \comp S \in A \leftrightarrow C$
+            \item Suppose $R: A \rel B$ and $S: B \rel C$ are two relations.
+            \item $R \comp S = \{(a, c) : A \cross C \mid \exists b : B \mid a R b \wedge b S c\}$
+            \item $R \comp S \in A \rel C$
         \end{itemize}
         \item Examples
         \begin{itemize}
@@ -428,23 +443,23 @@ The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\m
 
 \begin{frame}{Recap on Functions}
     \begin{itemize}
-        \item A (partial) function from a set $A$ to a set $B$, denoted by $f: A \pfun B$ is a subset $f$ of $A \times B$ with the property that for each $a \in A$, there is \textbf{at most one} $b \in B$ with $(a, b) \in f$.
-        \item \textbf{dom f} is the set $\{a : A \mid \exists b : B \bullet (a, b) \in f\}$
-        \item \textbf{ran f} is the set $\{b : B \mid \exists a : A \bullet (a, b) \in f\}$
-        \item Suppose $f: A \pfun B$ and $a \in dom f$, then $f(a)$ denotes the unique image $b \in B$ that $a$ is mapped to by $f$.
+        \item A (partial) function from a set $A$ to a set $B$, denoted by $f: A \pfun B$ is a subset $f$ of $A \cross B$ with the property that for each $a \in A$, there is \textbf{at most one} $b \in B$ with $(a, b) \in f$.
+        \item \textbf{$\dom f$} is the set $\{a : A \mid \exists b : B \bullet (a, b) \in f\}$
+        \item \textbf{$\ran f$} is the set $\{b : B \mid \exists a : A \bullet (a, b) \in f\}$
+        \item Suppose $f: A \pfun B$ and $a \in \dom f$, then $f(a)$ denotes the unique image $b \in B$ that $a$ is mapped to by $f$.
         \item $(a, b) \in f$ is equivalent to $f(a) = b$
-        \item \textbf{Total Function:} If the function $f: A \pfun B$ is a total function, then $f: A \rightarrow B$ if and only if $dom f = A$
+        \item \textbf{Total Function:} If the function $f: A \pfun B$ is a total function, then $f: A \rightarrow B$ if and only if $\dom f = A$
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Function Overriding}
     \begin{itemize}
-        \item Suppose $f, g: A \pfun B$, then $f \oplus g$ is the function (dom g $\lefttrianglebar$ f) $\cup$ g.
+        \item Suppose $f, g: A \pfun B$, then $f \oplus g$ is the function $(\dom g \lefttrianglebar f) \cup g$.
         \item The following predicates are true:
         \begin{enumerate}
-            \item dom f $\oplus$ g = dom f $\cup$ dom g
-            \item a : dom g $\bullet (f \oplus g)(a) = g(a)$
-            \item $\forall a :$ dom f - dom g $\bullet (f \oplus g)(a) = f(a)$
+            \item $\dom f \oplus g = \dom f \cup \dom g$
+            \item $a : \dom g$ $\bullet (f \oplus g)(a) = g(a)$
+            \item $\forall a : \dom f - \dom g \bullet (f \oplus g)(a) = f(a)$
             \item f $\oplus$ g $\in a \pfun b$
         \end{enumerate}
         \item Examples
@@ -455,17 +470,167 @@ The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\m
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Specifying Functions}
+\begin{frame}
+    \frametitle{Specifying Functions}
     \begin{enumerate}
         \item Using a look-up table
-        \item Declaring Axioms
-        \item Using Recursion
-        \item Giving an Algorithm
+        \begin{itemize}
+            \item If a function $f : A \pfun B$ is finite (and not too large), we can specify the function explicity by listing all pairs $(a, b)$ in the subset $A \cross B$.
+            \item Example: PassportNo $\fun$ Address
+            
+            \begin{tabular}{c c}
+                PassportNo & Address \\
+                A001017 & 77 Sunset Strip \\
+                $\cdots$ & $\cdots$ \\
+                G707165 & 19 Mail Street
+            \end{tabular}
+        \end{itemize}
+
+        \item Declaring Axioms: A function can be specified by giving a \textbf{predicate} determining which pairs $(a, b)$ are in the function.
+        \begin{itemize}
+            \item \textbf{Example: The root function that calculates the square root of a natural number} 
+            
+            \texttt{| root $\nat \pfun \nat$
+            \\|--------------------------------
+            \\| $\dom root = \{n : \nat \mid \exists m:\nat \bullet m^{2} = n\}$
+            \\| $\forall n : \dom root$ $\bullet$ $(root(n))^{2} = n$}
+
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Specifying Functions}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item Using Recursion: For functions defined recursively in terms of itself.
+        
+        \texttt{| fact $\nat_1 \pfun \nat$
+        \\|--------------------------------
+        \\| fact(1) = 1
+        \\| $\forall n : \nat_1 - \{1\} \bullet fact(n) = n * fact(n - 1)$}
+
+        \item Giving an Algorithm: A function $f : A \pfun B$ is specified by an algorithm such that given any element $a$ in the domain of $f$, the element $f(a)$ can be computed using the algorithm.
+        \begin{columns}
+            \begin{column}{0.4\textwidth}
+\begin{lstlisting}
+input n : N
+var x, y: integer;
+begin
+    x := n; y:= 0;
+    while x != 0 do
+    begin
+        x := x - 1; y:= y + 2
+    end;
+write(y)
+end
+\end{lstlisting}
+            \end{column}
+            \begin{column}{0.4\textwidth}  %%<--- here
+                \texttt{| double: $\nat \fun \nat$\\
+                | ------------------\\
+                | $\forall n : \nat \bullet double(n) = 2n$}
+            \end{column}
+        \end{columns}
     \end{enumerate}
 \end{frame}
 
 \begin{frame}{Sequences}
-    
+    \begin{itemize}
+        \item A sequence s of elements of a set $A$, denoted $s : \seq A$, is a function $s:\nat \pfun A$ where $\dom s = 1 \upto n$ for some natural number $n$.
+        \item \textbf{Example}
+        \begin{itemize}
+            \item $<b, c, a, b>$ denotes the sequence (function) $\{1 \fun b, 2 \fun c, 3 \fun a, 4 \fun b\}$
+            \item The empty sequence is denoted by $<>$
+        \end{itemize}
+        \item The set of all sequences of elements from $A$ is denoted as $\seq A$ and is defined to be $\seq A = \{s : \nat \pfun A \mid \exists n:\nat$ $\bullet$ $\dom s = 1 \upto n\}$
+        \item $\seq_1 A = \seq A - \{<>\}$ is defined as the set of non-empty sequences.
+        \item Since sequences are ordered mapping, $<a, b, a> \neq <a, a, b> \neq <a, b>$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Special Functions for Sequence}
+    \begin{enumerate}
+        \item Concatenation 
+        \begin{itemize}
+            \item $<a, b> \cat <b, a, c> = <a, b, b, a, c>$
+        \end{itemize}
+        \item Head
+        \begin{itemize}
+            \item \texttt{| head: $\seq_1 A \fun A$
+            \\|---------------------------------
+            \\|$\forall s : \seq_1 A \bullet head(s) = s(1)$}
+            \item $head<c, b, b> = c$
+        \end{itemize}
+        \item Tail
+        \begin{itemize}
+            \item \texttt{| tail: $\seq_1 A \fun \seq A$
+            \\|---------------------------------
+            \\|$\forall s : \seq_1 A \bullet <head(s)>$ $\cat$ $tail(s) = s$}
+            \item $tail<c, b, b> = <b, b>$
+        \end{itemize}
+        \item Filter
+        \begin{itemize}
+            \item $<a, b, c, d, e, d, c, b, a> \filter \{a, d\} = <a, d, d, a>$
+            \item Filter only keeps the element in the specified set, preserves order in the original sequence and outputs a new sequence.
+        \end{itemize}
+        
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Z Specification}
+\begin{itemize}
+\item As explained in an earlier slide, we can write Z Specification to formally specify requirements in \textbf{two distinct sections}
+\begin{enumerate}
+    \item Declaration: To define variables.
+    \item Predicate: Often used to define behaviours or invariants.
+\end{enumerate}
+\item When we were specifying functions earlier, we were formally specifying them in the form of \textbf{axioms} in the \textbf{axiom environment}.
+\item Later we will introduce how to formally specify \textbf{schemas} which are used to specify relationships between variable values.
+\item There are two main type of schemas in the \textbf{schema environment}
+\begin{itemize}
+    \item State Schema
+    \item Operation Schema
+\end{itemize}
+\item The \textbf{axiom environment} and \textbf{schema environment} are both available on the \texttt{zed-csp} package that was used to make these slides.
+\item This package allows us to render axioms and schemas using Z Specification in LATEX.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{zed-csp} Package}
+We can use the \texttt{zed-csp} package to formally specify requirements in Z Specification.
+\begin{enumerate}
+\item Axiom Environment
+\begin{axdef}
+limit: \nat
+\where
+limit \leq 65535
+\end{axdef}
+\begin{lstlisting}
+limit: \nat
+\where
+limit \leq 65535
+\end{lstlisting}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{zed-csp} Package}
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item Schema Environment
+\begin{schema}{PhoneDB}
+known: \power NAME \\ phone: NAME \pfun PHONE
+\where
+known = \dom phone
+\end{schema}
+\begin{lstlisting}
+known: \power NAME \\ phone: NAME \pfun PHONE
+\where
+known = \dom phone
+\end{lstlisting}
+\end{enumerate}
 \end{frame}
 
 \end{document}
