@@ -1,8 +1,16 @@
 \documentclass[aspectratio=169]{beamer}
 \usepackage{amsmath}
-
+\usepackage{graphicx}
+% \usepackage{oz}
+\usepackage{zed-csp}
+\usepackage[utf8]{inputenc}
+\usepackage{newunicodechar} % For defining new Unicode characters
 % The listings package supports many different programming languages
 \usepackage{listings}
+
+\usetheme{Madrid}
+\definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667}
+\usecolortheme[named=UBCblue]{structure}
 
 % Listings Configuration
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -29,9 +37,29 @@ showtabs=false,
 tabsize=2
 }
 
-\usetheme{Madrid}
-\definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667}
-\usecolortheme[named=UBCblue]{structure}
+\lstset{style=mystyle}
+
+\newlength{\trianglewidth}
+\settowidth{\trianglewidth}{\(\vartriangleleft\)}
+
+\newcommand{\lefttrianglebar}{%
+    \mathrel{\makebox[\trianglewidth]{%
+        \makebox[\trianglewidth]{\(\vartriangleleft\)}%
+        \hspace*{-\trianglewidth}%
+        \makebox[\trianglewidth]{\(-\)}%
+    }}%
+}
+\newcommand{\righttrianglebar}{%
+    \mathrel{\makebox[\trianglewidth]{%
+        \makebox[\trianglewidth]{\(-\)}%
+        \hspace*{-\trianglewidth}%
+        \makebox[\trianglewidth]{\(\vartriangleright\)}%
+    }}%
+}
+
+% Define the U+2987 and U+2988 character
+\newunicodechar{⦇}{\ensuremath{\langle\!\langle}} % or any other substitute
+\newunicodechar{⦈}{\ensuremath{\rangle\!\rangle}} % Substitute with any symbol you prefer
 
 \title{CS4211: Formal Methods for Software Engineering}
 \subtitle{Lecture Notes}
@@ -189,21 +217,21 @@ tabsize=2
 
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
-        \item Subset ($\subseteq$): If $\mathbb{S}$ and $\mathbb{T}$ are sets, $\mathbb{S} \subset \mathbb{T}$ is a predicate equivalent to $\forall s : \mathbb{S} \bullet s \in \mathbb{T}$.
+        \item Subset ($\subseteq$): If $S$ and $T$ are sets, $S \subset T$ is a predicate equivalent to $\forall s : S \bullet s \in T$.
         \begin{itemize}
             \item The following predicates are true:
             \begin{itemize}
                 \item $\{0, 1, 2\} \subseteq \mathbb{N}$
                 \item $2..3 \subseteq 1..5$
                 \item $\{a, b\} \subseteq \{a, b, c\}$
-                \item $\emptyset \subseteq \mathbb{X}$ for any set $\mathbb{X}$
-                \item $\{x\} \subseteq \mathbb{X} \Leftrightarrow x \in \mathbb{X}$
+                \item $\emptyset \subseteq X$ for any set $X$
+                \item $\{x\} \subseteq X \Leftrightarrow x \in X$
             \end{itemize}
         \end{itemize}
-        \item Proper Subset ($\subset$): If $\mathbb{S}$ and $\mathbb{T}$ are sets, $\mathbb{S} \subset \mathbb{T}$ is a predicate equivalent to $\mathbb{S} \subseteq \mathbb{T} \wedge \mathbb{S} \neq \mathbb{T}$.
-        \item Power Set ($\mathcal{P}$): If $\mathbb{X}$ is a set, $\mathcal{P}$ $\mathbb{X}$ (the power set of $\mathbb{X}$) is the set of all subsets of $\mathbb{X}$.
+        \item Proper Subset ($\subset$): If $S$ and $T$ are sets, $S \subset T$ is a predicate equivalent to $S \subseteq T \wedge S \neq T$.
+        \item Power Set ($\mathcal{P}$): If $X$ is a set, $\mathcal{P}$ $X$ (the power set of $X$) is the set of all subsets of $X$.
         \begin{itemize}
-            \item $\mathbb{A} \in$ $\mathcal{P}$ $\mathbb{B}$ $= \mathbb{A} \subseteq \mathbb{B}$ 
+            \item $A \in$ $\mathcal{P}$ $B$ $= A \subseteq B$ 
             \item The following predicates are true:
             \begin{itemize}
                 \item $\mathcal{P}\{a, b\} = \{\emptyset, \{a\}, \{b\}, \{a, b\}\}$
@@ -211,7 +239,7 @@ tabsize=2
                 \item $1 .. 5 \in \mathcal{P}$ $\mathbb{N}$
                 \item $2 .. 5 \in \mathcal{P}(1 .. 5)$
             \end{itemize}
-            \item If $\mathbb{X}$ has $k$ elements, then $\mathcal{P}$ $\mathbb{X}$ has $2^{k}$ elements.
+            \item If $\mathbb{X}$ has $k$ elements, then $\mathcal{P}$ $X$ has $2^{k}$ elements.
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -220,9 +248,22 @@ tabsize=2
     \begin{itemize}
         \item Set Operations
         \begin{itemize}
-            \item Set Union
-            \item Set Intersection
-            \item Set Difference
+            \item Set Union: Suppose $S, T : \mathcal{P} X$ or $S \subseteq X, T \subseteq X$, then $S \cup T = \{x : X \mid x \in S \vee x \in T\}$
+            \begin{itemize}
+                \item $\{a, b, c\} \cup \{b, g, h\} = \{a, b, c,g, h\}$
+                \item $A \cup \emptyset = A$ (for any set $A$)
+            \end{itemize}
+            \item Set Intersection: Suppose $S, T : \mathcal{P} X$, then $S \cap T = \{x : X \mid x \in S \wedge x \in T\}$ 
+            \begin{itemize}
+                \item $\{a, b\} \cap \{b, c\} = \{b\}$
+                \item $\{a, b, c\} \cap \{d, g\} = \emptyset$ (disjoint sets)
+                \item $A \cap \emptyset = \emptyset$ (for any set $A$)
+            \end{itemize}
+            \item Set Difference: Suppose $S, T : \mathcal{P} X$, then $S - T = \{x : X \mid x \in S \wedge x \not \in T\}$ 
+            \begin{itemize}
+                \item $\{a, b, c\} - \{b, g, h\} = \{a, c\}$
+                \item $\mathbb{N}_{1} = \mathbb{N} = \{0\}$
+            \end{itemize}
             \item Cartesian Product: If $A$ and $B$ are sets, then $A \times B$ is the set of all ordered pairs $(a, b)$ with $a \in A$ and $b \in B$.
             \begin{itemize}
                 \item $\{a, b\} \times \{a, c\} = \{(a, a), (a, c), (b, a), (b, c)\}$
@@ -252,7 +293,9 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Types in Z Specification}
+
+\begin{frame}
+    \frametitle{Types in Z Specification}
     \begin{itemize}
         \item Z specification language is \textbf{strongly typed}.
         \item Every expression is given a type.
@@ -266,14 +309,159 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Z Specification State Schema}
-    % \begin{lstlisting}
-    %     |-State------
-    %     | var: type
-    % \end{lstlisting}
+\begin{frame}[fragile]
+\frametitle{Modelling using Z Specification}
+\begin{itemize}
+\item When we write a program, we can write code procedurally, functionally or in an object oriented manner.
+\item Z Specification can help us model our code using two distinct sections.
+\begin{enumerate}
+    \item Declaration: To define variables.
+    \item Predicate: Often used to define behaviours or invariants.
+\end{enumerate}
+\item \textbf{Example \#1:} We can define the relation \textbf{divides} between two natural numbers.
+
+\texttt{| divides: $\mathbb{N}_1 \leftrightarrow \mathbb{N}$ \\
+| ----------------------------------------- \\
+| $\forall x : \mathbb{N}_1; y: \mathbb{N} \bullet x$ \underline{divides} $y \Leftrightarrow \exists k : \mathbb{N} \bullet x \cdot k = y$}
+
+Usage: 3 \underline{divides} 6, $\lnot$ (3 \underline{divides} 7)
+
+\item \textbf{Example \#2:} We can define the relation $\leq$ between two natural numbers.
+
+\texttt{| $\_<=\_$: $\mathbb{N} \leftrightarrow \mathbb{N}$ \\
+| ----------------------------------------- \\
+| $\forall x, y: \mathbb{N} \bullet x <= y \Leftrightarrow \exists k : \mathbb{N} \bullet x + k = y$}
+
+The relation $<=$ is the infinite subset of ordered pairs in $\mathbb{N}\times\mathbb{N}$.
+\\$\{(0, 0), (0, 1), (1, 1), (0, 2) (1, 2), (2, 2), \ldots \}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Domain and Range Restriction}
+\begin{itemize}
+    \item Let $A, B, R, S, T$ be sets.
+    \item $A$ is the domain set, $B$ is the range set and $R$ is the relation set.
+    \item Note that $S$ is a subset of the domain set and $T$ is the subset of the range set.
+    \item Suppose $R: A \leftrightarrow B, S \subseteq A$ and $T \subseteq B$.
+    \begin{itemize}
+        \item \textbf{Domain Restriction:} $S \vartriangleleft R$ is the set $\{(a, b): R \mid a \in S\}$
+        \item \textbf{Range Restriction:} $R \vartriangleright T$ is the set $\{(a, b): R \mid b \in T\}$
+    \end{itemize}
+    \item Notice that both $S \vartriangleleft R \in A \leftrightarrow B$ and $R \vartriangleright T \in A \leftrightarrow B$, meaning that both domain restriction and range restrictions are relations from sets $A$ to $B$.
+    \item If has\_sibling: People $\leftrightarrow$ People then
+    \begin{itemize}
+        \item female $\vartriangleleft$ has\_sibling is the relationship is\_sister\_of.
+        \item has\_sibling $\vartriangleright$ female is the relationship has\_sister.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Domain and Range Subtraction}
+\begin{itemize}
+    \item Let $A, B, R, S, T$ be sets.
+    \item $A$ is the domain set, $B$ is the range set and $R$ is the relation set.
+    \item Note that $S$ is a subset of the domain set and $T$ is the subset of the range set.
+    \item Suppose $R: A \leftrightarrow B, S \subseteq A$ and $T \subseteq B$.
+    \begin{itemize}
+        \item \textbf{Domain Subtraction:} $S \lefttrianglebar R$ is the set $\{(a, b): R \mid a \not \in S\}$
+        \item \textbf{Range Subtraction:} $R \righttrianglebar T$ is the set $\{(a, b): R \mid b \not \in T\}$
+    \end{itemize}
+    \item The following predicates are true.
+    \begin{itemize}
+        \item $S \lefttrianglebar R = (A - S) \vartriangleleft R$
+        \item $R \righttrianglebar T = R \vartriangleright (B - T)$
+        \item $S \lefttrianglebar R \in A \leftrightarrow B$
+        \item $R \righttrianglebar T \in A \leftrightarrow B$
+    \end{itemize}
+    \item If has\_sibling: People $\leftrightarrow$ People then
+    \begin{itemize}
+        \item female $\lefttrianglebar$ has\_sibling is the relationship is\_brother\_of.
+        \item has\_sibling $\righttrianglebar$ female is the relationship has\_brother.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Relational Image}
+\begin{itemize}
+    \item Suppose the relation $R : A \leftrightarrow B$ and $S \subseteq A$
+    \item $R \limg S \rimg = \{b : B \mid \exists a : S \bullet a R b\}$
+    \item $R \limg S \rimg \subseteq B$
+    \item Example
+    \begin{itemize}
+        \item $divides \limg \{8, 9\} \rimg = \{x : \mathbb{N} \mid \exists k : \mathbb{N} \bullet x = 8 \cdot k \vee 9 \cdot k \} = \{0, 8, 9, 16, 18, \ldots\}$
+        \item $<= \limg {3, 7, 21} \rimg = \{x : \mathbb{N} \mid x >= 3\}$ 
+    \end{itemize}
+    \item In summary, the relational image returns the set of all elements $b \in B$ such that there exists an $a \in S$ with $(a, b) \in R$.
+    \item The difference between relational image and range restriction is that range restriction returns the subset of $R$ which are ordered pairs of $(a, b)$ where $a \in A$ and $b \in B$ and the first element $a$ of the ordered pair is in $S$. The relational image simply just returns the set of all second elements $b$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Inverse and Relational Composition}
+    \begin{itemize}
+        \item \textbf{Inverse:} $R^{-1}$ is the set $\{(b, a) : B \times A \mid a R b \}$ or $R^{-1} \in B \leftrightarrow A$
+        \begin{itemize}
+            \item $has\_sibling^{-1} = has\_sibling$ 
+            \item $divisor^{-1} = has\_divisor$ 
+        \end{itemize}
+        \item Example: $succ^{-1}$ = pred
+        \\ \texttt{| succ: $\mathbb{N} \leftrightarrow \mathbb{N}$
+        \\|--------------------------------------
+        \\| $\forall x, y : \mathbb{N} \bullet x$ \underline{succ} $y \Leftrightarrow x + 1 = y$ 
+        }
+        \item \textbf{Relational Composition ($\comp$)}
+        \begin{itemize}
+            \item Suppose $R: A \leftrightarrow B$ and $S: B \leftrightarrow C$ are two relations.
+            \item $R \comp S = \{(a, c) : A \times C \mid \exists b : B \mid a R b \wedge b S c\}$
+            \item $R \comp S \in A \leftrightarrow C$
+        \end{itemize}
+        \item Examples
+        \begin{itemize}
+            \item $is\_parent\_of \comp is\_parent\_of = is\_grandparent\_of$
+            \item $R^{0} = id[A]$
+            \item $R^{1} = R$
+            \item $R^{2} = R \comp R$
+            \item $R^{3} = R \comp R \comp R$
+        \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Recap on Functions}
+    \begin{itemize}
+        \item A (partial) function from a set $A$ to a set $B$, denoted by $f: A \pfun B$ is a subset $f$ of $A \times B$ with the property that for each $a \in A$, there is \textbf{at most one} $b \in B$ with $(a, b) \in f$.
+        \item \textbf{dom f} is the set $\{a : A \mid \exists b : B \bullet (a, b) \in f\}$
+        \item \textbf{ran f} is the set $\{b : B \mid \exists a : A \bullet (a, b) \in f\}$
+        \item Suppose $f: A \pfun B$ and $a \in dom f$, then $f(a)$ denotes the unique image $b \in B$ that $a$ is mapped to by $f$.
+        \item $(a, b) \in f$ is equivalent to $f(a) = b$
+        \item \textbf{Total Function:} If the function $f: A \pfun B$ is a total function, then $f: A \rightarrow B$ if and only if $dom f = A$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Function Overriding}
+    \begin{itemize}
+        \item Suppose $f, g: A \pfun B$, then $f \oplus g$ is the function (dom g $\lefttrianglebar$ f) $\cup$ g.
+        \item The following predicates are true:
+        \begin{enumerate}
+            \item dom f $\oplus$ g = dom f $\cup$ dom g
+            \item a : dom g $\bullet (f \oplus g)(a) = g(a)$
+            \item $\forall a :$ dom f - dom g $\bullet (f \oplus g)(a) = f(a)$
+            \item f $\oplus$ g $\in a \pfun b$
+        \end{enumerate}
+        \item Examples
+        \begin{enumerate}
+            \item $\{a \rightarrow x, b \rightarrow y, c \rightarrow x\} \oplus \{a \rightarrow y\} = \{a \rightarrow y, b \rightarrow y, c \rightarrow x\}$
+            \item double $\oplus$ root = $\{(0, 0), (1, 1), (2, 4), (3, 6), (4, 2), \ldots\}$ (Note: $(4, 8)$ was replaced with $(4, 2)$ as the domain 4 is both in $f$ and $g$, so the range was replaced with $2$ that was in $g$)
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Specifying Functions}
+    \begin{enumerate}
+        \item Using a look-up table
+        \item Declaring Axioms
+        \item Using Recursion
+        \item Giving an Algorithm
+    \end{enumerate}
 \end{frame}
 
 \begin{frame}{Sequences}
