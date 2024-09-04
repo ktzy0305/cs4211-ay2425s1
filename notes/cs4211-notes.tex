@@ -302,6 +302,20 @@ tabsize=2
 \end{frame}
 
 % Slide 11
+\begin{frame}{Tuples and Cartesian Product}
+    \begin{itemize}
+        \item An n-tuple $(x_1, \ldots, x_n)$ is present in the Cartesian Product $\mathbf{a_1 \times \ldots \times a_n}$ if and only if each element $x_i$ is an element of the corresponding set $\mathbf{a_i}$. 
+        \item To refer to a particular component of a tuple $t$, we use the projection notation $(.)$
+        \item Suppose we have $t = (x_1, x_2, \ldots, x_n)$
+        \begin{itemize}
+            \item The first component of the tuple $t$ is written as $t.1$ which is the value $\mathbf{x_1}$.
+            \item The second component of the tuple $t$ is written as $t.2$ which is the value $\mathbf{x_2}$.
+            \item The n-th component of the tuple $t$ is written as $t.n$ which is the value $\mathbf{x_n}$
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 12
 \begin{frame}{Recap on Relations}
     \begin{itemize}
         \item A relation $R$ from sets $A$ to $B$, is declared as $R : A \rel B$ is a subset of $A \cross B$
@@ -319,7 +333,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 12
+% Slide 13
 \begin{frame}
     \frametitle{Types in Z Specification}
     \begin{itemize}
@@ -335,7 +349,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 13
+% Slide 14
 \begin{frame}[fragile]
 \frametitle{Modelling using Z Specification}
 \begin{itemize}
@@ -364,7 +378,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 14
+% Slide 15
 \begin{frame}{Domain and Range Restriction}
 \begin{itemize}
     \item Let $A, B, R, S, T$ be sets.
@@ -384,7 +398,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 15
+% Slide 16
 \begin{frame}{Domain and Range Subtraction}
 \begin{itemize}
     \item Let $A, B, R, S, T$ be sets.
@@ -410,7 +424,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 16
+% Slide 17
 \begin{frame}{Relational Image}
 \begin{itemize}
     \item Suppose the relation $R : A \rel B$ and $S \rel A$
@@ -426,7 +440,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 17
+% Slide 18
 \begin{frame}{Inverse and Relational Composition}
     \begin{itemize}
         \item \textbf{Inverse:} $R^{-1}$ is the set $\{(b, a) : B \cross A \mid a R b \}$ or $R^{-1} \in B \rel A$
@@ -456,7 +470,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 18
+% Slide 19
 \begin{frame}{Recap on Functions}
     \begin{itemize}
         \item A (partial) function from a set $A$ to a set $B$, denoted by $f: A \pfun B$ is a subset $f$ of $A \cross B$ with the property that for each $a \in A$, there is \textbf{at most one} $b \in B$ with $(a, b) \in f$.
@@ -468,7 +482,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 19
+% Slide 20
 \begin{frame}{Function Overriding}
     \begin{itemize}
         \item Suppose $f, g: A \pfun B$, then $f \oplus g$ is the function $(\dom g \lefttrianglebar f) \cup g$.
@@ -487,7 +501,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 20
+% Slide 21
 \begin{frame}
     \frametitle{Specifying Functions}
     \begin{enumerate}
@@ -517,7 +531,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{enumerate}
 \end{frame}
 
-% Slide 21
+% Slide 22
 \begin{frame}[fragile]
     \frametitle{Specifying Functions}
     \begin{enumerate}
@@ -554,7 +568,7 @@ end
     \end{enumerate}
 \end{frame}
 
-% Slide 22
+% Slide 23
 \begin{frame}{Sequences}
     \begin{itemize}
         \item A sequence s of elements of a set $A$, denoted $s : \seq A$, is a function $s:\nat \pfun A$ where $\dom s = 1 \upto n$ for some natural number $n$.
@@ -569,7 +583,7 @@ end
     \end{itemize}
 \end{frame}
 
-% Slide 23
+% Slide 24
 \begin{frame}{Special Functions for Sequence}
     \begin{enumerate}
         \item Concatenation 
@@ -599,7 +613,7 @@ end
     \end{enumerate}
 \end{frame}
 
-% Slide 24
+% Slide 25
 \begin{frame}{Z Specification}
 \begin{itemize}
 \item As explained in an earlier slide, we can write Z Specification to formally specify requirements in \textbf{two distinct sections}
@@ -618,7 +632,7 @@ end
 \end{itemize}
 \end{frame}
 
-% Slide 25
+% Slide 26
 \begin{frame}[fragile]
 \frametitle{The \texttt{zed-csp} Package}
 \begin{itemize}
@@ -673,7 +687,7 @@ known = \dom phone
 \end{enumerate}
 \end{frame}
 
-% Slide 26
+% Slide 27
 \begin{frame}{State Schema}
     \begin{itemize}
         \item A \textbf{state schema} specifies a relationship between variable values
@@ -684,7 +698,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 27
+% Slide 28
 \begin{frame}{Operation Schema}
     \begin{itemize}
         \item The state schema provides a static view of the system.
@@ -707,7 +721,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 28
+% Slide 29
 \begin{frame}{Case Study: A Message Buffer}
     \begin{itemize}
         \item We are going to model a message buffer to learn about \textbf{schema specification}.
@@ -725,7 +739,7 @@ known = \dom phone
     \end{center}
 \end{frame}
 
-% Slide 29
+% Slide 30
 \begin{frame}{Formal Specification: Message Buffer}
 \begin{columns}
 \begin{column}{0.6\textwidth}
@@ -767,7 +781,7 @@ known = \dom phone
 \end{columns}
 \end{frame}
 
-% Slide 30
+% Slide 31
 \begin{frame}{Explanation: Predicate of the Join Operation}
     \begin{columns}
         \begin{column}{0.4\textwidth}
@@ -793,7 +807,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 31
+% Slide 32
 \begin{frame}{Formal Specification: Message Buffer (Continued)}
     \begin{columns}
         \begin{column}{0.63\textwidth}
@@ -823,7 +837,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 32
+% Slide 33
 \begin{frame}{Special States: Delta ($\Delta$) and Initial State ($_{INIT}$)} 
 \begin{enumerate}
 \item Delta ($\Delta$): To specify a \textbf{before} and \textbf{after} instance of the state schema for any operation.
@@ -860,7 +874,7 @@ known = \dom phone
 \end{enumerate}
 \end{frame}
 
-% Slide 33
+% Slide 34
 \begin{frame}{Schema Inclusion}
 \begin{itemize}
     \item Schema Inclusion is the act of including a schema in the declaration of another schema.
@@ -896,7 +910,7 @@ known = \dom phone
 \end{columns}
 \end{frame}
 
-% Slide 34
+% Slide 35
 \begin{frame}{Example: Schema Inclusion}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -928,7 +942,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 35
+% Slide 36
 \begin{frame}{Merging Schemas}
     \begin{itemize}
         \item \textbf{Type Compatability} is needed to merge schemas.
@@ -971,7 +985,7 @@ known = \dom phone
     \end{columns}    
 \end{frame}
 
-% Slide 36
+% Slide 37
 \begin{frame}{Extending Specifications: Slow Buffer and Slow Operations}
     \begin{itemize}
         \item Applying concepts such as \textbf{Schema Inclusion} and \textbf{Merging Schemas}, we can extend specifications similar to inheritance or creating specialized classes in Object-Oriented Programming. 
@@ -1022,7 +1036,7 @@ known = \dom phone
     \end{footnotesize}  
 \end{frame}
 
-% Slide 37
+% Slide 38
 \begin{frame}{Extending Specifications: Slow Buffer and Slow Operations (Full Form)}
     \begin{footnotesize}
         \begin{columns}
@@ -1081,7 +1095,7 @@ known = \dom phone
     \end{footnotesize}
 \end{frame}
 
-% Slide 38
+% Slide 39
 \begin{frame}{Reasoning About The Specification}
     \begin{itemize}
         \item Suppose, we want to verify that message buffer specified has the \textbf{FIFO property}.
@@ -1093,7 +1107,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 39
+% Slide 40
 \begin{frame}{Recorded Buffer and Operations}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -1131,7 +1145,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 40
+% Slide 41
 \begin{frame}{RecordedJoin: Expanded Schema}
     \begin{schema}{RecordedJoin}
         items, items': \seq MSG\\
@@ -1146,7 +1160,7 @@ known = \dom phone
     \end{schema}
 \end{frame}
 
-% Slide 41
+% Slide 42
 \begin{frame}{Proving the FIFO Property}
     \begin{itemize}
         \item How can we use the auxillary variables \texttt{inhist} and \texttt{outhist} to prove that the buffer satisifies the \textbf{FIFO property}?
@@ -1162,7 +1176,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 42
+% Slide 43
 \begin{frame}{Conjunction of Schemas}
     \begin{itemize}
         \item When using the conjunction ($\wedge$) operator on two schemas, it is equivalent to merging the two schemas.
@@ -1185,7 +1199,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 43
+% Slide 44
 \begin{frame}{Disjunction of Schemas}
     \begin{itemize}
         \item Using the conjunction ($\wedge$) operator on two schemas yields a different result.
@@ -1233,7 +1247,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 44
+% Slide 45
 \begin{frame}{Disjunction of Schemas: Example}
     \begin{itemize}
         \item Let $Flag ::= ok \mid error$ (The Flag type can be either 'ok' or 'error')
@@ -1270,7 +1284,7 @@ known = \dom phone
     \end{footnotesize}
 \end{frame}
 
-% Slide 45
+% Slide 46
 \begin{frame}{Composition of Schemas}
     \begin{itemize}
         \item Using the composition operator ($\comp$) on two schemas is typically used to combine the effects of two operations.
@@ -1290,7 +1304,8 @@ known = \dom phone
         \exists items'': \seq MSG \spot items'' = items \cat <msg?> \wedge items'' = <msg!> \cat items'
     \end{schema}
 \end{frame}
-% Slide 46
+
+% Slide 47
 \begin{frame}{Composition of Schemas in general}
     \begin{columns}
         \begin{column}{0.2\textwidth}
