@@ -1497,15 +1497,15 @@ known = \dom phone
 % Slide 58
 \begin{frame}{CSP Syntax}
     \begin{enumerate}
-        \item Prefix: $a \rightarrow P$
+        \item Prefix: $a \then P$
         \item Sequential Composition: $P;Q$
         \item Parallel Composition (Synchronous): $P \parallel[X] Q$
         \item Interleaving (Asynchronous): $P \interleave Q$
-        \item Choice: $a \rightarrow P \extchoice b \rightarrow Q$
-        \item Interrupt Process: $P \interrupt e \rightarrow Q$
+        \item Choice: $a \then P \extchoice b \then Q$
+        \item Interrupt Process: $P$ $\nabla$ $e \then Q$
     \end{enumerate}
 
-    \footnotetext{Note that in the lecture slides, the nabla symbol $\nabla$ is used for interrupt.}
+    \footnotetext{Note that in the \texttt{zed-csp} package, the interrupt symbol is $\interrupt$.}
 \end{frame}
 
 % Slide 59
@@ -1517,9 +1517,9 @@ known = \dom phone
         \item The \textbf{event a} is sometimes referred to as the guard of the process.
         \item Examples
         \begin{enumerate}
-            \item $VMU = coin \rightarrow STOP$
-            \item $SHORTLIFE = (beat \rightarrow (beat \rightarrow STOP)) = beat \rightarrow beat \rightarrow STOP$
-            \item $VMS = coin \rightarrow choc \rightarrow STOP$
+            \item $VMU = coin \then STOP$
+            \item $SHORTLIFE = (beat \then (beat \then STOP)) = beat \then beat \then STOP$
+            \item $VMS = coin \then choc \then STOP$
         \end{enumerate}
     \end{itemize}
 \end{frame}
@@ -1529,7 +1529,7 @@ known = \dom phone
     \begin{itemize}
         \item Let $\tick$ be the Termination event.
         \item The process which may only terminate is written as $SKIP$.
-        \item Let $SKIP = \tick \rightarrow STOP$.
+        \item Let $SKIP = \tick \then STOP$.
         \item The sequential composition of processes P and Q, written as $P;Q$, acts as P until P terminates by communicating $\tick$ and then proceeds to act as Q.
     \end{itemize}
 \end{frame}
@@ -1541,7 +1541,7 @@ known = \dom phone
         \item No event from $X$ may occur in $P \parallel[X] Q$ unless \textbf{jointly enabled} by both P and Q.
         \item When events from $X$ occur, they occur in both P and Q simultaneously, and are referred to as \textbf{synchronisations}. 
         \item Events \textbf{not from X} may occur in either P or Q seperately \textbf{but not jointly}.
-        \item Example: $(a \rightarrow P) \parallel[a] (c \rightarrow a \rightarrow Q)$
+        \item Example: $(a \then P) \parallel[a] (c \then a \then Q)$
         \begin{itemize}
             \item All \textbf{a} events must be Synchronous between the two processes.
         \end{itemize}
@@ -1557,19 +1557,19 @@ known = \dom phone
     \begin{itemize}
         \item $P \interleave Q$ denotes an asynchronous parallel composition between two processes \textbf{P} and \textbf{Q}.
         \item Both components \textbf{P} and \textbf{Q} \textbf{execute concurrently} without any synchronisation.
-        \item Example: $((a \rightarrow P) \interleave (c \rightarrow a \rightarrow Q))$
+        \item Example: $((a \then P) \interleave (c \then a \then Q))$
         \begin{itemize}
             \item One possible trace is $\trace{c, a, a}$, after which the process acts as $P \interleave Q$
             \begin{enumerate}
-                \item $c$ from $c \rightarrow a \rightarrow Q$ is engaged, leaving us with $((a \rightarrow P) \interleave (a \rightarrow Q))$
-                \item $a$ from $a \rightarrow P$ is engaged, leaving us with $(P \interleave (a \rightarrow Q))$
-                \item $a$ from $a \rightarrow Q$ is engaged, leaving us with $P \interleave Q$
+                \item $c$ from $c \then a \then Q$ is engaged, leaving us with $((a \then P) \interleave (a \then Q))$
+                \item $a$ from $a \then P$ is engaged, leaving us with $(P \interleave (a \then Q))$
+                \item $a$ from $a \then Q$ is engaged, leaving us with $P \interleave Q$
             \end{enumerate}
             \item Another possible trace is $\trace{a, c, a}$, after which the process acts as $P \interleave Q$
             \begin{enumerate}
-                \item $a$ from $a \rightarrow P$ is engaged, leaving us with $(P \interleave (c \rightarrow a \rightarrow Q))$
-                \item $c$ from $c \rightarrow a \rightarrow Q$ is engaged, leaving us with $(P \interleave (a \rightarrow Q))$
-                \item $a$ from $a \rightarrow Q$ is engaged, leaving us with $P \interleave Q$
+                \item $a$ from $a \then P$ is engaged, leaving us with $(P \interleave (c \then a \then Q))$
+                \item $c$ from $c \then a \then Q$ is engaged, leaving us with $(P \interleave (a \then Q))$
+                \item $a$ from $a \then Q$ is engaged, leaving us with $P \interleave Q$
             \end{enumerate}
         \end{itemize}
     \end{itemize}
@@ -1578,7 +1578,7 @@ known = \dom phone
 % Slide 63
 \begin{frame}{Choice}
     \begin{itemize}
-        \item In a general choice, $(a \rightarrow P) \extchoice (b \rightarrow Q)$, the process begins with both events \textbf{a} and \textbf{b} enabled.
+        \item In a general choice, $(a \then P) \extchoice (b \then Q)$, the process begins with both events \textbf{a} and \textbf{b} enabled.
         \item The subsequent behaviour depends on the event which occured.
         \begin{itemize}
             \item If the event which occured is \textbf{a}, the process will act as \textbf{P} afterwards.
@@ -1586,10 +1586,10 @@ known = \dom phone
         \end{itemize}
         \item There are other types of choices, namely external or internal choice in the CSP syntax.
         \item For most cases, general choice is sufficient, hence in this module, we focus on general choice only.
-        \item Example: $(a \rightarrow P) \extchoice (c \rightarrow a \rightarrow Q)$
+        \item Example: $(a \then P) \extchoice (c \then a \then Q)$
         \begin{itemize}
             \item If the first event is \textbf{a}, after which the process acts as $P$.
-            \item If the first event is \textbf{c}, after which the process acts as $a \rightarrow Q$.
+            \item If the first event is \textbf{c}, after which the process acts as $a \then Q$.
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -1598,12 +1598,12 @@ known = \dom phone
 \begin{frame}[fragile]
     \frametitle{Interrupt}
     \begin{itemize}
-        \item The interrupt process $P \interrupt e \rightarrow Q$ behaves as \textbf{process P} until the first occurrence of \textbf{event e} which then the control passes to \textbf{process Q}. 
-        \item When coding the specification, the keyword \textbf{interrupt} is used instead of the symbol $\interrupt$. 
+        \item The interrupt process $P$ $\nabla$ $e \then Q$ behaves as \textbf{process P} until the first occurrence of \textbf{event e} which then the control passes to \textbf{process Q}. 
+        \item When coding the specification, the keyword \textbf{interrupt} is used instead of the symbol $\nabla$. 
         \item For the System process, the first event can be a routine or an exception.
         \item After that, it still behaves as a System process.      
     \end{itemize}
-    \footnotetext{Note that in the lecture slides, the nabla symbol $\nabla$ is used for interrupt.}
+    \footnotetext{Note that in the \texttt{zed-csp} package, the interrupt symbol is $\interrupt$.}
 \begin{lstlisting}
 Err() = exception -> Err();
 Routine() = routine -> Routine();
@@ -1632,7 +1632,7 @@ System = VMC || CHOCLOV;
 \begin{itemize}
     \item As defined in lines 3 and 4 of the specification, the common events are the alphabets of VMC and CHOCLOV which are \textbf{coin}, \textbf{choc} and \textbf{bisc}.
     \item However, the process \textbf{CHOCLOV} does not have the event \textbf{bisc}.
-    \item In VMC, the \textbf{coin} event has to be engaged first before we can engage $choc \rightarrow VMC$
+    \item In VMC, the \textbf{coin} event has to be engaged first before we can engage $choc \then VMC$
     \item Hence, both VMC and CHOCLOV engages in the \textbf{coin} event first then the \textbf{choc} event before acting as $VMC \parallel CHOCLOV$ again.
 \end{itemize}
 \end{itemize}
@@ -1658,7 +1658,7 @@ System = VMC || CHOCLOV;
     \item After $\trace{coin, bisc}$, no event is possible.
     \item This is because now the \textbf{bisc} event is not common to both \textbf{VMC} and \textbf{CHOCLOV} processes.
     \item Hence, the \textbf{bisc} event can occur seperately.
-    \item After $\trace{coin, bisc}$ has occurred, the system would be stuck at $VMC \parallel choc \rightarrow CHOCLOV$.
+    \item After $\trace{coin, bisc}$ has occurred, the system would be stuck at $VMC \parallel choc \then CHOCLOV$.
     \item Since \textbf{coin} and \textbf{choc} are common events, neither events can be engaged synchronously as \textbf{coin} is a prefix for \textbf{choc}.
 \end{itemize}
 \end{itemize}
@@ -1681,7 +1681,7 @@ System = VMH || CUST;
     \end{itemize}
     \item Deadlocks can occur with the following trace $\trace{on, coin, bisc}$
     \begin{itemize}
-        \item The system will be stuck at $choc \rightarrow off \rightarrow VMH \parallel CUST$ and no event can be engaged.
+        \item The system will be stuck at $choc \then off \then VMH \parallel CUST$ and no event can be engaged.
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1725,11 +1725,11 @@ Are the following traces possible?
         \item $\{c, d\} \subseteq (\alpha P \cap \alpha Q)$
     \end{enumerate}
     \begin{itemize}
-        \item Law 4A: $(c \rightarrow P) \parallel (c \rightarrow Q) = c \rightarrow (P \parallel Q)$
-        \item Law 4B: $(c \rightarrow P) \parallel (d \rightarrow Q) = STOP$ if $c \neq d$
-        \item Law 5A: $(a \rightarrow P) \parallel (c \rightarrow Q) = a \rightarrow (P \parallel (c \rightarrow Q))$
-        \item Law 5A: $(c \rightarrow P) \parallel (b \rightarrow Q) = b \rightarrow ((c \rightarrow P) \parallel Q)$
-        \item Law 6: $(a \rightarrow P) \parallel (b \rightarrow Q) = a \rightarrow (P \parallel (b \rightarrow Q)) \extchoice b \rightarrow((a \rightarrow P) \parallel Q)$
+        \item Law 4A: $(c \then P) \parallel (c \then Q) = c \then (P \parallel Q)$
+        \item Law 4B: $(c \then P) \parallel (d \then Q) = STOP$ if $c \neq d$
+        \item Law 5A: $(a \then P) \parallel (c \then Q) = a \then (P \parallel (c \then Q))$
+        \item Law 5A: $(c \then P) \parallel (b \then Q) = b \then ((c \then P) \parallel Q)$
+        \item Law 6: $(a \then P) \parallel (b \then Q) = a \then (P \parallel (b \then Q)) \extchoice b \then((a \then P) \parallel Q)$
     \end{itemize}
 \end{frame}
 
@@ -1809,7 +1809,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 #assert College() deadlockfree; // Check if a property is satisifed.
 \end{lstlisting}
 \begin{itemize}
-    \item $\parallel x : \{1 \upto n\}$ @ P(x) is equivalent to $P(1) \parallel \ldots \parallel P(n)$
+    \item $\parallel x : \{1 \upto n\} \at P(x)$ is equivalent to $P(1) \parallel \ldots \parallel P(n)$
     \item \texttt{\#assert College() deadlockfree} is the property we want to verify.
     \item If the property isn't always True, the Model Checker gives a counter example: $\trace{get.1.0, get.0.1}$
 \end{itemize}
@@ -1817,5 +1817,255 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 
 % Slide 74
 \section{Process Analysis Toolkit (PAT)}
+
+% Slide 75
+\begin{frame}{Introduction to Process Analysis Toolkit (PAT)}
+\begin{itemize}
+    \item The \hyperlink{https://www.comp.nus.edu.sg/~pat/OnlineHelp/index.htm}{Process Analysis Toolkit} is a self-contained framework to support composing, simulating and reasoning of concurrent, real-time systems and other possible domains.    
+    \item In PAT 3.5, there are 11 developed modules provided to model a variety of different systems ranging from \textbf{Communicating Sequential Processes (CSP) Module}, \textbf{Real-Time System Module} to the \textbf{Web Service Module}. 
+    \item In this module, we will be focusing on the \textbf{Communicating Sequential Programs (CSP\#) module}
+\end{itemize}
+\end{frame}
+
+% Slide 76
+\begin{frame}{Introduction to PAT's CSP\#}
+    \begin{itemize}
+        \item PAT's CSP\# module supports a rich modeling language named CSP\#(pronounced 'CSP sharp', short for Communicating Sequential Programs) \item CSP\# combines high-level modeling operators like (conditional or non-deterministic) choices, interrupt, (alphabetized) parallel composition, interleaving, hiding, asynchronous message passing channel, etc., with programmer-favored low-level constructs like variables, arrays, if-then-else, while, etc $\ldots$
+        \item CSP\# offers great flexibility on how to model systems. For instance, communication among processes can be either based on shared memory (using global variables) or message passing (using asynchronous message passing or CSP-style multi-party barrier synchronization).
+        \item The high-level operators are based on the classic process algebra Communicating Sequential Processes (CSP). 
+        \item The design principle for CSP\# is to maximally keep the original CSP as a sub-language of CSP\#, whilst offering a connection to the data states and executable data operations.
+    \end{itemize}
+\end{frame}
+
+% Slide 77
+\begin{frame}{Operational Semantics}
+    \begin{itemize}
+        \item Earlier, we want a way to automatically reason if a model satisfies a certain property. 
+        \item Hence, we will need to study \textbf{Operational Semantics} to understand how a process transitions from one state to another during the execution of CSP Specification.
+        \item \textbf{Operational Semantics} tell us at given a system state, what are the possible actions the system can perform and what are the outcomes (next state)?
+        \begin{itemize}
+            \item Example: $P \xrightarrow{a} Q$
+            \item The above is read as: If process P engages event a, it will become process Q.
+            \item In most cases the states are the process and actions are the events.
+            \item We will see in later examples what are states and actions.
+        \end{itemize}
+        \item Operational Semantics can be presented using a set of inference rules in the following form similar to the philosophy of logic.
+        
+        \begin{axdef}
+            Premises
+            \where
+            Conclusion
+        \end{axdef}
+    \end{itemize}
+\end{frame}
+
+% Slide 78
+\begin{frame}{Operational Semantics: Primitives}
+    \begin{itemize}
+        \item STOP (A process that does nothing)
+        \item SKIP
+        \begin{axdef}
+            \where
+            SKIP \xrightarrow{\tick} STOP
+        \end{axdef}
+        SKIP can only engage the \textbf{termination event}, afterwards it becomes STOP.
+        \item Prefixing
+        \begin{axdef}
+            \where
+            (a \then P) \xrightarrow{a} P
+        \end{axdef}
+        $a \then P$ can only engage event \textbf{a}, afterwards it becomes process \textbf{P}.
+    \end{itemize}
+\end{frame}
+
+% Slide 79
+\begin{frame}{Operational Semantics}
+\begin{columns}
+    \begin{column}{0.25\textwidth}
+    \textbf{General Choice}
+    \begin{itemize}
+        \item If P is choosen
+    \end{itemize}
+    \begin{axdef}
+        P \xrightarrow{a} P'
+        \where
+        (P \extchoice Q) \xrightarrow{a} P'
+    \end{axdef}
+    \begin{itemize}
+        \item If Q is chosen
+    \end{itemize}
+    \begin{axdef}
+        Q \xrightarrow{a} Q'
+        \where
+        (P \extchoice Q) \xrightarrow{a} Q'
+    \end{axdef}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+        \textbf{Sequential Composition}
+        \begin{itemize}
+            \item In process P;Q, P takes control first and Q starts only when P has finished.
+            \item Let $\tick$ be the termination event.
+        \end{itemize}
+        \begin{axdef}
+            P \xrightarrow{a} P'
+            \where
+            (P ; Q) \xrightarrow{a} (P' ; Q)
+        \end{axdef}
+        
+        \begin{axdef}
+            P \xrightarrow{\tick} P'
+            \where
+            (P \extchoice Q) \xrightarrow{\tick} Q
+        \end{axdef}
+    \end{column}
+    \begin{column}{0.35\textwidth}
+        \textbf{Interrupt}
+        \begin{itemize}
+            \item In process P $\nabla$ Q, whenever an event is engaged by Q, P is interrupted and the control is transferred to Q.
+        \end{itemize}
+        \begin{axdef}
+            P \xrightarrow{a} P'
+            \where
+            (P \nabla Q) \xrightarrow{a} (P' \nabla Q)
+        \end{axdef}
+
+        \begin{axdef}
+            Q \xrightarrow{a} Q'
+            \where
+            (P \nabla Q) \xrightarrow{a} Q
+        \end{axdef}
+    \end{column}
+\end{columns}
+
+\end{frame}
+
+% Slide 80
+\begin{frame}{Operational Semantics: Example \#1}
+    \begin{itemize}
+        \item Let $VMS = coin \then (choc \then VMS \extchoice bisc \then VMS)$ 
+    \end{itemize}
+
+    \begin{block}{Operation Semantics}
+        Step 1. $VMS \xrightarrow{coin} (choc \then VMS \extchoice bisc \then VMS)$\\
+        Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{choc} VMS$\\
+        Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{bisc} VMS$
+    \end{block}
+    
+\end{frame}
+
+% Slide 81
+\begin{frame}{Labelled Transition System (LTS)}
+    \begin{itemize}
+        \item A \textbf{Labelled Transition System} contains a set of states, an initial state (where the system starts from) and a labelled transition relation.
+    \end{itemize}
+    \begin{center}
+        \includegraphics[scale=0.08]{../images/LTS.jpeg}
+    \end{center}
+    \begin{itemize}
+        \item Let $VMS = coin \then (choc \then VMS \extchoice bisc \then VMS)$ 
+        \item State 1 represents the process VMS.
+        \item State 2 represents the process $(choc \then VMS \extchoice bisc \then VMS)$
+    \end{itemize}
+\end{frame}
+
+% Slide 82
+\begin{frame}{Operational Semantics}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Interleaving}
+            \begin{itemize}
+                \item In process $P \interleave Q$, P and Q behaves independently.
+                \item The exception is the termination, hence assume a is not $\tick$.
+            \end{itemize}
+            \begin{axdef}
+                P \xrightarrow{a} P'
+                \where
+                (P \interleave Q) \xrightarrow{a} (P' \interleave Q)
+            \end{axdef}
+            \begin{axdef}
+                Q \xrightarrow{a} Q'
+                \where
+                (P \interleave Q) \xrightarrow{a} (P \interleave Q')
+            \end{axdef}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Synchronization}
+            \begin{itemize}
+                \item In process $P \parallel[X] Q$, no event from X may occur unless jointly by both P and Q.
+                \item When events from X do occur, they occur in P and Q simultaneously.
+            \end{itemize}
+            \begin{footnotesize}
+                \begin{axdef}
+                    P \xrightarrow{a} P' , a \not \in X
+                    \where
+                    (P \parallel[X] Q) \xrightarrow{a} (P' \parallel[X] Q)
+                \end{axdef}
+                \begin{axdef}
+                    Q \xrightarrow{a} Q' , a \not \in X
+                    \where
+                    (P \parallel[X] Q) \xrightarrow{a} (P \parallel[X] Q')
+                \end{axdef}
+                \begin{axdef}
+                    P \xrightarrow{a} P', Q \xrightarrow{a} Q' , a \in X
+                    \where
+                    (P \parallel[X] Q) \xrightarrow{a}  (P' \parallel[X] Q')
+            \end{axdef}
+            \end{footnotesize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 83
+\begin{frame}{Operational Semantics: Example \#2}
+Given the process $a \then P \parallel[a] (c \then a \then Q)$
+\begin{enumerate}
+    \item $(a \then P \parallel[a] (c \then a \then Q)) \xrightarrow{c} (a \then P \parallel[a] (a \then Q))$
+    
+    Only event \textbf{c} can be engaged at first as \textbf{a} is a common event in both $a \then P$ and $c \then a \then Q$.
+
+    \item $(a \then P \parallel[a] (a \then Q)) \xrightarrow{a} (P \parallel[a] Q)$
+    
+    Engage the common event \textbf{a} on both $a \then P$ and $a \then Q$.
+\end{enumerate}
+    
+\end{frame}
+
+% Slide 84
+\begin{frame}{Operational Semantics: Example \#3}
+    \begin{itemize}
+        \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
+        \item $CHOCLOV = choc \then CHOCLOV \extchoice coin \then choc \then CHOCLOV$
+    \end{itemize}
+    \begin{enumerate}
+        \item How would the process $VMC \parallel[A] CHOCLOV$ behave when $A = \set{coin, choc, bisc}$
+        \begin{itemize}
+            \item Step 1: $VMC \parallel[A] CHOCLOV \xrightarrow{coin} (choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV)$
+            \item Step 2: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] CHOCLOV$
+        \end{itemize}
+    \end{enumerate}
+    \begin{center}
+        \includegraphics[scale=0.08]{../images/L3E3.jpeg}
+    \end{center}
+\end{frame}
+
+% Slide 85
+\begin{frame}{Operational Semantics Example: \#4}
+    \begin{itemize}
+        \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
+        \item $CHOCLOV = choc \then CHOCLOV \extchoice coin \then choc \then CHOCLOV$
+    \end{itemize}
+    \begin{enumerate}
+    \setcounter{enumi}{1}
+    \item How would the process $VMC \parallel[\set{coin, choc}] CHOCLOV$ or equivalently $VMC \parallel CHOCLOV$ behave?
+    \begin{itemize}
+        \item Step 1: $VMC \parallel CHOCLOV \xrightarrow{coin} (choc \then VMC \extchoice bisc \then VMC) \parallel (choc \then CHOCLOV)$
+        \item Step 2: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] CHOCLOV$
+        \item Step 2: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] (choc \then CHOCLOV)$
+    \end{itemize}
+    \end{enumerate}
+    \begin{center}
+        \includegraphics[scale=0.08]{../images/L3E4.jpeg}
+    \end{center}
+\end{frame}
 
 \end{document}
