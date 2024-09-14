@@ -62,6 +62,14 @@ tabsize=2
 \author{Kevin Toh}
 \date{}
 
+\AtBeginSection[]
+{
+    \begin{frame}
+        \frametitle{Table of Contents}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
 \begin{document}
 
 % Slide 1
@@ -70,6 +78,9 @@ tabsize=2
 \end{frame}
 
 % Slide 2
+\section{Introduction and Latex Setup}  
+
+% Slide 3
 \begin{frame}{Introduction to Formal Methods}
     \begin{itemize}
         \item Requirements are difficult to define because its written in \textbf{Natural Language} which can be imprecise and ambiguous at times.
@@ -80,7 +91,30 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 3
+% Slide 4
+\begin{frame}[fragile]
+    \frametitle{Latex Setup}
+    \begin{itemize}
+    \item The Latex package that we will be using is \texttt{zed-csp}
+    \item \textbf{Setup Code: }
+    \begin{lstlisting}[language=tex]
+    % For latex document
+    \documentstyle[12pt,zed]{article}
+    
+    % For beamer slides
+    \usepackage{zed-csp}  
+    
+    \begin{document}
+    \end{document}
+    \end{lstlisting}
+    \item \href{https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}{Reference: https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}
+    \end{itemize}
+    \end{frame}
+
+% Slide 5
+\section{Z Specification}  
+
+% Slide 6
 \begin{frame}{The Z Specification Language}
     \begin{itemize}
         \item Based on set theory and mathematical logic
@@ -102,27 +136,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 4
-\begin{frame}[fragile]
-\frametitle{Latex Setup}
-\begin{itemize}
-\item The Latex package that we will be using is \texttt{zed-csp}
-\item \textbf{Setup Code: }
-\begin{lstlisting}[language=tex]
-% For latex document
-\documentstyle[12pt,zed]{article}
-
-% For beamer slides
-\usepackage{zed-csp}  
-
-\begin{document}
-\end{document}
-\end{lstlisting}
-\item \href{https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}{Reference: https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}
-\end{itemize}
-\end{frame}
-
-% Slide 5
+% Slide 7
 \begin{frame}{Recap on Predicates and Logic}
     \begin{block}{Predicate}
         A statement that is either true or false.
@@ -146,7 +160,7 @@ tabsize=2
     \end{block}
 \end{frame}
 
-% Slide 6
+% Slide 8
 \begin{frame}{Recap on Quantifiers}
     \begin{enumerate}
         \item Universal Quantifier ($\forall$)
@@ -176,7 +190,7 @@ tabsize=2
     \end{block}
 \end{frame}
 
-% Slide 7
+% Slide 9
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item A set is a collection of elements (or members)
@@ -208,7 +222,7 @@ tabsize=2
     \end{block}
 \end{frame}
 
-% Slide 8
+% Slide 10
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item Set Expressions
@@ -238,7 +252,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 9
+% Slide 11
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item Subset ($\subseteq$): If $S$ and $T$ are sets, $S \subset T$ is a predicate equivalent to $\forall s : S \spot s \in T$.
@@ -268,7 +282,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 10
+% Slide 12
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item Set Operations
@@ -301,7 +315,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 11
+% Slide 13
 \begin{frame}{Tuples and Cartesian Product}
     \begin{itemize}
         \item An n-tuple $(x_1, \ldots, x_n)$ is present in the Cartesian Product $\mathbf{a_1 \times \ldots \times a_n}$ if and only if each element $x_i$ is an element of the corresponding set $\mathbf{a_i}$. 
@@ -315,7 +329,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 12
+% Slide 14
 \begin{frame}{Recap on Relations}
     \begin{itemize}
         \item A relation $R$ from sets $A$ to $B$, is declared as $R : A \rel B$ is a subset of $A \cross B$
@@ -333,7 +347,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 13
+% Slide 15
 \begin{frame}
     \frametitle{Types in Z Specification}
     \begin{itemize}
@@ -349,7 +363,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 14
+% Slide 16
 \begin{frame}[fragile]
 \frametitle{Modelling using Z Specification}
 \begin{itemize}
@@ -378,7 +392,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 15
+% Slide 17
 \begin{frame}{Domain and Range Restriction}
 \begin{itemize}
     \item Let $A, B, R, S, T$ be sets.
@@ -398,7 +412,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 16
+% Slide 18
 \begin{frame}{Domain and Range Subtraction}
 \begin{itemize}
     \item Let $A, B, R, S, T$ be sets.
@@ -424,7 +438,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 17
+% Slide 19
 \begin{frame}{Relational Image}
 \begin{itemize}
     \item Suppose the relation $R : A \rel B$ and $S \rel A$
@@ -440,7 +454,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 18
+% Slide 20
 \begin{frame}{Inverse and Relational Composition}
     \begin{itemize}
         \item \textbf{Inverse:} $R^{-1}$ is the set $\{(b, a) : B \cross A \mid a R b \}$ or $R^{-1} \in B \rel A$
@@ -470,7 +484,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 19
+% Slide 21
 \begin{frame}{Recap on Functions}
     \begin{itemize}
         \item A (partial) function from a set $A$ to a set $B$, denoted by $f: A \pfun B$ is a subset $f$ of $A \cross B$ with the property that for each $a \in A$, there is \textbf{at most one} $b \in B$ with $(a, b) \in f$.
@@ -482,7 +496,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 20
+% Slide 22
 \begin{frame}{Function Overriding}
     \begin{itemize}
         \item Suppose $f, g: A \pfun B$, then $f \oplus g$ is the function $(\dom g \lefttrianglebar f) \cup g$.
@@ -501,7 +515,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 21
+% Slide 23
 \begin{frame}
     \frametitle{Specifying Functions}
     \begin{enumerate}
@@ -531,7 +545,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{enumerate}
 \end{frame}
 
-% Slide 22
+% Slide 24
 \begin{frame}[fragile]
     \frametitle{Specifying Functions}
     \begin{enumerate}
@@ -568,7 +582,7 @@ end
     \end{enumerate}
 \end{frame}
 
-% Slide 23
+% Slide 25
 \begin{frame}{Sequences}
     \begin{itemize}
         \item A sequence s of elements of a set $A$, denoted $s : \seq A$, is a function $s:\nat \pfun A$ where $\dom s = 1 \upto n$ for some natural number $n$.
@@ -583,7 +597,7 @@ end
     \end{itemize}
 \end{frame}
 
-% Slide 24
+% Slide 26
 \begin{frame}{Special Functions for Sequence}
     \begin{enumerate}
         \item Concatenation 
@@ -613,7 +627,7 @@ end
     \end{enumerate}
 \end{frame}
 
-% Slide 25
+% Slide 27
 \begin{frame}{Z Specification}
 \begin{itemize}
 \item As explained in an earlier slide, we can write Z Specification to formally specify requirements in \textbf{two distinct sections}
@@ -632,7 +646,7 @@ end
 \end{itemize}
 \end{frame}
 
-% Slide 26
+% Slide 28
 \begin{frame}[fragile]
 \frametitle{The \texttt{zed-csp} Package}
 \begin{itemize}
@@ -687,7 +701,7 @@ known = \dom phone
 \end{enumerate}
 \end{frame}
 
-% Slide 27
+% Slide 29
 \begin{frame}{State Schema}
     \begin{itemize}
         \item A \textbf{state schema} specifies a relationship between variable values
@@ -698,7 +712,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 28
+% Slide 30
 \begin{frame}{Operation Schema}
     \begin{itemize}
         \item The state schema provides a static view of the system.
@@ -721,7 +735,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 29
+% Slide 31
 \begin{frame}{Case Study: A Message Buffer}
     \begin{itemize}
         \item We are going to model a message buffer to learn about \textbf{schema specification}.
@@ -739,7 +753,7 @@ known = \dom phone
     \end{center}
 \end{frame}
 
-% Slide 30
+% Slide 32
 \begin{frame}{Formal Specification: Message Buffer}
 \begin{columns}
 \begin{column}{0.6\textwidth}
@@ -781,7 +795,7 @@ known = \dom phone
 \end{columns}
 \end{frame}
 
-% Slide 31
+% Slide 33
 \begin{frame}{Explanation: Predicate of the Join Operation}
     \begin{columns}
         \begin{column}{0.4\textwidth}
@@ -807,7 +821,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 32
+% Slide 34
 \begin{frame}{Formal Specification: Message Buffer (Continued)}
     \begin{columns}
         \begin{column}{0.63\textwidth}
@@ -837,7 +851,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 33
+% Slide 35
 \begin{frame}{Special States: Delta ($\Delta$) and Initial State ($_{INIT}$)} 
 \begin{enumerate}
 \item Delta ($\Delta$): To specify a \textbf{before} and \textbf{after} instance of the state schema for any operation.
@@ -874,7 +888,7 @@ known = \dom phone
 \end{enumerate}
 \end{frame}
 
-% Slide 34
+% Slide 36
 \begin{frame}{Schema Inclusion}
 \begin{itemize}
     \item Schema Inclusion is the act of including a schema in the declaration of another schema.
@@ -910,7 +924,7 @@ known = \dom phone
 \end{columns}
 \end{frame}
 
-% Slide 35
+% Slide 37
 \begin{frame}{Example: Schema Inclusion}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -942,7 +956,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 36
+% Slide 38
 \begin{frame}{Merging Schemas}
     \begin{itemize}
         \item \textbf{Type Compatability} is needed to merge schemas.
@@ -985,7 +999,7 @@ known = \dom phone
     \end{columns}    
 \end{frame}
 
-% Slide 37
+% Slide 39
 \begin{frame}{Extending Specifications: Slow Buffer and Slow Operations}
     \begin{itemize}
         \item Applying concepts such as \textbf{Schema Inclusion} and \textbf{Merging Schemas}, we can extend specifications similar to inheritance or creating specialized classes in Object-Oriented Programming. 
@@ -1036,7 +1050,7 @@ known = \dom phone
     \end{footnotesize}  
 \end{frame}
 
-% Slide 38
+% Slide 40
 \begin{frame}{Extending Specifications: Slow Buffer and Slow Operations (Full Form)}
     \begin{footnotesize}
         \begin{columns}
@@ -1095,7 +1109,7 @@ known = \dom phone
     \end{footnotesize}
 \end{frame}
 
-% Slide 39
+% Slide 41
 \begin{frame}{Reasoning About The Specification}
     \begin{itemize}
         \item Suppose, we want to verify that message buffer specified has the \textbf{FIFO property}.
@@ -1107,7 +1121,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 40
+% Slide 42
 \begin{frame}{Recorded Buffer and Operations}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -1145,7 +1159,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 41
+% Slide 43
 \begin{frame}{RecordedJoin: Expanded Schema}
     \begin{schema}{RecordedJoin}
         items, items': \seq MSG\\
@@ -1160,7 +1174,7 @@ known = \dom phone
     \end{schema}
 \end{frame}
 
-% Slide 42
+% Slide 44
 \begin{frame}{Proving the FIFO Property}
     \begin{itemize}
         \item How can we use the auxillary variables \texttt{inhist} and \texttt{outhist} to prove that the buffer satisifies the \textbf{FIFO property}?
@@ -1176,7 +1190,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 43
+% Slide 45
 \begin{frame}{Conjunction of Schemas}
     \begin{itemize}
         \item When using the conjunction ($\wedge$) operator on two schemas, it is equivalent to merging the two schemas.
@@ -1199,7 +1213,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 44
+% Slide 46
 \begin{frame}{Disjunction of Schemas}
     \begin{itemize}
         \item Using the conjunction ($\wedge$) operator on two schemas yields a different result.
@@ -1247,7 +1261,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 45
+% Slide 47
 \begin{frame}{Disjunction of Schemas: Example}
     \begin{itemize}
         \item Let $Flag ::= ok \mid error$ (The Flag type can be either 'ok' or 'error')
@@ -1284,7 +1298,7 @@ known = \dom phone
     \end{footnotesize}
 \end{frame}
 
-% Slide 46
+% Slide 48
 \begin{frame}{Composition of Schemas}
     \begin{itemize}
         \item Using the composition operator ($\comp$) on two schemas is typically used to combine the effects of two operations.
@@ -1305,7 +1319,7 @@ known = \dom phone
     \end{schema}
 \end{frame}
 
-% Slide 47
+% Slide 49
 \begin{frame}{Composition of Schemas in general}
     \begin{columns}
         \begin{column}{0.2\textwidth}
@@ -1340,5 +1354,468 @@ known = \dom phone
         \exists x'': T_1; y'': T_2 \spot Q_{1}(x, x', y, y', t_{3}?, t_{4}!) \wedge Q_{2}(x, x', y, y', t_{5}?, t_{6}!)
     \end{schema}
 \end{frame}
+
+% Slide 50
+\section{Communicating Sequential Processes (CSP)}
+
+% Slide 51
+\begin{frame}{Introduction to CSP}
+    \begin{itemize}
+        \item \textbf{Communicating Sequential Processes (CSP)} is a formal language to describe patterns interaction between concurrent processes in computer systems.
+        \item CSP was created by \textbf{Tony Hoare} to reason about the behaviour of concurrent systems.
+        \item CSP provides \textbf{event based} notation primarily aimed at describing the sequencing of behaviour within a process and the synchronisation of behaviour (or communication) between processes.
+        \item In CSP, there are two main fundamental concepts
+        \begin{enumerate}
+            \item Process
+            \item Event
+        \end{enumerate}
+        \item Events represent a co-operative synchronisation between process and environment.
+        \item Both process and environment may control the behaviour of each other by enabling or refusing certain events or sequences of events.
+    \end{itemize}
+\end{frame}
+
+% Slide 52
+\begin{frame}{Recap: Process State Model}
+    \begin{itemize}
+        \item To gain a better understanding of \textbf{Communicating Sequential Processes}, revisit the first half of \textbf{CS2106: Operating Systems} where Processes, Concurrency, Synchronisation and Semaphores were covered.
+        \item The Process State Model is shown here to help you visualize potential process behaviour that can be modelled using CSP.
+    \end{itemize}
+    \begin{center}
+        \includegraphics[scale=0.125]{../images/process.png}
+    \end{center}
+\end{frame}
+
+% Slide 53
+\begin{frame}{Specifying a Process}
+    \begin{itemize}
+        \item A process is determined or specified by what it can do.
+        \item In other words, a process is defined by its behaviour, which are the events that we can observe.
+        \item The perceived behaviour of a process will depend on the observer.
+        \item In this course, we are mainly concerned with specifying the interaction between a system and its environment which is also the \textbf{external or visible behaviour}.
+    \end{itemize}
+\end{frame}
+
+% Slide 54
+\begin{frame}{Concepts in CSP: Events}
+    \begin{itemize}
+        \item A process engages in \textbf{events}.
+        \item Each event is an atomic action.
+        \begin{block}{Alphabet}
+            The \textbf{set of events} a process can possibly engage in is the \textbf{alphabet} of the process.
+        \end{block}
+        \item Example: Chocolate Vending Machine
+        \item Events for a chocolate vending machine
+        \begin{enumerate}
+            \item coin - insert a coin
+            \item choc - extract a chocolate
+        \end{enumerate}
+        \item The alphabet of a chocolate vending machine is $\{coin, choc\}$
+    \end{itemize}
+\end{frame}
+
+% Slide 55
+\begin{frame}{Concepts in CSP: Trace}
+    \begin{block}{Trace}
+        A finite sequence of events
+    \end{block}
+    \begin{itemize}
+        \item A deterministic process is specified by the set of processes denoting its possible behaviour.
+        \item Any execution of the process will be one of these sequences.
+        \item Example: The traces of the chocolate vending machine are:
+        \begin{itemize}
+            \item $\nil$
+            \item $\trace{coin}$
+            \item $\trace{coin, choc}$
+            \item $\trace{coin, choc, coin}$
+            \item $\ldots$
+        \end{itemize}
+        \item Any execution of the process will be one of the above sequences or traces. 
+        \item If $s \cat t$ is a trace of a process, then $s$ is also a trace of a process. This means that set of traces is prefixed closed.
+        \begin{itemize}
+            \item Example: Let $s = \trace{coin, choc}, t = \trace{coin}$, then $s \cat t = \trace{coin, choc, coin}$.
+        \end{itemize}
+    \end{itemize}
+
+\end{frame}
+
+% Slide 56
+\begin{frame}{Notations and Conventions}
+    \begin{itemize}
+        \item \textbf{Events} are denoted in \textbf{lower case}
+        \begin{itemize}
+            \item Example: $x, y, z$ are variables that denote events.
+        \end{itemize}
+        \item \textbf{Processes} are denoted in \textbf{upper case}
+        \begin{itemize}
+            \item Example: $X, Y, Z$ are variables that denote processes.
+        \end{itemize}
+        \item The \textbf{alphabet} of a process $P$ is denoted by $\alpha P$
+        \item The set of traces of $P$ is denoted by \texttt{traces(P)}
+        \item \textbf{Trace Notation}
+        \begin{itemize}
+            \item If $A$ is a set of events, then $\seq A$ denotes the set of all finite sequences of events from $A$.
+            \item In this scenario, \texttt{$\alpha$ P = A} and \texttt{trace(P) = $\seq A$}
+            \item Let $s, t : \seq A$, $s \cat t$ be the concatenation of $s$ with $t$.
+            \item We define the relation $<=$ to be the \textbf{sequence prefix} of two sequences.
+            \begin{axdef}
+                <= : \seq A \rel \seq A
+                \where
+                s <= t \Leftrightarrow \exists u : \seq A \spot s \cat u = t
+            \end{axdef}
+            \item $s^n = s \cat s \cat s \cat \ldots \cat s$ denotes the event s concatenated with itself $n$ times.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 57
+\begin{frame}{Examples of Process Specification using CSP}
+    \begin{enumerate}
+        \item Let $STOP_{A}$ be the process with alphabet $A$ that can do nothing.
+        \begin{itemize}
+            \item $traces(STOP_{A}) = \{\nil\}$
+        \end{itemize}
+        \item Let CLOCK be the process with $\alpha CLOCK = {tick}$ which can 'tick' at any time.
+        \begin{itemize}
+            \item $traces(Clock) = tick^{*}$ where $* \geq 0$
+        \end{itemize}
+        \item Let VM be the process with $\alpha VM = \{coin, choc\}$ which repeatedly supplies a chocolate after a coin has been inserted.
+        \begin{itemize}
+            \item $traces(VM) = \{s: \seq \{coin, choc\} \mid \exists n : \nat \spot s <=$ $\trace{coin, choc}^{n} \}$
+            \item Note: $<=$ is the sequence prefix relation from the previous slide.
+        \end{itemize}
+        \item Let WALK be a one-dimensional random walk process with $\alpha WALK = \{left, right\}$.
+        \begin{itemize}
+            \item $traces(WALK) = (left \vee right)^{*}$ where $* \geq 0$
+        \end{itemize}
+        \item Let LIFE be the process with $\alpha LIFE = \{beat\}$ which can stop (die) at any time.
+        \begin{itemize}
+            \item $traces(LIFE) = beat^{*}$ where $* \geq 0$
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+% Slide 58
+\begin{frame}{CSP Syntax}
+    \begin{enumerate}
+        \item Prefix: $a \rightarrow P$
+        \item Sequential Composition: $P;Q$
+        \item Parallel Composition (Synchronous): $P \parallel[X] Q$
+        \item Interleaving (Asynchronous): $P \interleave Q$
+        \item Choice: $a \rightarrow P \extchoice b \rightarrow Q$
+        \item Interrupt Process: $P \interrupt e \rightarrow Q$
+    \end{enumerate}
+
+    \footnotetext{Note that in the lecture slides, the nabla symbol $\nabla$ is used for interrupt.}
+\end{frame}
+
+% Slide 59
+\begin{frame}{Prefix}
+    \begin{itemize}
+        \item A process which may participate in \textbf{event a} then act according to \textbf{process description P} is written as: \texttt{a -> P}.
+        \item \textbf{a} is the event prefix to \textbf{P}.
+        \item The \textbf{event a} is initially enabled by the process and occurs as soon as it is requested by its environment. All other events are refused initially.
+        \item The \textbf{event a} is sometimes referred to as the guard of the process.
+        \item Examples
+        \begin{enumerate}
+            \item $VMU = coin \rightarrow STOP$
+            \item $SHORTLIFE = (beat \rightarrow (beat \rightarrow STOP)) = beat \rightarrow beat \rightarrow STOP$
+            \item $VMS = coin \rightarrow choc \rightarrow STOP$
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+% Slide 60
+\begin{frame}{Sequential Composition ($P;Q$)}
+    \begin{itemize}
+        \item Let $\tick$ be the Termination event.
+        \item The process which may only terminate is written as $SKIP$.
+        \item Let $SKIP = \tick \rightarrow STOP$.
+        \item The sequential composition of processes P and Q, written as $P;Q$, acts as P until P terminates by communicating $\tick$ and then proceeds to act as Q.
+    \end{itemize}
+\end{frame}
+
+% Slide 61
+\begin{frame}{Parallel Composition}
+    \begin{itemize}
+        \item The parallel composition of \textbf{processes P and Q} synchronised on the \textbf{event set X} is written as $P \parallel[X] Q$.
+        \item No event from $X$ may occur in $P \parallel[X] Q$ unless \textbf{jointly enabled} by both P and Q.
+        \item When events from $X$ occur, they occur in both P and Q simultaneously, and are referred to as \textbf{synchronisations}. 
+        \item Events \textbf{not from X} may occur in either P or Q seperately \textbf{but not jointly}.
+        \item Example: $(a \rightarrow P) \parallel[a] (c \rightarrow a \rightarrow Q)$
+        \begin{itemize}
+            \item All \textbf{a} events must be Synchronous between the two processes.
+        \end{itemize}
+        \item Often, it is simply written as $P \parallel Q$ where the common event set $X = \alpha P \cap \alpha Q$ is omitted.
+        \begin{itemize}
+            \item When $P \parallel Q$ is given, we still know that all common events in $X = \alpha P \cap \alpha Q$ must be synchronous between P and Q.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 62
+\begin{frame}{Interleaving}
+    \begin{itemize}
+        \item $P \interleave Q$ denotes an asynchronous parallel composition between two processes \textbf{P} and \textbf{Q}.
+        \item Both components \textbf{P} and \textbf{Q} \textbf{execute concurrently} without any synchronisation.
+        \item Example: $((a \rightarrow P) \interleave (c \rightarrow a \rightarrow Q))$
+        \begin{itemize}
+            \item One possible trace is $\trace{c, a, a}$, after which the process acts as $P \interleave Q$
+            \begin{enumerate}
+                \item $c$ from $c \rightarrow a \rightarrow Q$ is engaged, leaving us with $((a \rightarrow P) \interleave (a \rightarrow Q))$
+                \item $a$ from $a \rightarrow P$ is engaged, leaving us with $(P \interleave (a \rightarrow Q))$
+                \item $a$ from $a \rightarrow Q$ is engaged, leaving us with $P \interleave Q$
+            \end{enumerate}
+            \item Another possible trace is $\trace{a, c, a}$, after which the process acts as $P \interleave Q$
+            \begin{enumerate}
+                \item $a$ from $a \rightarrow P$ is engaged, leaving us with $(P \interleave (c \rightarrow a \rightarrow Q))$
+                \item $c$ from $c \rightarrow a \rightarrow Q$ is engaged, leaving us with $(P \interleave (a \rightarrow Q))$
+                \item $a$ from $a \rightarrow Q$ is engaged, leaving us with $P \interleave Q$
+            \end{enumerate}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 63
+\begin{frame}{Choice}
+    \begin{itemize}
+        \item In a general choice, $(a \rightarrow P) \extchoice (b \rightarrow Q)$, the process begins with both events \textbf{a} and \textbf{b} enabled.
+        \item The subsequent behaviour depends on the event which occured.
+        \begin{itemize}
+            \item If the event which occured is \textbf{a}, the process will act as \textbf{P} afterwards.
+            \item If the event which occured is \textbf{b}, the process will act as \textbf{Q} afterwards.
+        \end{itemize}
+        \item There are other types of choices, namely external or internal choice in the CSP syntax.
+        \item For most cases, general choice is sufficient, hence in this module, we focus on general choice only.
+        \item Example: $(a \rightarrow P) \extchoice (c \rightarrow a \rightarrow Q)$
+        \begin{itemize}
+            \item If the first event is \textbf{a}, after which the process acts as $P$.
+            \item If the first event is \textbf{c}, after which the process acts as $a \rightarrow Q$.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 64
+\begin{frame}[fragile]
+    \frametitle{Interrupt}
+    \begin{itemize}
+        \item The interrupt process $P \interrupt e \rightarrow Q$ behaves as \textbf{process P} until the first occurrence of \textbf{event e} which then the control passes to \textbf{process Q}. 
+        \item When coding the specification, the keyword \textbf{interrupt} is used instead of the symbol $\interrupt$. 
+        \item For the System process, the first event can be a routine or an exception.
+        \item After that, it still behaves as a System process.      
+    \end{itemize}
+    \footnotetext{Note that in the lecture slides, the nabla symbol $\nabla$ is used for interrupt.}
+\begin{lstlisting}
+Err() = exception -> Err();
+Routine() = routine -> Routine();
+ExceptionHandling() = Routine() interrupt exception -> ExceptionHandling();
+System = Err() || ExceptionHandling();
+\end{lstlisting}
+
+\end{frame}
+
+% Slide 65
+\begin{frame}[fragile]
+\frametitle{Concurrency Example \#1}
+We are given the following system specification in CSP
+\begin{lstlisting}
+VMC = coin -> ((choc -> VMC)[](bisc -> VMC));
+CHOCLOV = choc -> CHOCLOV [] coin -> choc -> CHOCLOV;
+#alphabet VMC{coin, choc, bisc};
+#alphabet VMC{coin, choc, bisc};
+System = VMC || CHOCLOV;
+\end{lstlisting}
+
+\begin{itemize}
+\item Semi-colon marks the end of each statement.
+\item When coding process specifications in CSP, we use the keyword \textbf{\#alphabet}, instead of the symbol $\alpha$.
+\item The only possible trace for this example is $\trace{coin, choc}^{n}$ for $n : \nat_1$ after which the system acts as $VMC \parallel CHOCLOV$.
+\begin{itemize}
+    \item As defined in lines 3 and 4 of the specification, the common events are the alphabets of VMC and CHOCLOV which are \textbf{coin}, \textbf{choc} and \textbf{bisc}.
+    \item However, the process \textbf{CHOCLOV} does not have the event \textbf{bisc}.
+    \item In VMC, the \textbf{coin} event has to be engaged first before we can engage $choc \rightarrow VMC$
+    \item Hence, both VMC and CHOCLOV engages in the \textbf{coin} event first then the \textbf{choc} event before acting as $VMC \parallel CHOCLOV$ again.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 66
+\begin{frame}[fragile]
+\frametitle{Concurrency Example \#2}
+We are given the same specification as the previous slide in CSP except that we now do not define the alphabet for the \textbf{VMC} and \textbf{CHOCLOV} processes.
+\begin{lstlisting}
+VMC = coin -> ((choc -> VMC)[](bisc -> VMC));
+CHOCLOV = choc -> CHOCLOV [] coin -> choc -> CHOCLOV;
+System = VMC || CHOCLOV;
+\end{lstlisting}
+\begin{itemize}
+\item If we did not explicity define the alphabet for each process, it can be \textbf{auto inferred}.
+\begin{itemize}
+    \item $\alpha VMC = \{coin, choc, bisc\}$
+    \item $\alpha CHOCLOV = \{coin, choc\}$
+\end{itemize}
+\item In this specification the system may deadlock with the following trace $\trace{coin, bisc}$.
+\begin{itemize}
+    \item After $\trace{coin, bisc}$, no event is possible.
+    \item This is because now the \textbf{bisc} event is not common to both \textbf{VMC} and \textbf{CHOCLOV} processes.
+    \item Hence, the \textbf{bisc} event can occur seperately.
+    \item After $\trace{coin, bisc}$ has occurred, the system would be stuck at $VMC \parallel choc \rightarrow CHOCLOV$.
+    \item Since \textbf{coin} and \textbf{choc} are common events, neither events can be engaged synchronously as \textbf{coin} is a prefix for \textbf{choc}.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 67
+\begin{frame}[fragile]
+\frametitle{Concurrency Example \#3}
+We are given the following system specification in CSP
+\begin{lstlisting}
+VMH = on -> coin -> choc -> off -> VMH;
+CUST = on -> ((coin -> bisc -> CUST) [] (curse -> coin -> choc -> CUST));
+System = VMH || CUST;
+\end{lstlisting}
+\begin{itemize}
+    \item The common events between \textbf{VMH} and \textbf{CUST} are \textbf{on}, \textbf{coin} and \textbf{choc} and they must occur synchronously in the two processes.
+    \item $\trace{on, curse, coin, choc, off}$ is a possible trace.
+    \begin{itemize}
+        \item After the trace, the process will still behave as a System process.
+    \end{itemize}
+    \item Deadlocks can occur with the following trace $\trace{on, coin, bisc}$
+    \begin{itemize}
+        \item The system will be stuck at $choc \rightarrow off \rightarrow VMH \parallel CUST$ and no event can be engaged.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 68
+\begin{frame}[fragile]
+\frametitle{Concurrency Example \#4}
+We are given the following system specification in CSP
+\begin{lstlisting}
+SLOWALK = left -> rest -> SLOWALK [] right -> rest -> SLOWALK;
+SLOCLIMB = up -> rest -> SLOCLIMB [] down -> SLOCLIMB;
+System = SLOWALK || SLOCLIMB;
+\end{lstlisting}
+
+Are the following traces possible?
+\begin{enumerate}
+    \item $\trace{up, rest}$
+    \begin{itemize}
+        \item No. The common event between \textbf{SLOWALK} and \textbf{SLOCLIMB} is \textbf{rest}.
+        \item $\trace{up, left, rest}$ and $\trace{up, right, rest}$ are possible traces.
+    \end{itemize}
+    \item $\trace{\ldots, up, rest}$ where up may not the first event.
+    \begin{itemize}
+        \item Yes. For example $\trace{left, up, rest}$ and $\trace{right, up, rest}$.
+    \end{itemize}
+\end{enumerate}
+
+\end{frame}
+
+% Slide 69
+\begin{frame}{Laws for Concurrency}
+    \begin{itemize}
+        \item Law 1: $P \parallel Q = Q \parallel P$
+        \item Law 2: $P \parallel (Q \parallel R) = (P \parallel Q) \parallel R$
+        \item Law 3: $P \parallel STOP_{\alpha P} = STOP_{\alpha P}$
+    \end{itemize}
+    Let...
+    \begin{enumerate}
+        \item $a \in (\alpha P - \alpha Q)$
+        \item $b \in (\alpha Q - \alpha P)$
+        \item $\{c, d\} \subseteq (\alpha P \cap \alpha Q)$
+    \end{enumerate}
+    \begin{itemize}
+        \item Law 4A: $(c \rightarrow P) \parallel (c \rightarrow Q) = c \rightarrow (P \parallel Q)$
+        \item Law 4B: $(c \rightarrow P) \parallel (d \rightarrow Q) = STOP$ if $c \neq d$
+        \item Law 5A: $(a \rightarrow P) \parallel (c \rightarrow Q) = a \rightarrow (P \parallel (c \rightarrow Q))$
+        \item Law 5A: $(c \rightarrow P) \parallel (b \rightarrow Q) = b \rightarrow ((c \rightarrow P) \parallel Q)$
+        \item Law 6: $(a \rightarrow P) \parallel (b \rightarrow Q) = a \rightarrow (P \parallel (b \rightarrow Q)) \extchoice b \rightarrow((a \rightarrow P) \parallel Q)$
+    \end{itemize}
+\end{frame}
+
+% Slide 70
+\begin{frame}{Channel}
+    \begin{itemize}
+        \item Processes may communicate through channels.
+        \item A channel is like a message buffer for one process to send a value to another process.
+        \item A channel event is written as one of the following forms:
+        
+        \begin{tabular}{|l|l|}
+            \hline
+                \textbf{Form} & \textbf{Description} \\ 
+            \hline
+                $c!n$ & Channel Output. This event occurs when a process writes $n$ (a value) \\ & to the tail of channel c's buffer\\
+            \hline
+                $c?n$ & Channel Input. This event occurs when a process reads a value from \\ & the head of channel c's buffer to a local variable n\\
+            \hline
+                $c.n$ & Channel output and its matching channel input are engaged together\\ & by two processes.\\
+            \hline
+        \end{tabular}
+    \end{itemize}
+\end{frame}
+
+% Slide 71
+\begin{frame}[fragile]
+    \frametitle{Channel Example}
+    Suppose we are given the following specification in CSP.
+\begin{lstlisting}
+channel c 1; // Channel with buffer size = 1
+Sender(i) = c!i -> Sender(i);
+Receiver() = c?x -> a.x -> Receiver();
+System() = Sender(5) ||| Receiver();
+\end{lstlisting}
+
+\begin{itemize}
+    \item Note: A process can have optional parameters, eg: Sender(i)
+    \item The first event must be c!5 since c's buffer is empty.
+    \item The second event must be c?5 since c's buffer size is 1.
+    \item The third event can either be c!5 or a.5
+\end{itemize}
+
+\end{frame}
+
+% Slide 72
+\begin{frame}[fragile]
+    \frametitle{Channel Example: Synchronous Buffer}
+    Suppose we are given the following specification in CSP.
+\begin{lstlisting}
+channel c 0; // Synchronous Buffer
+Sender(i) = c!i -> Sender(i);
+Receiver() = c?x -> a.x -> Receiver();
+System() = Sender(5) ||| Receiver();
+\end{lstlisting}
+
+\begin{itemize}
+    \item Note: A synchronous buffer is defined by setting the buffer size to 0.
+    \item The first event must be c.5, since the sender must write to the c's buffer and the reciever must read from c's buffer simultaneously.
+    \item The second event must be a.5
+\end{itemize}
+
+\end{frame}
+
+% Slide 73
+\begin{frame}[fragile]
+\frametitle{CSP Model Checkers: Automatic Reasoning}
+\begin{itemize}
+    \item A CSP Model Checker can check if a property is always satisfied.
+    \item In the next part, we will explore how we can verify certain properties of our process model using PAT (CSP\#).
+    \item Suppose we are given the specification of the \textbf{Dining Philosophers Problem}.
+\end{itemize}
+\begin{lstlisting}
+#define N 2;
+Phil(i) = get.i.(i+1)%N -> get.i.i -> eat.i -> put.i.(i+1)%N -> put.i.i -> Phil(i);
+Fork(x) = get.x.x -> put.x.x -> Fork(x) [] get.(x-1)%N.x -> put.(x-1)%N.x -> Fork(x);
+College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
+#assert College() deadlockfree; // Check if a property is satisifed.
+\end{lstlisting}
+\begin{itemize}
+    \item $\parallel x : \{1 \upto n\}$ @ P(x) is equivalent to $P(1) \parallel \ldots \parallel P(n)$
+    \item \texttt{\#assert College() deadlockfree} is the property we want to verify.
+    \item If the property isn't always True, the Model Checker gives a counter example: $\trace{get.1.0, get.0.1}$
+\end{itemize}
+\end{frame}
+
+% Slide 74
+\section{Process Analysis Toolkit (PAT)}
 
 \end{document}
