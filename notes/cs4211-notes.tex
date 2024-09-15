@@ -1966,6 +1966,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
         \item State 1 represents the process VMS.
         \item State 2 represents the process $(choc \then VMS \extchoice bisc \then VMS)$
     \end{itemize}
+    \footnotetext[1]{The Labelled Transition System is a directed graph}
 \end{frame}
 
 % Slide 82
@@ -2066,6 +2067,171 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     \begin{center}
         \includegraphics[scale=0.08]{../images/L3E4.jpeg}
     \end{center}
+\end{frame}
+
+% Slide 86
+\begin{frame}[fragile]
+    \frametitle{Case Study: Dining Philosophers}
+    \begin{enumerate}
+        \item Specify the dining philosophers 
+\begin{lstlisting}
+Alice = Alice.get.fork1 -> Alice.get.fork2 -> Alice.eat -> Alice.put.fork1 -> Alice.put.fork2 -> Alice
+Bob = Bob.get.fork1 -> Bob.get.fork2 -> Bob.eat -> Bob.put.fork1 -> Bob.put.fork2 -> Bob
+Fork1 = (Alice.get.fork1 -> Alice.put.fork1 -> Fork1) [] (Bob.get.fork1 -> Bob.put.fork1 -> Fork1)
+Fork2 = (Alice.get.fork2 -> Alice.put.fork2 -> Fork2) [] (Bob.get.fork2 -> Bob.put.fork2 -> Fork2)
+College = Alice || Bob || Fork1 || Fork2
+\end{lstlisting}
+        \item Get the alphabets of each process
+        \begin{itemize}
+            \item $\alpha Alice = \set{Alice.get.fork1, Alice.get.fork2, Alice.eat, Alice.put.fork1, Alice.put.fork2}$
+            \item $\alpha Bob = \set{Bob.get.fork1, Bob.get.fork2, Bob.eat, Bob.put.fork1, Bob.put.fork2}$
+            \item $\alpha Fork1 = \set{Alice.get.fork1, Alice.put.fork1, Bob.get.fork1, Bob.put.fork1}$
+            \item $\alpha Fork2 = \set{Alice.get.fork2, Alice.put.fork2, Bob.get.fork2, Bob.put.fork2}$
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+% Slide 87
+\begin{frame}{Case Study: Dining Philosophers}
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Apply the operational semantics rule (one at a time) to build the Labelled Transition System.
+    \begin{itemize}
+        \item Alice can perform Alice.get.fork1
+        \item Bob can perform Bob.get.Fork2
+        \item Fork1 can perform Alice.get.fork1 or Bob.get.fork1
+        \item Fork2 can perform Alice.get.fork2 or Bob.get.Fork2
+        \item By rule syn3, College can perform either Alice.get.fork1 or Bob.get.fork2, and then a state of the form.
+        \begin{center}
+            $\cdots \parallel \cdots \parallel \cdots \parallel \cdots$
+        \end{center}
+    \end{itemize}
+\end{enumerate}
+\begin{center}
+    \includegraphics[scale=0.18]{../images/DiningPhilosophers.png}   
+\end{center}
+\end{frame}
+
+% Slide 88
+\begin{frame}{Case Study: Dining Philosophers}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item Analyze the Labelled Transition system
+        \begin{itemize}
+            \item Is the system deadlock-free?
+            \item Will Alice or Bob starve to death?
+        \end{itemize}
+        \begin{center}
+            \includegraphics[scale=0.2]{../images/DiningPhilosophers.png}   
+        \end{center}
+    \end{enumerate}
+\end{frame}
+
+% Slide 89
+\begin{frame}[fragile]
+\frametitle{Safety}
+\begin{itemize}
+\item Safety means \textbf{something bad never happens}.
+\item Examples
+\begin{enumerate}
+\item deadlock-freeness
+\begin{lstlisting}
+#assert College() deadlockfree;
+\end{lstlisting}
+The system never deadlocks
+\item invariant
+\begin{lstlisting}
+#assert Bank() |= [] Value >= Debit;
+\end{lstlisting}
+The savings of a bank account must always be non-negative.
+\end{enumerate}
+\end{itemize}
+\footnotetext[1]{'[]' signifies 'always' in Linear Temporal Logic.}
+\footnotetext[2]{'$\mid =$' represents 'satisfisfaction' in Linear Temporal Logic.}
+\end{frame}
+
+% Slide 90
+\begin{frame}{Verifying Safety}
+    \begin{itemize}
+        \item To verify safety, perform \textbf{reachability analysis} on the \textbf{Labelled Transition System}.
+        \item A counterexample to the safety property is a finite execution which leads to a bad state.
+        \item Perform either \textbf{Depth First Search (DFS)} or \textbf{Breadth First Search (BFS)} to search all reachable states for a 'bad' one.
+        \item Example:
+        \begin{center}
+            \includegraphics[scale=0.18]{../images/DiningPhilosophers.png}
+        \end{center}
+        \begin{enumerate}
+            \item Depth First Search: $1 \then 2 \then 5 \then 7 \then 1 \then$ backtrack $\then 4 \then$ FOUND! 
+            \item Breadth First Search: $1 \then 2 \then 3 \then 5 \then 4 \then$ FOUND!
+        \end{enumerate}
+    \end{itemize}
+    \footnotetext[1]{State 4 is the bad state as there is no outgoing edges.}
+\end{frame}
+
+% Slide 91
+\begin{frame}{Applications of Safety Verification}
+Many properties can be formulated as a safety property and solved using \textbf{reachability analysis}.
+\begin{enumerate}
+    \item Mutual Exclusion: []!(more than one process accessing the critical section)
+    \begin{itemize}
+        \item There will never be more than one process accessing the critical section.
+    \end{itemize}
+    \item Security: [](only the authorized user can access the information)
+    \begin{itemize}
+        \item It is always the case that only the authorized user can access the information.
+    \end{itemize}
+    \item Program Analysis
+    \begin{itemize}
+        \item Arrays are always bounded.
+        \item Pointers are always non-null
+        \item etc...
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+% Slide 92
+\begin{frame}{Liveness}
+    \begin{itemize}
+        \item Liveness means \textbf{something good eventually happens}.
+        \item Examples
+        \begin{enumerate}
+            \item A program is eventually terminating.
+            \item A file writer is eventually closed.
+            \item Both Alice and Bob eventually get to eat.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+% Slide 93
+\begin{frame}[fragile]
+    \frametitle{Verifying Liveness}
+    \begin{itemize}
+        \item To verify liveness, perform \textbf{loop searching} on the \textbf{Labelled Transition System}.
+        \item A counterexample to a liveness property is an infinite system execution during which the 'good' thing never happens.
+        \begin{itemize}
+            \item Example: An infinite loop fails the property that the program is eventually terminating.
+        \end{itemize}
+        \item We can search through the Labelled Transition System for a bad loop using \textbf{Nested Depth First Search} or \textbf{Strongly Connected Component based Search}
+        \item Example
+        \begin{columns}
+            \begin{column}{0.45\textwidth}
+                \begin{center}
+                    \includegraphics[scale=0.18]{../images/DiningPhilosophers.png}
+                \end{center}
+            \end{column}
+            \begin{column}{0.55\textwidth}
+                Assertion: Alice will always eventually eat. (\textbf{False})
+\begin{lstlisting}
+#assert College() |= Alice.eat
+\end{lstlisting}
+                \textbf{Counterexamples}
+                \begin{itemize}
+                    \item $\trace{Alice.get.fork1, Bob.get.fork2}$
+                    \item $<Bob.get.fork2 \then Bob.get.fork1 \then Bob.eat \then$ \\ $Bob.put.fork2, \then Bob.put.fork1>^{*}$
+                \end{itemize}
+            \end{column}
+        \end{columns}
+   \end{itemize} 
 \end{frame}
 
 \end{document}
