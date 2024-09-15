@@ -2234,4 +2234,75 @@ Many properties can be formulated as a safety property and solved using \textbf{
    \end{itemize} 
 \end{frame}
 
+% Slide 94
+\begin{frame}{CSP\#: Extending CSP}
+    \begin{itemize}
+        \item The original CSP has no shared variables, arrays, etc\dots
+        \item PAT (CSP\#) extends it with data operations.
+        \item Hence, the operational semantics must be updated to support data operations.
+    \end{itemize}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{axdef}
+                (V, P) \xrightarrow{x} (V', P')
+                \where 
+                (V, P \extchoice Q) \xrightarrow{x} -> (V', P')
+            \end{axdef}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{axdef}
+                (V, Q) \xrightarrow{x} (V', Q')
+                \where 
+                (V, P \extchoice Q) \xrightarrow{x} -> (V', Q')
+            \end{axdef}
+        \end{column}
+    \end{columns}
+    \begin{block}{Example}
+        var x = 0;\\
+        $P = (a\{x = 1\} \then P) \extchoice (b \then Skip);$\\
+        P (with valuation var x = 0) $\xrightarrow{a}$ P (with valuation var x = 1)\\
+        P (with valuation var x = 0) $\xrightarrow{b}$ Skip (with valuation var x = 1)
+    \end{block}
+\end{frame}
+
+% Slide 95
+\begin{frame}{CSP\#: Global Definition}
+    \begin{itemize}
+        \item Constant
+        \item Enums
+        \item Variables
+        \item Arrays
+    \end{itemize}
+\end{frame}
+
+% Slide 96
+\begin{frame}{CSP\#: Global Definition}
+    
+\end{frame}
+
+% Slide 97
+\begin{frame}{CSP\#: Process Definition}
+    
+\end{frame}
+
+% Slide 98
+\begin{frame}{CSP\#: Process Definition}
+    
+\end{frame}
+
+% Slide 99
+\begin{frame}{CSP\#: Assertions}
+    
+\end{frame}
+
+% Slide 100
+\begin{frame}{CSP\#: Assertions}
+    
+\end{frame}
+
+% Slide 101
+\begin{frame}{CSP\#: Assertions and Linear Temporal Logic}
+    
+\end{frame}
+
 \end{document}

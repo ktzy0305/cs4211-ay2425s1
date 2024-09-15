@@ -1,0 +1,20 @@
+channel C1P 0;
+channel PB 0;
+channel PC1 0;
+channel C1B 0;
+channel BP 0;
+
+var c_v = 0;
+var p_v = 0;
+var b_v = 0;
+
+C = ||x:{0..1}@C1P!x -> PC1?x -> C 
+    [] get_p {c_v = p_v} -> C 
+    [] get_b {c_v = b_v} 
+    [] ||x:{0..1}@C1B!x -> PC1?x -> C;
+
+B = PB?x {b_v = x} -> B [] C1B?x -> BP!x -> B;
+
+P = C1P?x {p_v = x} -> PB!x -> PC1!x -> P [] BP?x {p_v = x} -> PB!x -> PC1!x -> P;
+
+SYS = C ||| P ||| B;
