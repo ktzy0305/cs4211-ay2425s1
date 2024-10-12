@@ -93,23 +93,23 @@ tabsize=2
 
 % Slide 4
 \begin{frame}[fragile]
-    \frametitle{Latex Setup}
-    \begin{itemize}
-    \item The Latex package that we will be using is \texttt{zed-csp}
-    \item \textbf{Setup Code: }
-    \begin{lstlisting}[language=tex]
-    % For latex document
-    \documentstyle[12pt,zed]{article}
-    
-    % For beamer slides
-    \usepackage{zed-csp}  
-    
-    \begin{document}
-    \end{document}
-    \end{lstlisting}
-    \item \href{https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}{Reference: https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}
-    \end{itemize}
-    \end{frame}
+\frametitle{Latex Setup}
+\begin{itemize}
+\item The Latex package that we will be using is \texttt{zed-csp}
+\item \textbf{Setup Code: }
+\begin{lstlisting}[language=tex]
+% For latex document
+\documentstyle[12pt,zed]{article}
+
+% For beamer slides
+\usepackage{zed-csp}  
+
+\begin{document}
+\end{document}
+\end{lstlisting}
+\item \href{https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}{Reference: https://sg.mirrors.cicku.me/ctan/macros/latex/contrib/zed-csp/zed2e.pdf}
+\end{itemize}
+\end{frame}
 
 % Slide 5
 \section{Z Specification}  
@@ -1758,7 +1758,7 @@ Are the following traces possible?
 \begin{frame}[fragile]
     \frametitle{Channel Example}
     Suppose we are given the following specification in CSP.
-\begin{lstlisting}
+\begin{lstlisting}[language=C]
 channel c 1; // Channel with buffer size = 1
 Sender(i) = c!i -> Sender(i);
 Receiver() = c?x -> a.x -> Receiver();
@@ -1778,7 +1778,7 @@ System() = Sender(5) ||| Receiver();
 \begin{frame}[fragile]
     \frametitle{Channel Example: Synchronous Buffer}
     Suppose we are given the following specification in CSP.
-\begin{lstlisting}
+\begin{lstlisting}[language=C]
 channel c 0; // Synchronous Buffer
 Sender(i) = c!i -> Sender(i);
 Receiver() = c?x -> a.x -> Receiver();
@@ -1801,7 +1801,7 @@ System() = Sender(5) ||| Receiver();
     \item In the next part, we will explore how we can verify certain properties of our process model using PAT (CSP\#).
     \item Suppose we are given the specification of the \textbf{Dining Philosophers Problem}.
 \end{itemize}
-\begin{lstlisting}
+\begin{lstlisting}[language=C]
 #define N 2;
 Phil(i) = get.i.(i+1)%N -> get.i.i -> eat.i -> put.i.(i+1)%N -> put.i.i -> Phil(i);
 Fork(x) = get.x.x -> put.x.x -> Fork(x) [] get.(x-1)%N.x -> put.(x-1)%N.x -> Fork(x);
@@ -2266,43 +2266,445 @@ Many properties can be formulated as a safety property and solved using \textbf{
 \end{frame}
 
 % Slide 95
-\begin{frame}{CSP\#: Global Definition}
-    \begin{itemize}
-        \item Constant
-        \item Enums
-        \item Variables
-        \item Arrays
-    \end{itemize}
+\begin{frame}[fragile]
+\frametitle{CSP\#: Global Definition}
+\begin{itemize}
+\item Constants
+\begin{lstlisting}[language=C]
+#define max 5;
+\end{lstlisting}
+\item Enumerations
+\begin{lstlisting}[language=C]
+enum {red, blue, green};
+// Syntactic Sugar for the following
+#define red 0;
+#define blue 1;
+#define green 2;
+\end{lstlisting}
+\end{itemize}
+\begin{block}{Note}
+\begin{itemize}
+    \item The constant value can only be of \textbf{integer} or \textbf{boolean} value.
+    \item \textbf{\#define} is a keyword used for multiple purposes. Here it defines a global constant.
+    \item (;) \textbf{semi-colon} marks the end of the 'sentence'.
+\end{itemize}
+\end{block}
 \end{frame}
 
 % Slide 96
-\begin{frame}{CSP\#: Global Definition}
-    
+\begin{frame}[fragile]
+\frametitle{CSP\#: Global Definition}
+\begin{itemize}
+\item Variables
+\begin{lstlisting}[language=C]
+var knight = 0;
+\end{lstlisting}
+\item Arrays
+\begin{lstlisting}[language=C]
+// A fixed sized array may be defined as follows:
+var board = [3, 5, 6, 0, 2, 7, 8, 4, 1];
+// If we do not specify the elements in an array, 
+// all elements in array are initialized to 0
+var leader[3]; // Array of size 3. 
+var matrix[3][2] // Multi-dimensional array (internally an array of 6)
+\end{lstlisting}
+\end{itemize}
+\begin{block}{Note}
+\begin{itemize}
+    \item Multi-dimensional arrays are internally converted to one-dimension.
+    \item The \textbf{var} keyword is used to defined variables.
+    \item The scope of these variables are global if they are not within an event or process.
+\end{itemize}
+\end{block}
 \end{frame}
 
 % Slide 97
-\begin{frame}{CSP\#: Process Definition}
-    
+\begin{frame}[fragile]
+\frametitle{CSP\#: Global Definition}
+\begin{itemize}
+\item Often, it is desirable to provide the range of the variables / arrays explicity by giving the lower bound or upper bound or both.
+\begin{lstlisting}[language=C]
+var knight:{0..} = 0;
+var board:{0..10} = [3, 5, 6, 0, 2, 7, 8, 4, 1]; 
+\end{lstlisting}
+\item Array Initialization: To ease modelling, PAT supports fast array initialization using the following syntax
+\begin{lstlisting}[language=C]
+#define N 2;
+// Initialized array with syntax shortcuts
+var array = [1(2), 3..6, 7(N * 2), 12..10];
+// The above is the same as the following
+var array = [1, 1, 3, 4, 5, 6, 7, 7, 7, 7, 12, 11, 10];
+\end{lstlisting}
+\end{itemize}
 \end{frame}
 
 % Slide 98
-\begin{frame}{CSP\#: Process Definition}
-    
+\begin{frame}[fragile]
+\frametitle{CSP\#: Global Definition}
+\begin{itemize}
+\item \textbf{Macro}
+\begin{itemize}
+\item The keyword \textbf{\#define} may be used to define macros.
+\begin{lstlisting}[language=C]
+#define goal x == 0;
+\end{lstlisting}
+\begin{block}{Explanation}
+\begin{itemize}
+    \item goal is the name of the macro
+    \item x == 0 is what the goal means.
+\end{itemize}
+\end{block}
+\item We can use macro to define system properties.
+\begin{lstlisting}[language=C]
+#assert System() reaches goal;
+\end{lstlisting}
+\item We can also use macro to define processes
+\begin{lstlisting}[language=C]
+if (goal) { P } else { Q };
+\end{lstlisting}
+\end{itemize}
+\end{itemize}
+\begin{block}{Explanation}
+If the value of x is 0 then do P else do Q.
+\end{block}
 \end{frame}
 
 % Slide 99
-\begin{frame}{CSP\#: Assertions}
-    
+\begin{frame}{CSP\#: Global Definition}
+    \begin{itemize}
+        \item PAT only supports integer, boolean and integer arrays for the purpose of \textbf{efficient verification}.
+        \item However, advanced data structures (eg: Stack, Queue, Hashtable, etc\dots) are necessary for some models.
+        \item To support arbitrary data structures, PAT provides an interface to create user defined data types by inheriting an \textbf{abstract class} \texttt{ExpressionValue} using the \textbf{C\# library}.
+        \item For more details:
+        \begin{itemize}
+            \item \href{https://www.comp.nus.edu.sg/~pat/OnlineHelp/index.htm}{PAT User Manual: Section 2.5.2 User Defined Data Types}
+        \end{itemize}
+    \end{itemize}
 \end{frame}
 
 % Slide 100
-\begin{frame}{CSP\#: Assertions}
-    
+\begin{frame}[fragile]
+\frametitle{CSP\#: Process Definition}
+\begin{itemize}
+\item Event Prefixing
+\begin{enumerate}
+\item Basic Form
+\begin{lstlisting}[language=C]
+e -> p;
+VM() = coin -> coffee -> VM();
+\end{lstlisting}
+\item Compound Form
+\begin{itemize}
+    \item For example in \texttt{x.exp1.exp2}, \texttt{x} is the event name and \texttt{exp1} and \texttt{exp2} are expressions.
+    \item Each expression corresponds to a variable (eg: process parameters, channel input variables or global variables).
+\end{itemize}
+\begin{lstlisting}[language=C]
+#define N 2;
+// Dining Philosophers Example
+Phil(i) = get.i.(i + 1) % N -> Rest();
+\end{lstlisting}
+\end{enumerate}
+\end{itemize}
 \end{frame}
 
 % Slide 101
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Process Definition}
+    \begin{itemize}
+        \item Statement Block inside Events (aka Data Operations)
+        \begin{itemize}
+            \item An event can be attached with assignments which update global or local variables.
+            \item Process arguments and channel inputs can only used without being updated.
+            \item Semi-colons (;) mark the end of a statement in C\# or end of a sentence in CSP\#.
+        \end{itemize}
+    \end{itemize}
+\begin{lstlisting}[language=C]
+var array = [0, 2, 4, 7, 1, 3];
+var maxi = -1;
+P() = findmax {
+    var index = 0;
+    while (index < 6) {
+        if (maxi < array[index]) { maxi = array[index]; }
+        index = index + 1;
+    };
+} -> Skip;
+\end{lstlisting}
+\begin{block}{Note}
+    \begin{itemize}
+        \item P() = $\dots$ is equivalent to defining process P without any process parameters.
+    \end{itemize}
+\end{block}
+\end{frame}
+
+% Slide 102
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Process Definition}
+    \begin{itemize}
+        \item \textbf{Conditional Choice:} A choice may depend on a Boolean expression which in turn depends on the valuation of the variables.
+\begin{lstlisting}[language=C]
+var x = 1;
+Init = []i{1,2}@set.i{x = i} -> Skip;
+P = if (x == 1) { a -> Stop } else { b -> Stop };
+System = Init;P; // Sequential composition of two processes
+\end{lstlisting}
+        \item \textbf{Guarded Process:} A guarded process only executes when its guard condition is satisfied.
+\begin{lstlisting}[language=C]
+var x = 1;
+Init = []i{1,2}@set.i{x = i} -> Skip;
+P = [x == 1] a -> Stop [] [x != 1] b -> Stop;
+System = Init;P; // Sequential composition of two processes
+\end{lstlisting}
+    \end{itemize}
+    \begin{block}{Note}
+        \begin{scriptsize}
+            \begin{itemize}
+                \item \texttt{[]i:\set{1, 2}} means choice for variable i which can be either 1 or 2.
+                \item In both examples, Process P behaves differently depending of the value of variable x.
+                \item Both conditional choice and guarded process can produce the same effect.
+            \end{itemize}
+        \end{scriptsize}
+    \end{block}
+\end{frame}
+
+% Slide 103
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Process Definition}
+    \begin{itemize}
+        \item  \textbf{Guarded Process:} A guarded process only executes when its guard condition is satisfied.
+        \item In the example, the trace $\trace{b, b, a}$ is possible but $\trace{b, b, b, a}$ is not possible.
+    \end{itemize}
+\begin{lstlisting}[language=C]
+var x = 0;
+P = [x < 4] b{x = x + 1;} -> P;
+aSys = [x == 2] a -> Stop ||| P;
+\end{lstlisting}
+\end{frame}
+
+% Slide 104
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Process Definition}
+    \begin{itemize}
+        \item \textbf{Atomic Process:}
+        \begin{itemize}
+            \item The keyword \textbf{atomic} is used to indicate that a process is of \textbf{higher priority}.
+            \item This means if the atomic process has an enabled event, the event will execute before any events from non-atomic processes.
+\begin{lstlisting}[language=C]
+channel ch 0;
+P = atomic { a -> ch!0 -> b -> Skip };
+Q = atomic { d -> ch?0 -> e -> f -> Skip };
+W = g -> Skip;
+System = P ||| Q ||| W;
+\end{lstlisting}
+            \item In the example above, processes P and Q are both atomic processes, while process W is not.
+            \item The expected behaviour is that processes P and Q will interleave each other (only synchronised on ch.0), whereas W will execute only after event b and f have occured.
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Note}
+        Since the channel size is 0, processes P and Q have to synchronise at the channel events.
+    \end{block}
+\end{frame}
+
+% Slide 105
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Assertions}
+    \begin{itemize}
+        \item \textbf{Deadlock-freeness:} The following assertion asks if process P() is deadlock-free or not.
+        \begin{itemize}
+            \item A deadlock state is a state with no further move, except for successfully terminated state.
+        \end{itemize}
+\begin{lstlisting}[language=C]
+P = a -> Skip;
+#assert P deadlockfree; // True
+\end{lstlisting}
+        \item \textbf{Reachability:} The following assertion asks whether process P() can reach a state at which \textit{some given condition is satisified.}
+        \begin{itemize}
+            \item In this example, the assertion is True because it can reach a state where \texttt{x < 0}.
+        \end{itemize}
+\begin{lstlisting}[language=C]
+var x = 0;
+P() = add{x = x + 1;} -> P() [] minus{x = x - 1;} -> P();
+#define goal x < 0;
+#assert P() reaches goal; // Note: goal condition must be a macro
+\end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+% Slide 106
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Assertions}
+    The following coin exchanging example shows how to minimize the number of coins during reachability search.
+\begin{lstlisting}[language=C]
+var x = 0;
+var weight = 0;
+P() = if (x <= 14) {
+    coin1{x = x + 1; weight = weight + 1;} -> P();
+    [] coin2{x = x + 2; weight = weight + 1;} -> P();
+    [] coin5{x = x + 5; weight = weight + 1;} -> P();
+};
+#define goal x == 14;
+#assert P() reaches goal with min(weight);
+\end{lstlisting}
+\end{frame}
+
+% Slide 107
 \begin{frame}{CSP\#: Assertions and Linear Temporal Logic}
-    
+    \begin{itemize}
+        \item \textbf{Linear Temporal Logic (LTL)} is a formalism used for specifying and reasoning about the behavior of systems over time. 
+        \item It extends propositional logic by introducing temporal operators that describe how properties of a system evolve over time, making it suitable for reasoning about sequences of states in a system. 
+        \item In LTL, time is viewed as a linear sequence of discrete points, and temporal operators allow the expression of future and current behaviors in a system.
+    \end{itemize}
+\end{frame}
+
+% Slide 108
+\begin{frame}{CSP\#: Assertions and Linear Temporal Logic}
+Let $\phi$ and $\psi$ be LTL formulaes.
+\begin{center}
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        \textbf{Operator} & \textbf{Usage} & \textbf{Name} & \textbf{Explanation} \\
+        \hline
+        \textbf{X} & \textbf{X} $\phi$ & Next & $\phi$ has to hold at the next state\\
+        \hline
+        \textbf{G} & \textbf{G} $\phi$ & Globally & $\phi$ has to hold on the entire subsequent path\\
+        \hline
+        \textbf{F} & \textbf{F} $\phi$ & Finally & $\phi$ eventually has to hold somewhere on the subsequent path\\ 
+        \hline
+        \textbf{U} & $\psi$ \textbf{U} $\phi$ & Until & $\phi$ holds at the current or a future position, and $\psi$ has to hold \\ & & & until that position. At that position $\psi$ does not have to hold \\ & & &anymore.\\
+        \hline
+        \textbf{R} & $\psi$ \textbf{R} $\phi$ & Release & $\phi$ is true until the first position in which $\psi$ is true, or forever \\ & & &if such a position does not exist.\\
+        \hline
+    \end{tabular}
+\end{center}
+\end{frame}
+
+% Slide 109
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Assertions and Linear Temporal Logic}
+    \begin{itemize}
+        \item The LTL assertion is true if and only if every execution (\textbf{trace}) of the system satisfies the formula $F$, where F is an LTL formula whose syntax is defined as the following rules.
+        \begin{itemize}
+            \item F = e $\mid$ prop $\mid$ [] F $\mid$ $<>$ F $\mid$ X F $\mid$ F1 U F2 $\mid$ F1 R F2
+            \item Notations
+            \begin{enumerate}
+                \item e is an event
+                \item prop is a predefined propositional
+                \item $[]$ reads as "always" (or 'G' in CSP\#)
+                \item $<>$ reads as "eventually" (or 'F' in CSP\#)
+                \item X reads as "next"
+                \item U reads as "until"
+                \item R reads as "release" 
+            \end{enumerate} 
+        \end{itemize}
+\begin{lstlisting}[language=C]
+#assert P() |= F;
+\end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+% Slide 110
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Assertions and Linear Temporal Logic}
+    \begin{columns}[t]
+        \begin{column}{0.425\textwidth}
+\begin{lstlisting}[language=C]
+var x = 0;
+P = [x < 2] a{x = x + 1} -> P
+    [][x < 4] b {x = x + 2} -> P
+    [][x >= 4] c -> P;
+#define ge2 x >= 2;
+#define lt2 x < 2;
+\end{lstlisting}
+\begin{center}
+    \includegraphics[scale=0.0425]{../images/PAT_Assertions.jpg}
+\end{center}
+        \end{column}
+        \begin{column}{0.55\textwidth}
+\begin{lstlisting}[language=C]
+#assert P deadlockfree; // Valid
+
+#assert P |= lt2; // First state, x < 2? 
+                  // Yes
+
+#assert P |= !c; // Init event is not c? 
+                 // Yes
+
+#assert P |= X (a || b); 
+// Next event a or b? Yes!
+
+#assert P |= [] ge2; // Always x >= 2? No
+// Counter Example: Initial State (x = 0)
+
+#assert P |= <> ge2; // Eventually x >= 2? 
+// Yes. Traces: <a, b>, <a, a>, <b>
+\end{lstlisting}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 111
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Assertions and Linear Temporal Logic}
+    \begin{columns}[t]
+        \begin{column}{0.425\textwidth}
+\begin{lstlisting}[language=C]
+var x = 0;
+P = [x < 2] a{x = x + 1} -> P
+    [][x < 4] b {x = x + 2} -> P
+    [][x >= 4] c -> P;
+#define ge2 x >= 2;
+#define lt2 x < 2;
+\end{lstlisting}
+\begin{center}
+    \includegraphics[scale=0.0425]{../images/PAT_Assertions.jpg}
+\end{center}
+        \end{column}
+        \begin{column}{0.55\textwidth}
+\begin{lstlisting}[language=C]
+#assert P |= [] (lt2 -> X ge2);
+// It is always true that if the current state is x < 2, it implies the next state is x >= 2?
+// No. For example, <a>, init state x = 0 (lt2), next state x = 1(!ge2)
+
+#assert P |= [] (lt2 -> X(Xge2));
+// It is always true that if the current state is x < 2, then the next next state is x >= 2?
+// Yes. Traces: <a, a>, <a, b>, <b>
+\end{lstlisting}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 111
+\begin{frame}[fragile]
+    \frametitle{CSP\#: Assertions and Linear Temporal Logic}
+    \begin{columns}[t]
+        \begin{column}{0.425\textwidth}
+\begin{lstlisting}[language=C]
+var x = 0;
+P = [x < 2] a{x = x + 1} -> P
+    [][x < 4] b {x = x + 2} -> P
+    [][x >= 4] c -> P;
+#define ge2 x >= 2;
+#define lt2 x < 2;
+\end{lstlisting}
+\begin{center}
+    \includegraphics[scale=0.0425]{../images/PAT_Assertions.jpg}
+\end{center}
+        \end{column}
+        \begin{column}{0.55\textwidth}
+\begin{lstlisting}[language=C]
+#assert P |= (lt2 U ge2); 
+// Is it always x < 2 until x >= 2? Yes
+
+#assert P |= (ge2 R le3); 
+// x <= 3 until the first position 
+// where x >= 2? Yes
+
+#assert P |= (ge2 R lt2); 
+// x < 2 until the first position 
+// where x >= 2? No
+// Counter Examples: <a, b>, <b>
+\end{lstlisting}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \end{document}
