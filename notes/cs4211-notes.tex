@@ -78,9 +78,22 @@ tabsize=2
 \end{frame}
 
 % Slide 2
-\section{Introduction and Latex Setup}  
+\begin{frame}{Acknowledgement}
+    These set of slides are modified from the content and lecture notes of the following professors:
+\begin{itemize}
+    \item Professor Dong Jing Song
+    \item Professor Yang Liu
+    \item Professor Jun Sun
+    \item Professor Abhik Roychoudhury
+    \item Professor Jiang Kan
+\end{itemize}
+I would like to express my gratitude for their invaluable lecture notes and content that forms the basis of this set of lecture notes.
+\end{frame}
 
 % Slide 3
+\section{Introduction and Latex Setup}  
+
+% Slide 4
 \begin{frame}{Introduction to Formal Methods}
     \begin{itemize}
         \item Requirements are difficult to define because its written in \textbf{Natural Language} which can be imprecise and ambiguous at times.
@@ -91,7 +104,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 4
+% Slide 5
 \begin{frame}[fragile]
 \frametitle{Latex Setup}
 \begin{itemize}
@@ -111,10 +124,10 @@ tabsize=2
 \end{itemize}
 \end{frame}
 
-% Slide 5
+% Slide 6
 \section{Z Specification}  
 
-% Slide 6
+% Slide 7
 \begin{frame}{The Z Specification Language}
     \begin{itemize}
         \item Based on set theory and mathematical logic
@@ -136,7 +149,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 7
+% Slide 8
 \begin{frame}{Recap on Predicates and Logic}
     \begin{block}{Predicate}
         A statement that is either true or false.
@@ -160,7 +173,7 @@ tabsize=2
     \end{block}
 \end{frame}
 
-% Slide 8
+% Slide 9
 \begin{frame}{Recap on Quantifiers}
     \begin{enumerate}
         \item Universal Quantifier ($\forall$)
@@ -190,7 +203,7 @@ tabsize=2
     \end{block}
 \end{frame}
 
-% Slide 9
+% Slide 10
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item A set is a collection of elements (or members)
@@ -222,7 +235,7 @@ tabsize=2
     \end{block}
 \end{frame}
 
-% Slide 10
+% Slide 11
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item Set Expressions
@@ -252,7 +265,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 11
+% Slide 12
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item Subset ($\subseteq$): If $S$ and $T$ are sets, $S \subset T$ is a predicate equivalent to $\forall s : S \spot s \in T$.
@@ -282,7 +295,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 12
+% Slide 13
 \begin{frame}{Recap on Set Theory}
     \begin{itemize}
         \item Set Operations
@@ -315,7 +328,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 13
+% Slide 14
 \begin{frame}{Tuples and Cartesian Product}
     \begin{itemize}
         \item An n-tuple $(x_1, \ldots, x_n)$ is present in the Cartesian Product $\mathbf{a_1 \times \ldots \times a_n}$ if and only if each element $x_i$ is an element of the corresponding set $\mathbf{a_i}$. 
@@ -329,7 +342,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 14
+% Slide 15
 \begin{frame}{Recap on Relations}
     \begin{itemize}
         \item A relation $R$ from sets $A$ to $B$, is declared as $R : A \rel B$ is a subset of $A \cross B$
@@ -347,7 +360,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 15
+% Slide 16
 \begin{frame}
     \frametitle{Types in Z Specification}
     \begin{itemize}
@@ -363,7 +376,7 @@ tabsize=2
     \end{itemize}
 \end{frame}
 
-% Slide 16
+% Slide 17
 \begin{frame}[fragile]
 \frametitle{Modelling using Z Specification}
 \begin{itemize}
@@ -392,7 +405,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 17
+% Slide 18
 \begin{frame}{Domain and Range Restriction}
 \begin{itemize}
     \item Let $A, B, R, S, T$ be sets.
@@ -412,7 +425,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 18
+% Slide 19
 \begin{frame}{Domain and Range Subtraction}
 \begin{itemize}
     \item Let $A, B, R, S, T$ be sets.
@@ -438,7 +451,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 19
+% Slide 20
 \begin{frame}{Relational Image}
 \begin{itemize}
     \item Suppose the relation $R : A \rel B$ and $S \rel A$
@@ -454,7 +467,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 \end{itemize}
 \end{frame}
 
-% Slide 20
+% Slide 21
 \begin{frame}{Inverse and Relational Composition}
     \begin{itemize}
         \item \textbf{Inverse:} $R^{-1}$ is the set $\{(b, a) : B \cross A \mid a R b \}$ or $R^{-1} \in B \rel A$
@@ -484,7 +497,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 21
+% Slide 22
 \begin{frame}{Recap on Functions}
     \begin{itemize}
         \item A (partial) function from a set $A$ to a set $B$, denoted by $f: A \pfun B$ is a subset $f$ of $A \cross B$ with the property that for each $a \in A$, there is \textbf{at most one} $b \in B$ with $(a, b) \in f$.
@@ -496,7 +509,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 22
+% Slide 23
 \begin{frame}{Function Overriding}
     \begin{itemize}
         \item Suppose $f, g: A \pfun B$, then $f \oplus g$ is the function $(\dom g \lefttrianglebar f) \cup g$.
@@ -515,7 +528,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{itemize}
 \end{frame}
 
-% Slide 23
+% Slide 24
 \begin{frame}
     \frametitle{Specifying Functions}
     \begin{enumerate}
@@ -545,7 +558,7 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
     \end{enumerate}
 \end{frame}
 
-% Slide 24
+% Slide 25
 \begin{frame}[fragile]
     \frametitle{Specifying Functions}
     \begin{enumerate}
@@ -582,7 +595,7 @@ end
     \end{enumerate}
 \end{frame}
 
-% Slide 25
+% Slide 26
 \begin{frame}{Sequences}
     \begin{itemize}
         \item A sequence s of elements of a set $A$, denoted $s : \seq A$, is a function $s:\nat \pfun A$ where $\dom s = 1 \upto n$ for some natural number $n$.
@@ -597,7 +610,7 @@ end
     \end{itemize}
 \end{frame}
 
-% Slide 26
+% Slide 27
 \begin{frame}{Special Functions for Sequence}
     \begin{enumerate}
         \item Concatenation 
@@ -627,7 +640,7 @@ end
     \end{enumerate}
 \end{frame}
 
-% Slide 27
+% Slide 28
 \begin{frame}{Z Specification}
 \begin{itemize}
 \item As explained in an earlier slide, we can write Z Specification to formally specify requirements in \textbf{two distinct sections}
@@ -646,7 +659,7 @@ end
 \end{itemize}
 \end{frame}
 
-% Slide 28
+% Slide 29
 \begin{frame}[fragile]
 \frametitle{The \texttt{zed-csp} Package}
 \begin{itemize}
@@ -701,7 +714,7 @@ known = \dom phone
 \end{enumerate}
 \end{frame}
 
-% Slide 29
+% Slide 30
 \begin{frame}{State Schema}
     \begin{itemize}
         \item A \textbf{state schema} specifies a relationship between variable values
@@ -712,7 +725,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 30
+% Slide 31
 \begin{frame}{Operation Schema}
     \begin{itemize}
         \item The state schema provides a static view of the system.
@@ -735,7 +748,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 31
+% Slide 32
 \begin{frame}{Case Study: A Message Buffer}
     \begin{itemize}
         \item We are going to model a message buffer to learn about \textbf{schema specification}.
@@ -753,7 +766,7 @@ known = \dom phone
     \end{center}
 \end{frame}
 
-% Slide 32
+% Slide 33
 \begin{frame}{Formal Specification: Message Buffer}
 \begin{columns}
 \begin{column}{0.6\textwidth}
@@ -795,7 +808,7 @@ known = \dom phone
 \end{columns}
 \end{frame}
 
-% Slide 33
+% Slide 34
 \begin{frame}{Explanation: Predicate of the Join Operation}
     \begin{columns}
         \begin{column}{0.4\textwidth}
@@ -821,7 +834,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 34
+% Slide 35
 \begin{frame}{Formal Specification: Message Buffer (Continued)}
     \begin{columns}
         \begin{column}{0.63\textwidth}
@@ -851,7 +864,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 35
+% Slide 36
 \begin{frame}{Special States: Delta ($\Delta$) and Initial State ($_{INIT}$)} 
 \begin{enumerate}
 \item Delta ($\Delta$): To specify a \textbf{before} and \textbf{after} instance of the state schema for any operation.
@@ -888,7 +901,7 @@ known = \dom phone
 \end{enumerate}
 \end{frame}
 
-% Slide 36
+% Slide 37
 \begin{frame}{Schema Inclusion}
 \begin{itemize}
     \item Schema Inclusion is the act of including a schema in the declaration of another schema.
@@ -924,7 +937,7 @@ known = \dom phone
 \end{columns}
 \end{frame}
 
-% Slide 37
+% Slide 38
 \begin{frame}{Example: Schema Inclusion}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -956,7 +969,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 38
+% Slide 39
 \begin{frame}{Merging Schemas}
     \begin{itemize}
         \item \textbf{Type Compatability} is needed to merge schemas.
@@ -999,7 +1012,7 @@ known = \dom phone
     \end{columns}    
 \end{frame}
 
-% Slide 39
+% Slide 40
 \begin{frame}{Extending Specifications: Slow Buffer and Slow Operations}
     \begin{itemize}
         \item Applying concepts such as \textbf{Schema Inclusion} and \textbf{Merging Schemas}, we can extend specifications similar to inheritance or creating specialized classes in Object-Oriented Programming. 
@@ -1050,7 +1063,7 @@ known = \dom phone
     \end{footnotesize}  
 \end{frame}
 
-% Slide 40
+% Slide 41
 \begin{frame}{Extending Specifications: Slow Buffer and Slow Operations (Full Form)}
     \begin{footnotesize}
         \begin{columns}
@@ -1109,7 +1122,7 @@ known = \dom phone
     \end{footnotesize}
 \end{frame}
 
-% Slide 41
+% Slide 42
 \begin{frame}{Reasoning About The Specification}
     \begin{itemize}
         \item Suppose, we want to verify that message buffer specified has the \textbf{FIFO property}.
@@ -1121,7 +1134,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 42
+% Slide 43
 \begin{frame}{Recorded Buffer and Operations}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -1159,7 +1172,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 43
+% Slide 44
 \begin{frame}{RecordedJoin: Expanded Schema}
     \begin{schema}{RecordedJoin}
         items, items': \seq MSG\\
@@ -1174,7 +1187,7 @@ known = \dom phone
     \end{schema}
 \end{frame}
 
-% Slide 44
+% Slide 45
 \begin{frame}{Proving the FIFO Property}
     \begin{itemize}
         \item How can we use the auxillary variables \texttt{inhist} and \texttt{outhist} to prove that the buffer satisifies the \textbf{FIFO property}?
@@ -1190,7 +1203,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 45
+% Slide 46
 \begin{frame}{Conjunction of Schemas}
     \begin{itemize}
         \item When using the conjunction ($\wedge$) operator on two schemas, it is equivalent to merging the two schemas.
@@ -1213,7 +1226,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 46
+% Slide 47
 \begin{frame}{Disjunction of Schemas}
     \begin{itemize}
         \item Using the conjunction ($\wedge$) operator on two schemas yields a different result.
@@ -1261,7 +1274,7 @@ known = \dom phone
     \end{columns}
 \end{frame}
 
-% Slide 47
+% Slide 48
 \begin{frame}{Disjunction of Schemas: Example}
     \begin{itemize}
         \item Let $Flag ::= ok \mid error$ (The Flag type can be either 'ok' or 'error')
@@ -1298,7 +1311,7 @@ known = \dom phone
     \end{footnotesize}
 \end{frame}
 
-% Slide 48
+% Slide 49
 \begin{frame}{Composition of Schemas}
     \begin{itemize}
         \item Using the composition operator ($\comp$) on two schemas is typically used to combine the effects of two operations.
@@ -1319,7 +1332,7 @@ known = \dom phone
     \end{schema}
 \end{frame}
 
-% Slide 49
+% Slide 50
 \begin{frame}{Composition of Schemas in general}
     \begin{columns}
         \begin{column}{0.2\textwidth}
@@ -1355,10 +1368,10 @@ known = \dom phone
     \end{schema}
 \end{frame}
 
-% Slide 50
+% Slide 51
 \section{Communicating Sequential Processes (CSP)}
 
-% Slide 51
+% Slide 52
 \begin{frame}{Introduction to CSP}
     \begin{itemize}
         \item \textbf{Communicating Sequential Processes (CSP)} is a formal language to describe patterns interaction between concurrent processes in computer systems.
@@ -1374,7 +1387,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 52
+% Slide 53
 \begin{frame}{Recap: Process State Model}
     \begin{itemize}
         \item To gain a better understanding of \textbf{Communicating Sequential Processes}, revisit the first half of \textbf{CS2106: Operating Systems} where Processes, Concurrency, Synchronisation and Semaphores were covered.
@@ -1385,7 +1398,7 @@ known = \dom phone
     \end{center}
 \end{frame}
 
-% Slide 53
+% Slide 54
 \begin{frame}{Specifying a Process}
     \begin{itemize}
         \item A process is determined or specified by what it can do.
@@ -1395,7 +1408,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 54
+% Slide 55
 \begin{frame}{Concepts in CSP: Events}
     \begin{itemize}
         \item A process engages in \textbf{events}.
@@ -1413,7 +1426,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 55
+% Slide 56
 \begin{frame}{Concepts in CSP: Trace}
     \begin{block}{Trace}
         A finite sequence of events
@@ -1438,7 +1451,7 @@ known = \dom phone
 
 \end{frame}
 
-% Slide 56
+% Slide 57
 \begin{frame}{Notations and Conventions}
     \begin{itemize}
         \item \textbf{Events} are denoted in \textbf{lower case}
@@ -1467,7 +1480,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 57
+% Slide 58
 \begin{frame}{Examples of Process Specification using CSP}
     \begin{enumerate}
         \item Let $STOP_{A}$ be the process with alphabet $A$ that can do nothing.
@@ -1494,7 +1507,7 @@ known = \dom phone
     \end{enumerate}
 \end{frame}
 
-% Slide 58
+% Slide 59
 \begin{frame}{CSP Syntax}
     \begin{enumerate}
         \item Prefix: $a \then P$
@@ -1508,7 +1521,7 @@ known = \dom phone
     \footnotetext{Note that in the \texttt{zed-csp} package, the interrupt symbol is $\interrupt$.}
 \end{frame}
 
-% Slide 59
+% Slide 60
 \begin{frame}{Prefix}
     \begin{itemize}
         \item A process which may participate in \textbf{event a} then act according to \textbf{process description P} is written as: \texttt{a -> P}.
@@ -1524,7 +1537,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 60
+% Slide 61
 \begin{frame}{Sequential Composition ($P;Q$)}
     \begin{itemize}
         \item Let $\tick$ be the Termination event.
@@ -1534,7 +1547,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 61
+% Slide 62
 \begin{frame}{Parallel Composition}
     \begin{itemize}
         \item The parallel composition of \textbf{processes P and Q} synchronised on the \textbf{event set X} is written as $P \parallel[X] Q$.
@@ -1552,7 +1565,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 62
+% Slide 63
 \begin{frame}{Interleaving}
     \begin{itemize}
         \item $P \interleave Q$ denotes an asynchronous parallel composition between two processes \textbf{P} and \textbf{Q}.
@@ -1575,7 +1588,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 63
+% Slide 64
 \begin{frame}{Choice}
     \begin{itemize}
         \item In a general choice, $(a \then P) \extchoice (b \then Q)$, the process begins with both events \textbf{a} and \textbf{b} enabled.
@@ -1594,7 +1607,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 64
+% Slide 65
 \begin{frame}[fragile]
     \frametitle{Interrupt}
     \begin{itemize}
@@ -1613,7 +1626,7 @@ System = Err() || ExceptionHandling();
 
 \end{frame}
 
-% Slide 65
+% Slide 66
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#1}
 We are given the following system specification in CSP
@@ -1638,7 +1651,7 @@ System = VMC || CHOCLOV;
 \end{itemize}
 \end{frame}
 
-% Slide 66
+% Slide 67
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#2}
 We are given the same specification as the previous slide in CSP except that we now do not define the alphabet for the \textbf{VMC} and \textbf{CHOCLOV} processes.
@@ -1664,7 +1677,7 @@ System = VMC || CHOCLOV;
 \end{itemize}
 \end{frame}
 
-% Slide 67
+% Slide 68
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#3}
 We are given the following system specification in CSP
@@ -1686,7 +1699,7 @@ System = VMH || CUST;
 \end{itemize}
 \end{frame}
 
-% Slide 68
+% Slide 69
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#4}
 We are given the following system specification in CSP
@@ -1711,7 +1724,7 @@ Are the following traces possible?
 
 \end{frame}
 
-% Slide 69
+% Slide 70
 \begin{frame}{Laws for Concurrency}
     \begin{itemize}
         \item Law 1: $P \parallel Q = Q \parallel P$
@@ -1733,7 +1746,7 @@ Are the following traces possible?
     \end{itemize}
 \end{frame}
 
-% Slide 70
+% Slide 71
 \begin{frame}{Channel}
     \begin{itemize}
         \item Processes may communicate through channels.
@@ -1754,7 +1767,7 @@ Are the following traces possible?
     \end{itemize}
 \end{frame}
 
-% Slide 71
+% Slide 72
 \begin{frame}[fragile]
     \frametitle{Channel Example}
     Suppose we are given the following specification in CSP.
@@ -1774,7 +1787,7 @@ System() = Sender(5) ||| Receiver();
 
 \end{frame}
 
-% Slide 72
+% Slide 73
 \begin{frame}[fragile]
     \frametitle{Channel Example: Synchronous Buffer}
     Suppose we are given the following specification in CSP.
@@ -1793,7 +1806,7 @@ System() = Sender(5) ||| Receiver();
 
 \end{frame}
 
-% Slide 73
+% Slide 74
 \begin{frame}[fragile]
 \frametitle{CSP Model Checkers: Automatic Reasoning}
 \begin{itemize}
@@ -1815,10 +1828,10 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 \end{itemize}
 \end{frame}
 
-% Slide 74
+% Slide 75
 \section{Process Analysis Toolkit (PAT)}
 
-% Slide 75
+% Slide 76
 \begin{frame}{Introduction to Process Analysis Toolkit (PAT)}
 \begin{itemize}
     \item The \hyperlink{https://www.comp.nus.edu.sg/~pat/OnlineHelp/index.htm}{Process Analysis Toolkit} is a self-contained framework to support composing, simulating and reasoning of concurrent, real-time systems and other possible domains.    
@@ -1827,7 +1840,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 \end{itemize}
 \end{frame}
 
-% Slide 76
+% Slide 77
 \begin{frame}{Introduction to PAT's CSP\#}
     \begin{itemize}
         \item PAT's CSP\# module supports a rich modeling language named CSP\#(pronounced 'CSP sharp', short for Communicating Sequential Programs) \item CSP\# combines high-level modeling operators like (conditional or non-deterministic) choices, interrupt, (alphabetized) parallel composition, interleaving, hiding, asynchronous message passing channel, etc., with programmer-favored low-level constructs like variables, arrays, if-then-else, while, etc $\ldots$
@@ -1837,7 +1850,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{itemize}
 \end{frame}
 
-% Slide 77
+% Slide 78
 \begin{frame}{Operational Semantics}
     \begin{itemize}
         \item Earlier, we want a way to automatically reason if a model satisfies a certain property. 
@@ -1859,7 +1872,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{itemize}
 \end{frame}
 
-% Slide 78
+% Slide 79
 \begin{frame}{Operational Semantics: Primitives}
     \begin{itemize}
         \item STOP (A process that does nothing)
@@ -1878,7 +1891,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{itemize}
 \end{frame}
 
-% Slide 79
+% Slide 80
 \begin{frame}{Operational Semantics}
 \begin{columns}
     \begin{column}{0.25\textwidth}
@@ -1939,7 +1952,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 
 \end{frame}
 
-% Slide 80
+% Slide 81
 \begin{frame}{Operational Semantics: Example \#1}
     \begin{itemize}
         \item Let $VMS = coin \then (choc \then VMS \extchoice bisc \then VMS)$ 
@@ -1953,7 +1966,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     
 \end{frame}
 
-% Slide 81
+% Slide 82
 \begin{frame}{Labelled Transition System (LTS)}
     \begin{itemize}
         \item A \textbf{Labelled Transition System} contains a set of states, an initial state (where the system starts from) and a labelled transition relation.
@@ -1969,7 +1982,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \footnotetext[1]{The Labelled Transition System is a directed graph}
 \end{frame}
 
-% Slide 82
+% Slide 83
 \begin{frame}{Operational Semantics}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -2016,7 +2029,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{columns}
 \end{frame}
 
-% Slide 83
+% Slide 84
 \begin{frame}{Operational Semantics: Example \#2}
 Given the process $a \then P \parallel[a] (c \then a \then Q)$
 \begin{enumerate}
@@ -2031,7 +2044,7 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     
 \end{frame}
 
-% Slide 84
+% Slide 85
 \begin{frame}{Operational Semantics: Example \#3}
     \begin{itemize}
         \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
@@ -2049,7 +2062,7 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     \end{center}
 \end{frame}
 
-% Slide 85
+% Slide 86
 \begin{frame}{Operational Semantics Example: \#4}
     \begin{itemize}
         \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
@@ -2069,7 +2082,7 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     \end{center}
 \end{frame}
 
-% Slide 86
+% Slide 87
 \begin{frame}[fragile]
     \frametitle{Case Study: Dining Philosophers}
     \begin{enumerate}
@@ -2091,7 +2104,7 @@ College = Alice || Bob || Fork1 || Fork2
     \end{enumerate}
 \end{frame}
 
-% Slide 87
+% Slide 88
 \begin{frame}{Case Study: Dining Philosophers}
 \begin{enumerate}
     \setcounter{enumi}{2}
@@ -2112,7 +2125,7 @@ College = Alice || Bob || Fork1 || Fork2
 \end{center}
 \end{frame}
 
-% Slide 88
+% Slide 89
 \begin{frame}{Case Study: Dining Philosophers}
     \begin{enumerate}
         \setcounter{enumi}{3}
@@ -2127,7 +2140,7 @@ College = Alice || Bob || Fork1 || Fork2
     \end{enumerate}
 \end{frame}
 
-% Slide 89
+% Slide 90
 \begin{frame}[fragile]
 \frametitle{Safety}
 \begin{itemize}
@@ -2150,7 +2163,7 @@ The savings of a bank account must always be non-negative.
 \footnotetext[2]{'$\mid =$' represents 'satisfisfaction' in Linear Temporal Logic.}
 \end{frame}
 
-% Slide 90
+% Slide 91
 \begin{frame}{Verifying Safety}
     \begin{itemize}
         \item To verify safety, perform \textbf{reachability analysis} on the \textbf{Labelled Transition System}.
@@ -2168,7 +2181,7 @@ The savings of a bank account must always be non-negative.
     \footnotetext[1]{State 4 is the bad state as there is no outgoing edges.}
 \end{frame}
 
-% Slide 91
+% Slide 92
 \begin{frame}{Applications of Safety Verification}
 Many properties can be formulated as a safety property and solved using \textbf{reachability analysis}.
 \begin{enumerate}
@@ -2189,7 +2202,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
 \end{enumerate}
 \end{frame}
 
-% Slide 92
+% Slide 93
 \begin{frame}{Liveness}
     \begin{itemize}
         \item Liveness means \textbf{something good eventually happens}.
@@ -2202,7 +2215,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
     \end{itemize}
 \end{frame}
 
-% Slide 93
+% Slide 94
 \begin{frame}[fragile]
     \frametitle{Verifying Liveness}
     \begin{itemize}
@@ -2234,7 +2247,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
    \end{itemize} 
 \end{frame}
 
-% Slide 94
+% Slide 95
 \begin{frame}{CSP\#: Extending CSP}
     \begin{itemize}
         \item The original CSP has no shared variables, arrays, etc\dots
@@ -2265,7 +2278,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
     \end{block}
 \end{frame}
 
-% Slide 95
+% Slide 96
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2291,7 +2304,7 @@ enum {red, blue, green};
 \end{block}
 \end{frame}
 
-% Slide 96
+% Slide 97
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2318,7 +2331,7 @@ var matrix[3][2] // Multi-dimensional array (internally an array of 6)
 \end{block}
 \end{frame}
 
-% Slide 97
+% Slide 98
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2338,7 +2351,7 @@ var array = [1, 1, 3, 4, 5, 6, 7, 7, 7, 7, 12, 11, 10];
 \end{itemize}
 \end{frame}
 
-% Slide 98
+% Slide 99
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2369,7 +2382,7 @@ If the value of x is 0 then do P else do Q.
 \end{block}
 \end{frame}
 
-% Slide 99
+% Slide 100
 \begin{frame}{CSP\#: Global Definition}
     \begin{itemize}
         \item PAT only supports integer, boolean and integer arrays for the purpose of \textbf{efficient verification}.
@@ -2382,7 +2395,7 @@ If the value of x is 0 then do P else do Q.
     \end{itemize}
 \end{frame}
 
-% Slide 100
+% Slide 101
 \begin{frame}[fragile]
 \frametitle{CSP\#: Process Definition}
 \begin{itemize}
@@ -2407,7 +2420,7 @@ Phil(i) = get.i.(i + 1) % N -> Rest();
 \end{itemize}
 \end{frame}
 
-% Slide 101
+% Slide 102
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2436,7 +2449,7 @@ P() = findmax {
 \end{block}
 \end{frame}
 
-% Slide 102
+% Slide 103
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2466,7 +2479,7 @@ System = Init;P; // Sequential composition of two processes
     \end{block}
 \end{frame}
 
-% Slide 103
+% Slide 104
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2480,7 +2493,7 @@ aSys = [x == 2] a -> Stop ||| P;
 \end{lstlisting}
 \end{frame}
 
-% Slide 104
+% Slide 105
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2504,7 +2517,7 @@ System = P ||| Q ||| W;
     \end{block}
 \end{frame}
 
-% Slide 105
+% Slide 106
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions}
     \begin{itemize}
@@ -2529,7 +2542,7 @@ P() = add{x = x + 1;} -> P() [] minus{x = x - 1;} -> P();
     \end{itemize}
 \end{frame}
 
-% Slide 106
+% Slide 107
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions}
     The following coin exchanging example shows how to minimize the number of coins during reachability search.
@@ -2546,7 +2559,7 @@ P() = if (x <= 14) {
 \end{lstlisting}
 \end{frame}
 
-% Slide 107
+% Slide 108
 \begin{frame}{CSP\#: Assertions and Linear Temporal Logic}
     \begin{itemize}
         \item \textbf{Linear Temporal Logic (LTL)} is a formalism used for specifying and reasoning about the behavior of systems over time. 
@@ -2555,7 +2568,7 @@ P() = if (x <= 14) {
     \end{itemize}
 \end{frame}
 
-% Slide 108
+% Slide 109
 \begin{frame}{CSP\#: Assertions and Linear Temporal Logic}
 Let $\phi$ and $\psi$ be LTL formulaes.
 \begin{center}
@@ -2577,7 +2590,7 @@ Let $\phi$ and $\psi$ be LTL formulaes.
 \end{center}
 \end{frame}
 
-% Slide 109
+% Slide 110
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{itemize}
@@ -2601,7 +2614,7 @@ Let $\phi$ and $\psi$ be LTL formulaes.
     \end{itemize}
 \end{frame}
 
-% Slide 110
+% Slide 111
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{columns}[t]
@@ -2641,7 +2654,7 @@ P = [x < 2] a{x = x + 1} -> P
     \end{columns}
 \end{frame}
 
-% Slide 111
+% Slide 112
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{columns}[t]
@@ -2672,7 +2685,7 @@ P = [x < 2] a{x = x + 1} -> P
     \end{columns}
 \end{frame}
 
-% Slide 111
+% Slide 113
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{columns}[t]
@@ -2706,5 +2719,309 @@ P = [x < 2] a{x = x + 1} -> P
         \end{column}
     \end{columns}
 \end{frame}
+
+% Slide 114
+\begin{frame}{CSP\# Example: Alternating Bit Protocol}
+    \begin{itemize}
+        \item We are trying to model a simple network protocol that retransmits lost messages between a Sender (A) and Receiver (B).
+        \item A sends a bit to B and message may get lost. Using an internal timer, A should retransmit if there is no ACK when {\color{red} \textbf{the time is out}.} A should {\color{orange} \textbf{continue to listen}} for the correct ACK if it receives a wrong one.
+        \item B will send ACK if and only if it receives a correct bit. We assume the ACK never gets lost. B should {\color{orange} \textbf{ignore the wrong bit}} received.
+        \item After finishing one bit, A and B should move on to send and ACK the alternating bit.
+    \end{itemize}
+    \begin{block}{Note}
+        \texttt{ifa (cond)\{ P \} else \{ Q \};} performs the condition checking and the first operation of P or Q together.
+    \end{block}
+\end{frame}
+
+% Slide 115
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Alternating Bit Protocol}
+\begin{lstlisting}[language=C]
+channel c 1; // unreliable channel.
+channel d 1; // perfect channel.
+channel tmr 0; // sender's internal timer.
+
+Sender(alterbit) = (c!alterbit -> Skip [] lost -> Skip); tmr!1 -> Wait4Response(alterbit);
+
+Wait4Response(alterbit) = (d?x -> ifa (x == alterbit) {
+    tmr!0 -> Sender(1 - alterbit)
+} else { Wait4Response(alterbit) }) // Time not out, wait
+[] tmr?2 -> Sender(alterbit); // Time is out, retransmit
+
+Timer = tmr?1 -> (tmr?0 -> Timer [] tmr!2 -> Timer);
+
+Receiver(alterbit) = c?x -> ifa (x == alterbit) {
+    d!alterbit -> Receiver(1 - alterbit)
+} else { Receiver(alterbit) }; // Wait to receive
+
+ABP = (Sender(0) ||| Receiver(0) ||| Timer);
+\end{lstlisting}
+\end{frame}
+
+% Slide 116
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Alternating Bit Protocol}
+\begin{lstlisting}
+#assert ABP |= [](c!0 -> <>d?0);
+\end{lstlisting}
+Is it always true, that when a Sender process writes 0 into the unreliable channel $c$, a Receiver process will read the value 0 from the perfect channel $d$?
+\begin{itemize}
+    \item Not valid
+    \item Counter Example: $\trace{c!0, c?0, d!0, tmr.1, tmr.2, c!0, c?0, tmr.1, tmr.2, c!0, (c!0, c?0, tmr.1, tmr.2, c!0)^{*}}$
+\end{itemize}
+\end{frame}
+
+% Slide
+\section{Timed and Probability CSP}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{Real-Time System (RTS) Module}
+    \begin{itemize}
+        \item The Real-Time System (RTS) module is an extension of the CSP module with operators which captures quantitative \textbf{timing requirements.}
+        \item Let $P$ and $Q$ be processes, while $d$ represents a duration of $d$ time units.
+    \end{itemize}
+\begin{lstlisting}[language=C]
+P = Wait[t] // delay
+P = P timeout[t] Q // timeout
+P = P interrupt[t] Q // timed interrupt
+P = P deadline [t] // deadline
+P = P within[t] // within
+\end{lstlisting}
+\end{frame}
+
+% Slide 
+\begin{frame}[fragile]
+    \frametitle{Timed Process Definition: Wait}
+    \begin{itemize}
+        \item A wait process \texttt{Wait[t]} delays the system execution for a period of t time units then terminates.
+        \item In the subsequent slides, a set of inference rules using premises and conclusions will be used to define the behaviour of each timed process.
+        \item Recall that each (V, P) is an ordered pair of values and processes.
+    \end{itemize}
+    \begin{columns}[t]
+        \begin{column}{0.5\textwidth}
+            \begin{small}
+                \textbf{Definition 1}
+                \begin{axdef}
+                    t \leq d
+                    \where
+                    (V, Wait[d]) \xrightarrow{t} (V, Wait[d - t])
+                \end{axdef}
+
+                \textbf{Definition 2}
+                \begin{axdef}
+                    \where
+                    (V, Wait[0]) \xrightarrow{\tau} (V, Skip)
+                \end{axdef}
+            \end{small}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+\begin{lstlisting}[language=C]
+P = Wait[t]; P
+\end{lstlisting}
+        \begin{itemize}
+            \item The starting time of process P is delayed by exactly t time units.
+            \item If the amount of time elapsed is less than the specified duration, then the Wait process will be still active.
+        \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 
+\begin{frame}[fragile]
+    \frametitle{Timed Process Definition: Timeout}
+    
+    \begin{itemize}
+        \item The process \texttt{P timeout[t] Q} passes control to process \texttt{Q} if no event has occured in process \texttt{P} before t time units have elapsed.
+        \item For instance if process \texttt{a -> P timeout [t] Q} engages in event \texttt{a} before $t$ time units have elapsed since the process is enabled, then the process is transformed to P.
+        \item If event \texttt{a} has not occured by time $t$, the process transforms to Q (by silent tau-transition).
+    \end{itemize}
+    \begin{block}{Invisible Events}
+        \begin{enumerate}
+            \item Let $\tau$ (tau) be an invisible event. Example: \texttt{tau\{pv = x\}}
+            \item \texttt\{ pv = x \} (Event with no name is also an invisible event)
+        \end{enumerate}
+        \textbf{Note:} Invisible events are not observable.
+    \end{block} 
+\end{frame}
+
+% Slide 
+\begin{frame}{Timed Process Definition: Timeout}
+    \begin{small}
+        \begin{itemize}
+            \item The timeout constraint is removed if an event in P is engaged before $d$ time units has elapsed.
+            \begin{footnotesize}
+                \begin{axdef}
+                    (V, P) \xrightarrow{x} (V', P')
+                    \where
+                    (V, \text{$P$ timeout[d] $Q$}) \xrightarrow{x} (V', P')
+                \end{axdef}
+            \end{footnotesize}
+            \item If P engages in an invisible event $\tau$, the timeout constraint is not removed, but the process becomes \texttt{P' timeout[d] Q}
+            \begin{footnotesize}
+            \begin{axdef}
+                (V, P) \xrightarrow{\tau} (V, P')
+                \where
+                (V, \text{$P$ timeout[d] $Q$}) \xrightarrow{\tau} (V', \text{P' timeout[d] $Q$})
+            \end{axdef}
+            \end{footnotesize}
+            \item If time has not passed d units, the timeout constraint remains.
+            \begin{footnotesize}
+                \begin{axdef}
+                    (V, P) \xrightarrow{t} (V, P'), t \leq d
+                    \where
+                    (V, \text{$P$ timeout[d] $Q$}) \xrightarrow{t} (V, \text{P' timeout[d - t] $Q$})
+                \end{axdef}
+            \end{footnotesize}
+            \item If no event has occure by timeout, the process transforms to Q by silent-tau transition.
+            \begin{footnotesize}
+                \begin{axdef}
+                    \where
+                    (V, \text{$P$ timeout[0] $Q$}) \xrightarrow{\tau} (V, Q)
+                \end{axdef}
+            \end{footnotesize}
+        \end{itemize}
+    \end{small}
+\end{frame}
+
+% Slide
+\begin{frame}{Timed Process Definition: Timed Interrupt}
+    \begin{itemize}
+        \item Process \texttt{P interrupt[t] Q} behaves as P until t time unit elapse and then switches to Q
+        \item For example process \texttt{(a -> b -> c -> \dots) interrupt[t] Q} may engage in events a, b, c, \dots as long as $t$ time units has not elapsed.
+        \item Once t time units have elapse, then the process transforms to Q by silent-tau transition.
+    \end{itemize}
+
+    \textbf{Definition 1}
+    \begin{footnotesize}
+        \begin{axdef}
+            (V, P) \xrightarrow{x} (V', P')
+            \where
+            (V, \text{$P$ interrupt[d] $Q$}) \xrightarrow{x} (V', \text{$P'$ interrupt[d] $Q$})
+        \end{axdef}
+    \end{footnotesize}
+
+    \textbf{Definition 2}
+    \begin{footnotesize}
+        \begin{axdef}
+            (V, P) \xrightarrow{t} (V', P'), t \leq d
+            \where
+            (V, \text{$P$ interrupt[d] $Q$}) \xrightarrow{t} (V', \text{$P'$ interrupt[d - t] $Q$})
+        \end{axdef}
+    \end{footnotesize}
+
+    \textbf{Definition 3}
+    \begin{footnotesize}
+        \begin{axdef}
+            \where
+            (V, \text{$P$ interrupt[0] $Q$}) \xrightarrow{\tau} (V', Q)
+        \end{axdef}
+    \end{footnotesize}
+\end{frame}
+
+% Slide
+\begin{frame}{Timed Process Definition: Deadline}
+Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units.
+\textbf{Definition 1}
+\begin{footnotesize}
+    \begin{axdef}
+        (V, P) \xrightarrow{x} (V', P')
+        \where
+        (V, \text{$P$ deadline[d]}) \xrightarrow{x} (V', \text{$P'$ deadline[d]})
+    \end{axdef}
+\end{footnotesize}
+
+\textbf{Definition 2}
+\begin{footnotesize}
+    \begin{axdef}
+        (V, P) \xrightarrow{t} (V', P'), t \leq d
+        \where
+        (V, \text{$P$ deadline[d]}) \xrightarrow{t} (V', \text{$P'$ deadline[d - t]})
+    \end{axdef}
+\end{footnotesize}
+
+\textbf{Definition 3}
+\begin{footnotesize}
+    \begin{axdef}
+        \where
+        (V, \text{$P$ interrupt[0]}) \rightarrow Skip
+    \end{axdef}
+\end{footnotesize}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{Timed Process Definition: Within}
+    \begin{columns}
+        \begin{column}{0.75\textwidth}
+            \begin{itemize}
+                \item The within operator forces the process to make an observable move within the given time frame.
+                \item For example \texttt{P within[t]} says the first event of P must engage within $t$ time units.
+                \item In the example below, event a has to be engaged by latest $t = 2$ which is at \textbf{State 4}.
+            \end{itemize}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) within[2];
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.2\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.55]{../images/within_operator.JPG}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Fischer's Protocol}
+    Mutual exclusion in Fischer's Protocol is guaranteed by carefully placing bounds on the execution times of the instructions, leading to a protocol which is very simple, and relies heavily on time aspects.
+\begin{lstlisting}[language=C]
+#define N 2;
+#define Delta 3;
+#define Epsilon 4;
+#define Idle -1;
+var x = Idle;
+var counter;
+
+P(i) = ifb(x == Idle) {
+    ((update.i{x = i} -> Wait[Epsilon]) within[Delta]);
+    ([x == i](cs.i{counter++} -> exit.i{counter--; x=Idle} -> P(i))
+    [] [x != i]P(i))
+};
+
+FischersProtocol = ||| i:{0..N-1}@P(i);
+\end{lstlisting}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Railway Crossing System}
+    Control trains passing a critical point (a bridge)
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily]
+#import "PAT.Lib.Queue";
+#define N 2;
+channel appr 0;
+channel go 0;
+channel leave 0;
+channel stop 0;
+var<Queue> queue;
+
+Train(i) = appr!i -> ((stop?i -> StopS(i) within[10]) timeout[10] Cross(i));
+Cross(i) = Wait[4]; (leave!i -> Train(i)) within[11];
+StopS(i) = go?i -> Start(i);
+Start(i) = Wait[10]; (leave!i -> Train(i)) within[10];
+Gate = if (queue.Count() ==0) {
+    appr?i -> atomic{tau{queue.Enqueue(i)} -> Skip}; Occ 
+} else {
+    (go!queue.First() -> Occ) within[10] 
+};
+
+Occ = (leave?[i == queue.First()]i -> atomic{tau{queue.Dequeue()} -> Skip}; Gate) [] (appr?i -> atomic{tau{queue.Enqueue(i)} -> stop!queue.Last() -> Skip}; Occ);
+System = (||| x:{0..N-1}@Train(x)) ||| Gate;
+\end{lstlisting}
+\end{scriptsize}
+\end{frame}
+
 
 \end{document}
