@@ -2771,6 +2771,217 @@ Is it always true, that when a Sender process writes 0 into the unreliable chann
 \end{itemize}
 \end{frame}
 
+% Slide 117
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Shunting Game}
+    Modelling the game board using a 1-D array
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define M 7;
+#define N 6;
+#define o -1;
+#define a 1;
+#define w 0;
+    // col number: 0 1 2 3 4 5 6
+var board[N][M] = [o,o,a,a,o,o,o, // 0 row number starting from 0
+                   o,o,a,a,o,o,o, // 1
+                   a,a,a,w,a,a,a, // 2
+                   a,w,a,a,a,w,a, // 3
+                   a,w,a,a,a,w,a, // 4
+                   o,o,a,w,o,o,o, // 5
+                   o,o,a,a,o,o,o];// 6
+
+// Black Position
+var r:{0..N-1} = 3; // row
+var c:{0..M-1} = 0; // column
+\end{lstlisting}
+\end{frame}
+
+% Slide 118
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Shunting Game}
+\begin{itemize}
+    \item Modelling the moves
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+Game = [r - 1 >= 0] MoveUp [] [r - 2 >= 0] PushUp
+    [] [r + 1 < N] MoveDown [] [r + 2 < N] PushDown
+    [] [c - 1 >= 0] MoveLeft [] [c - 2 >= 0] PushLeft
+    [] [c + 1 < M] MoveRight [] [c + 2 < M] PushRight;
+
+MoveUp = [board[r - 1][c] == a] go_up{r = r - 1} -> Game;
+PushUp = [board[r - 2][c] == a && board[r - 1][c] == w] push_up{
+    board[r - 2][c] = w;
+    board[r - 1][c] = a;
+    r = r - 1;
+} -> Game
+$\dots$
+\end{lstlisting}
+    \item Modelling goal and trouble state.
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define goal board[2][2] == w && board[2][3] == w && board[3][2] == w && board[3][3] == w;
+#assert Game reaches goal;
+#define trouble board[0][3] == w;
+#assert Game reaches trouble;
+#assert Game |= [](trouble -> ! <> goal); // trouble prevents reaching goal
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+% Slide 119
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Keyless System}
+    \begin{itemize}
+        \item One of the latest automotive technologies, a push-button keyless system, allows you to start your car's engine without the hassle of key insertion and offers great convenience.
+        \item These systems are designed so it is possible to start the engine without the owner's key-fob and it cannot lock your key fob inside the car because the system will sense it and prevent the user from locking them in.
+        \item \color{red} However, the keyless system can also suprise you as it may allow you to drive the car without a key-fob, meaning you can drive without physically having the key.
+        \item In this example, we will model such a Keyless System and use assertions to check if one can drive the car without having a key with them.
+    \end{itemize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+\end{lstlisting}
+\end{frame}
+
+% Slide 120
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Keyless System}
+Constants and variables
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2; // number of owners
+#define far 0; // owner is out and far away from the car
+#define near 1; // owner is close enough to open / lock the car if he has the keyfob
+#define in 2; // owner is in the car
+#define off 0; // engine is off
+#define on 1; // engine is on
+#define unlock 0; // door is unlocked but closed
+#define lock 1; // door is locked (and must be closed)
+#define open 2; // door is open
+#define incar -1; // keyfob is put inside car
+#define faralone -2; // keyfob is put outside and far
+
+var owner[N]; // owners' position, initially all users are far away from the car
+var engine = off; // engine status, intially off
+var door = lock; // door status, initally locked
+var key = 0; // key fob position, initially with its first owner
+var moving = 0; // car moving status, 0 for stop and 1 for moving
+var fuel = 10; // energy costs, say 1 for a short drive and 5 for long driving
+\end{lstlisting}
+\end{frame}
+
+% Slide 121
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Keyless System}
+\begin{itemize}
+    \item Owner positions
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+car = (||i:{0..N-1} @ (owner_pos(i) || motor(i) || door_op(i) || key_pos(i)));
+
+owner_pos(i) = [owner[i] == far] towards.i{owner[i] = near} -> owner_pos(i)
+            [] [owner[i] == near] goaway.i{owner[i] = far} -> owner_pos(i)
+            [] [owner[i] == near && door == open && moving == 0] 
+                getin.i{owner[i] = in} -> owner_pos(i)
+            [] [owner[i] == in && door == open && moving == 0] 
+            goout.i{owner[i] = near} -> owner_pos(i);
+\end{lstlisting}
+    \item Key-fob positions
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+key_pos(i) = 
+    [key == i && owner[i] == in] putincar.i{key = incar} -> key_pos(i)
+ [] [key == i && owner[i] == far] putaway.i{key = faralone} -> key_pos(i)
+ [] [(key == faralone && owner[i] == far) || (key == incar && owner[i] == in)] getkey.i{key = i} -> key_pos(i);
+
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+% Slide 122
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Keyless System}
+Door Operation
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+door_op(i) =
+    [key == i && owner[i] == near && door == lock && moving == 0] 
+    unlockopen.i{door = open} -> door_op(i)
+ [] [owner[i] == near && door == unlock && moving == 0] justopen.i{door = open} -> door_op(i)
+ [] [door != open && owner[i] == in] insideopen.i{door = open} -> door_op(i)
+ [] [door == open] close.i{door = unlock} -> door_op(i)
+ [] [door == unlock && owner[i] == in] insidelock.i{door = lock} -> door_op(i)
+ [] [door == unlock && owner[i] == near && key == i] outsidelock.i{door = lock} -> door_op(i);
+\end{lstlisting}
+\end{frame}
+
+% Slide 123
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Keyless System}
+Motor
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+motor(i) =
+    [owner[i] == in && (key == i || key == incar) && engine == off && fuel != 0] turnon.i{engine = on} -> motor(i)
+ [] [engine == on && owner[i] == in && moving == 0] startdrive.i{
+        moving = 1;
+    } -> motor(i)
+ [] [moving == 1 && fuel != 0] shortdrive.i{
+        fuel = fuel - 1; 
+        if (fuel == 0) {engine = off; moving = 0;}
+    } -> motor(i)
+ [] [moving == 1 && fuel > 5] longdrive.i{
+        fuel = fuel - 5; 
+        if (fuel == 0) { engine = off; moving = 0; }
+    } -> motor(i)
+ [] [engine == on && moving == 1 && owner[i] == in] stop.i{moving = 0;} -> motor(i)
+ [] [fuel == 0 && engine == off] refill{fuel = 10} -> motor(i)
+ [] [engine == on && moving == 0 && owner[i] == in] turnoff.i{
+        engine = off;
+    } -> motor(i);
+\end{lstlisting}
+\end{frame}
+
+% Slide 124
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Keyless System}
+Reasoning
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define keylockinside (key == incar && door == lock && owner[0] != in && owner[1] != in);
+#define drivewithoutengineon (moving == 1 && engine == off);
+#define drivewithoutkeyholdbyother (moving == 1 && owner[1] == in && owner[0] == far && key == 0);
+
+#assert car deadlockfree;
+#assert car reaches keylockinside; // False
+#assert car reaches drivewithoutengineon; // False
+#assert car reaches drivewithoutkeyholdbyother; // True
+\end{lstlisting}
+\end{frame}
+
+% Slide 125
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Multi-lift System (using C\#)}
+\end{frame}
+
+% Slide 
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: 2-phase Commit Protocol}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2; // number of participants
+enum {Yes, No, Commit, Abort}; // constants
+channel vote 0;
+var hasNo = false;
+
+// The following models the coordinator
+Coord() = (|||{N}@ request -> Skip); 
+          (|||{N}@ vote?vo{if (vo == No) {hasNo = true;}} -> Skip);
+          decide -> (([hasNo == false] (|||{N}@inform.Commit -> Skip); 
+          CoordPhaseTwo(Commit))
+          [] ([hasNo == true] (|||{N}@inform.Abort -> Skip); CoordPhaseTwo(Abort)));
+CoordPhaseTwo(decC) = |||{N}@acknowledge -> Skip;
+
+// The following models a participant
+Part() = request -> execute -> (vote!Yes -> PhaseTwo() [] vote!No -> PhaseTwo());
+PhaseTwo() = inform.Commit -> complete -> result.Commit -> acknowledge -> Skip 
+           [] inform.Abort -> undo -> result.Abort -> acknowledge -> Skip;
+
+#alphabet Coord {request, inform.Commit, inform.Abort, acknowledge};
+#alphabet Part {request, inform.Commit, inform.Abort, acknowledge};
+System = Coord() || (|||{N}@Part()); // Note: request is a common event between Coord and Part and has to be synchronised.
+\end{lstlisting}
+\end{frame}
+
 % Slide
 \section{Timed and Probability CSP}
 
@@ -2922,6 +3133,7 @@ P = Wait[t]; P
 % Slide
 \begin{frame}{Timed Process Definition: Deadline}
 Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units.
+
 \textbf{Definition 1}
 \begin{footnotesize}
     \begin{axdef}
@@ -3019,6 +3231,365 @@ Gate = if (queue.Count() ==0) {
 
 Occ = (leave?[i == queue.First()]i -> atomic{tau{queue.Dequeue()} -> Skip}; Gate) [] (appr?i -> atomic{tau{queue.Enqueue(i)} -> stop!queue.Last() -> Skip}; Occ);
 System = (||| x:{0..N-1}@Train(x)) ||| Gate;
+\end{lstlisting}
+\end{scriptsize}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Light Control System (Part 1 of 2)}
+    \begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily]
+var dim : {0..100};
+var on = false;
+channel button 0;
+channel dimmer 0;
+channel motion 0;
+
+TurningOn = turnOn{ on = true; dim = 100;} -> Skip;
+TurningOff = turnOff{ on = false; dim = 0; } -> Skip;
+
+ButtonPushing = button?1 -> atomic{if (dim > 0) { TurningOff } else { TurningOn }};
+DimChange = dimmer?n -> atomic{setdim{dim = n} -> Skip};
+ControlledLight = (ButtonPushing [] DimChange); ControlledLight;
+
+// The motion detector
+NoUser = move -> motion!1 -> User [] nomove -> Wait[1]; NoUser;
+User = nomove -> motion!0 -> NoUser [] move -> Wait[1]; User;
+MotionDetector = NoUser;
+
+// Continued on the next slide...
+\end{lstlisting}
+\end{scriptsize}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Light Control System (Part 2 of 2)}
+    \begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily]
+// The room controller
+Ready = motion?1 -> button!1 -> On;
+Regular = adjust -> dimmer!50 -> Regular;
+On = Regular interrupt motion?0 -> OnAgain;
+OnAgain = (motion?1 -> On) timeout[20] Off;
+Off = button!1 ->> Ready; // Note: ->> is shortcut for atomic
+Controller = Ready;
+
+System = MotionDetector ||| ControlledLight ||| Controller;
+
+\end{lstlisting}
+\end{scriptsize}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{PCSP Module: Probability Processes}
+    \begin{itemize}
+        \item The PCSP module adds \textbf{probability processes} to existing process definitions in the CSP\# module.
+        \item \textbf{Probability processes} are a special kind of process with probabilistic characteristic defined using the keyword \texttt{pcase}.
+        \item It is a compositional process made up of probabilistic branches.
+    \end{itemize}
+    \begin{columns}[t]
+        \begin{column}{0.45\textwidth}
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P = pcase{
+    [prob1] : Q1
+    [prob2] : Q2
+    $\dots$
+    default : Qn
+}
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{prob1} and \texttt{prob2} are floating point probability values.
+    \item \texttt{default = 1 - prob1 - prob2 - ...}
+\end{itemize}
+\end{scriptsize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P = pcase{
+    weight1 : Q1
+    weight2 : Q2
+    $\dots$
+    weightn : Qn
+}
+\end{lstlisting}
+\begin{itemize}
+    \item PAT will add up and normalize the weights.
+    \item For example, the probability of P to Q1 is $\frac{weight1}{weight1 + weight2 + \dots + weightn}$
+\end{itemize}
+\end{scriptsize}         
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{Probabilty Processes Assertion}
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#assert P reaches cond with prob/pmin/pmax
+\end{lstlisting}
+\end{scriptsize}
+This assertion asks the (min/max/both) probability that the process P() can reach a state at which some given condition is satisifed.
+
+\begin{block}{Keyword: \texttt{prob}}
+    The keyword \texttt{prob} provides both the minimum and maximum probability a process P() can reach a certain state. It provides a range of probabilities.
+\end{block}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{PCSP Example: Simple pcase}
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+var current = 0;
+aSystem = State0;
+
+State0 = pcase{
+    [0.5] : e05{current = 1} -> State1
+    default : e05{current = 2} -> State2 
+} [] pcase{
+    [0.25] : e025{current = 3} -> State3
+    default : e075{current = 2} -> State2
+};
+
+State1 = pcase{
+    [0.5] : e05{current = 0} -> State0
+    default : e05{current = 3} -> State3
+}
+
+State2 = e -> State2;
+State3 = e -> State3;
+
+#define predicate current == 2;
+#assert aSystem reaches predicate with pmax; // 0.75
+#assert aSystem reaches predicate with pmin; // 0.67
+
+\end{lstlisting}
+\end{scriptsize}
+    
+\end{frame}
+
+% Slide
+\begin{frame}{PCSP Example: Calculating Max Reachability for Simple pcase}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.325]{../images/L4_Simple_Pcase_LTD.png} 
+            \end{center}
+            Let $x_i$ be the max reachability from $S_i$ to $S_2$:
+            \begin{itemize}
+                \item $x_0 = max(0.5x_1 + 0.5x_2, 0.75x_2 + 0.25x_3)$
+                \item $x_1 = 0.5x_0 + 0.5x_3$
+                \item $x_2 = 1$
+                \item $x_2 = 0$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item $x_0, x_1$ dependent on other reachability values.
+                \item Initially, assume $x_0, x_1 = 0$.
+                \item When calculating each current iteration, use the previous iteration's $x_0$ value when calculating $x_1$. That is why in the table below, we start from iteration 0.
+                \item Stop iterating only when the values are stabilized.
+            \end{itemize}
+            \begin{center}
+                \begin{scriptsize}
+                    \begin{tabular}{|l|l|l|}
+                        \hline
+                        Iteration & $x_0$ & $x_1$ \\
+                        \hline
+                        0 & 0 & 0 \\
+                        \hline
+                        1 & 0.75 & 0 \\
+                        \hline
+                        2 & 0.75 & 0.375 \\
+                        \hline
+                        3 & 0.75 & 0.375 \\
+                        \hline
+                    \end{tabular}
+                \end{scriptsize}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide
+\begin{frame}{PCSP Example: Calculating Min Reachability for Simple pcase}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.325]{../images/L4_Simple_Pcase_LTD.png} 
+            \end{center}
+            Let $x_i$ be the min reachability from $S_i$ to $S_2$:
+            \begin{itemize}
+                \item $x_0 = min(0.5x_1 + 0.5x_2, 0.75x_2 + 0.25x_3)$
+                \item $x_1 = 0.5x_0 + 0.5x_3$
+                \item $x_2 = 1$
+                \item $x_2 = 0$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item $x_0, x_1$ dependent on other reachability values.
+                \item Initially, assume $x_0, x_1 = 1$.
+                \item Use the previous iteration's $x_0$ value when calculating $x_1$.
+                \item Stop iterating only when the values are stabilized.
+            \end{itemize}
+            \begin{center}
+                \begin{scriptsize}
+                    \begin{tabular}{|l|l|l|}
+                        \hline
+                        Iteration & $x_0$ & $x_1$ \\
+                        \hline
+                        0 & 1 & 1 \\
+                        \hline
+                        1 & 0.75 & 0.5 \\
+                        \hline
+                        2 & 0.75 & 0.375 \\
+                        \hline
+                        3 & 0.6875 & 0.375 \\
+                        \hline
+                        4 & 0.6875 & 0.3438 \\
+                        \hline
+                        5 & 0.6719 & 0.3438 \\
+                        \hline
+                        $\dots$ &  &  \\
+                        \hline
+                         & 0.6667 & 0.3333 \\
+                        \hline
+                    \end{tabular}
+                \end{scriptsize}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+\frametitle{PCSP Example: Monty Hall}
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+enum{Door1, Door2, Door3};;
+var car = -1;
+var guess = -1;
+var goat = -1;
+var final = false;
+
+#define goal guess == car && final;
+
+PlaceCar = []i:{Door1, Door2, Door3}@ placecar.i{car = i} -> Skip;
+Goat = []i:{Door1, Door2, Door3}@ 
+    ifb (i != car && i != guess) { hostopen.i{goat = i} -> Skip };
+
+TakeOffer = []i:{Door1, Door2, Door3}@
+    ifb (i != guess && i != goat) { changeguess{guess = i; final = true} -> Stop };
+NotTakeOffer = keepguess{final = true} -> Stop;
+
+Sys_Take_Offer = PlaceCar; Guest; Goat; TakeOffer;
+#assert Sys_Take_Offer reaches goal with prob; // Max Prob = 2/3
+
+Sys_Not_Take_Offer = PlaceCar; Guest; Goat; NotTakeOffer;
+#assert Sys_Not_Take_Offer reaches goal with prob; // Max Prob = 1/3
+
+\end{lstlisting}
+\end{scriptsize}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+\frametitle{PCSP Example: Monty Hall (Explanation)}
+\begin{itemize}
+    \item What happens if we changed \textbf{line 14} to
+\begin{lstlisting}{language=C}
+if (i != car && i != guess) { hostopen.i{goat = i} -> Skip };
+\end{lstlisting}
+    \begin{itemize}
+        \item \text{goat} will remain as \texttt{-1}
+        \item In the original code, \texttt{ifb} was used. The process will wait at the \texttt{ifb} block when the condition is not true.
+        \item However for \texttt{if}, the process will terminate if the condition is not true.
+        \item Alternatively, we can change \texttt{ifb} to a guard condition.
+    \end{itemize}
+    \item The code in the previous slide \textbf{can deadlock}.
+    \begin{itemize}
+        \item The \texttt{TakeOffer} and \texttt{NotTakeOffer} processes have a \texttt{STOP} process inside its definition.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{PCSP Example: Consensus}
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2;
+#define K 2;
+#define range 12; // Range
+#define counter_init 6; // Middle
+#define left 2; // Left Target
+#define right 10; // Right Target
+var counter : {0..range} = counter_init; // shared coin
+var Pcounter; // record the process number
+var coin0counter = N; // number of coints which are 0;
+var coin1counter; // number of coints which are 1;
+// local variable: 0 - flip, 1 - write, 2 - check, 3 - finished
+// processij means this process's coin is i and its local variable is j
+process00 = pcase{ [0.5] : process01
+                    default : tau {coin0counter--; coin1counter++;} -> process11 };
+process01 = [counter > 0] tau {counter--;} -> process02;
+process02 = [(counter <= left)] tau {Pcounter++;} -> process03
+  [] [(counter >= right)] {Pcounter++; coin0counter--; coin1counter++;} -> process13 
+  [] [(counter > left) && (counter < right)] process00;
+process03 = [Pcounter==N] done -> process03;
+process13 = [Pcounter==N] done -> process13;
+
+System = |||{N}@ process00;
+\end{lstlisting}
+\end{scriptsize}
+\end{frame}
+
+\begin{frame}{PCSP Example: Consensus (Explanation)}
+\begin{itemize}
+    \item In this example, $N$ processes come to a consensus by deciding whether the agreed value should be $0$ or $1$.
+    \item In \texttt{process00}, there is a $50\%$ chance that the process gets coin 0 in the coin flip which goes to \texttt{process01}. In the remaining $50\%$ chance, the process gets coin 1 in the coin flip and proceeds to \texttt{process11}.
+    \item If a process flips coin 0, the counter's value is reduced by 1.
+    \item If a process flips coin 1, the counter's value is increased by 1.
+    \item If the counter's value is below the left boundary of 2, then the agreed value is 0.
+    \item If the counter's value is below the above boundary of 10, then the agreed value is 1.
+    \item Note that in this system, all $N$ processes are \textbf{executing concurrently} without synchronisation. Hence, it is possible that the majority decision on the coin value, may differ from the counter value.
+    \begin{center}
+        \includegraphics[scale=0.35]{../images/L4Consensus.png}
+    \end{center}
+\end{itemize}
+\end{frame}
+
+% Slide
+\begin{frame}[fragile]
+    \frametitle{PCSP Example: Consensus (Simplified)}
+\begin{scriptsize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2;
+#define K 2;
+#define range 12;
+#define counter_init 6;
+#define left 2;
+#define right 6;
+var counter: {0..range} = counter_init;
+Var Pcounter;
+
+process00 = pcase{ 
+    [0.5] : tau{counter--;} -> process02 
+     default: tau{counter++;} -> process02
+};
+process02 = [(counter <= left)] tau{Pcounter++} -> process03;
+            [] [(counter >= right)] tau{Pcounter++} -> process13;
+            [] [(counter > left) && (counter < right)] process00;
+process03 = [Pcounter == N] done -> process03;
+Process13 = [Pcounter == N] done -> process13;
+System = |||{N}@ process00;    
 \end{lstlisting}
 \end{scriptsize}
 \end{frame}
