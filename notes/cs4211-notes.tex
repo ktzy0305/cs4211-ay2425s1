@@ -1369,9 +1369,142 @@ known = \dom phone
 \end{frame}
 
 % Slide 51
-\section{Communicating Sequential Processes (CSP)}
+\begin{frame}{Z Specification Case Study: Shunting Game}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \begin{itemize}
+                \item The diagram illustrates the board and the starting state for a shunting game.
+                \item The black piece is the shunter.
+                \item A move consists of the black piece (the shunter) moving one position either vertically or horizontally provided either:
+                \begin{itemize}
+                    \item The position moved to is empty, or
+                    \item The position moved to is occupied by a white piece but the position beyond the white piece is empty, in which case the white piece is pushed into the empty position.
+                \end{itemize}
+                \item The shunter cannot push two white pieces at the same time.
+                \item At each stage, a score is kept of the number of moves made so far.
+                \item The game ends when the white pieces occupy the four positions marked with a cross.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.4]{../images/L1_ShuntingGame.png}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
 
 % Slide 52
+\begin{frame}{Z Specification Case Study: Shunting Game (Writing the Specification)}
+    \begin{itemize}
+        \item $Board == (1..7 \cross 3..4) \cup (3..4 \cross 1..6)$
+        \item $over == \set{(3, 3), (4, 3), (3, 4), (4, 4)}$
+    \end{itemize}
+    \begin{scriptsize}
+        \begin{axdef}
+            next: Board \rel Board
+            \where
+            \forall(i, j),(k, l) : Board \spot (i, j) \text{ \underline{next} } (k, l) \iff (i = k \wedge (j = l + 1 \vee j = l - 1)) \vee (j = 1 \wedge (i = k + 1 \vee i = k - 1))    
+        \end{axdef}
+        \begin{axdef}
+            beyond: Board \cross Board \pfun \nat \cross \nat
+            \where
+            \dom beyond = {b, w: Board \mid b \text{ \underline{next} } w}\\
+            \forall b, w : \dom beyond \spot beyond(b, w) = 2w - b
+        \end{axdef}
+    \end{scriptsize}
+    \begin{center}
+        \includegraphics[scale=0.3]{../images/L1_ShuntingGame.png}
+    \end{center}
+\end{frame}
+
+% Slide 53
+\begin{frame}{Z Specification Case Study: Shunting Game (Writing the Specification)}
+    \begin{columns}[t]
+        \begin{column}{0.33\textwidth}
+            \begin{scriptsize}
+                \begin{schema}{Shunting}
+                    bposn : Board\\
+                    wposn : \power Board\\
+                    score : \nat
+                    \where
+                    bposn \not \in wposn \wedge \#wposn = 4
+                \end{schema}
+            \end{scriptsize}
+        \end{column}
+        \begin{column}{0.33\textwidth}
+            \begin{scriptsize}
+            \begin{schema}{ShuntingInit}
+                bposn = (1, 4)\\
+                wposn = \set{(2, 4), (4, 3), (4, 5), (6, 4)}\\
+                score = 0
+            \end{schema}
+            \end{scriptsize}
+        \end{column}
+        \begin{column}{0.33\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.3]{../images/L1_ShuntingGame.png}
+            \end{center}
+        \end{column}
+    \end{columns}
+    \begin{columns}[t]
+        \begin{column}{0.25\textwidth}
+            \begin{scriptsize}
+                \begin{schema}{Over}
+                    \Xi Shunting \\
+                    score! : \nat \\
+                    \where
+                    wposn = over \\
+                    score! = score
+                \end{schema}
+            \end{scriptsize}
+        \end{column}
+        \begin{column}{0.75\textwidth}
+            \begin{scriptsize}
+            \begin{schema}{Move}
+                \Delta Shunting
+                \where
+                wposn \neq over \\
+                bposn' \underline{ next } bposn \\
+                bposn' \not \in wposn \implies wposn' = wposn \\
+                bposn' \in wposn \implies wposn' = (wposn - {bposn'}) \cup {beyond(bposn, bposn')} \\
+                score' = score + 1
+            \end{schema}
+            \end{scriptsize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 54
+\begin{frame}{CSP Prelude: Automatic Reasoning \& Verification}
+    \begin{itemize}
+        \item Z Specification is good at \textbf{capturing high level requirements}.
+        \item However, if we want to answer the following questions, we need a formal language that can perform automatic reasoning and verification.
+        \begin{enumerate}
+            \item What is a valid trace of moves in the Shunting Game?
+            \item Is the goal state (a.k.a "over") reachable?
+            \item If the goal state is reachable, are there any bad moves preventing the goal?
+            \item What is the minimum number of moves to reach the goal?
+        \end{enumerate}
+        \item The answers to these questions would be answered in \textbf{process modelling using CSP} in the next section.
+    \end{itemize}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.35]{../images/L1_ShuntingGameTree.png}
+            \end{center}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.3]{../images/L1_ShuntingGame.png}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 55
+\section{Communicating Sequential Processes (CSP)}
+
+% Slide 56
 \begin{frame}{Introduction to CSP}
     \begin{itemize}
         \item \textbf{Communicating Sequential Processes (CSP)} is a formal language to describe patterns interaction between concurrent processes in computer systems.
@@ -1387,7 +1520,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 53
+% Slide 57
 \begin{frame}{Recap: Process State Model}
     \begin{itemize}
         \item To gain a better understanding of \textbf{Communicating Sequential Processes}, revisit the first half of \textbf{CS2106: Operating Systems} where Processes, Concurrency, Synchronisation and Semaphores were covered.
@@ -1398,7 +1531,7 @@ known = \dom phone
     \end{center}
 \end{frame}
 
-% Slide 54
+% Slide 58
 \begin{frame}{Specifying a Process}
     \begin{itemize}
         \item A process is determined or specified by what it can do.
@@ -1408,7 +1541,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 55
+% Slide 59
 \begin{frame}{Concepts in CSP: Events}
     \begin{itemize}
         \item A process engages in \textbf{events}.
@@ -1426,7 +1559,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 56
+% Slide 60
 \begin{frame}{Concepts in CSP: Trace}
     \begin{block}{Trace}
         A finite sequence of events
@@ -1451,7 +1584,7 @@ known = \dom phone
 
 \end{frame}
 
-% Slide 57
+% Slide 61
 \begin{frame}{Notations and Conventions}
     \begin{itemize}
         \item \textbf{Events} are denoted in \textbf{lower case}
@@ -1480,7 +1613,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 58
+% Slide 62
 \begin{frame}{Examples of Process Specification using CSP}
     \begin{enumerate}
         \item Let $STOP_{A}$ be the process with alphabet $A$ that can do nothing.
@@ -1507,7 +1640,7 @@ known = \dom phone
     \end{enumerate}
 \end{frame}
 
-% Slide 59
+% Slide 63
 \begin{frame}{CSP Syntax}
     \begin{enumerate}
         \item Prefix: $a \then P$
@@ -1521,7 +1654,7 @@ known = \dom phone
     \footnotetext{Note that in the \texttt{zed-csp} package, the interrupt symbol is $\interrupt$.}
 \end{frame}
 
-% Slide 60
+% Slide 64
 \begin{frame}{Prefix}
     \begin{itemize}
         \item A process which may participate in \textbf{event a} then act according to \textbf{process description P} is written as: \texttt{a -> P}.
@@ -1537,7 +1670,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 61
+% Slide 65
 \begin{frame}{Sequential Composition ($P;Q$)}
     \begin{itemize}
         \item Let $\tick$ be the Termination event.
@@ -1547,7 +1680,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 62
+% Slide 66
 \begin{frame}{Parallel Composition}
     \begin{itemize}
         \item The parallel composition of \textbf{processes P and Q} synchronised on the \textbf{event set X} is written as $P \parallel[X] Q$.
@@ -1565,7 +1698,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 63
+% Slide 67
 \begin{frame}{Interleaving}
     \begin{itemize}
         \item $P \interleave Q$ denotes an asynchronous parallel composition between two processes \textbf{P} and \textbf{Q}.
@@ -1588,7 +1721,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 64
+% Slide 68
 \begin{frame}{Choice}
     \begin{itemize}
         \item In a general choice, $(a \then P) \extchoice (b \then Q)$, the process begins with both events \textbf{a} and \textbf{b} enabled.
@@ -1607,7 +1740,7 @@ known = \dom phone
     \end{itemize}
 \end{frame}
 
-% Slide 65
+% Slide 69
 \begin{frame}[fragile]
     \frametitle{Interrupt}
     \begin{itemize}
@@ -1626,7 +1759,7 @@ System = Err() || ExceptionHandling();
 
 \end{frame}
 
-% Slide 66
+% Slide 70
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#1}
 We are given the following system specification in CSP
@@ -1651,7 +1784,7 @@ System = VMC || CHOCLOV;
 \end{itemize}
 \end{frame}
 
-% Slide 67
+% Slide 71
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#2}
 We are given the same specification as the previous slide in CSP except that we now do not define the alphabet for the \textbf{VMC} and \textbf{CHOCLOV} processes.
@@ -1677,7 +1810,7 @@ System = VMC || CHOCLOV;
 \end{itemize}
 \end{frame}
 
-% Slide 68
+% Slide 72
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#3}
 We are given the following system specification in CSP
@@ -1699,7 +1832,7 @@ System = VMH || CUST;
 \end{itemize}
 \end{frame}
 
-% Slide 69
+% Slide 73
 \begin{frame}[fragile]
 \frametitle{Concurrency Example \#4}
 We are given the following system specification in CSP
@@ -1724,7 +1857,7 @@ Are the following traces possible?
 
 \end{frame}
 
-% Slide 70
+% Slide 74
 \begin{frame}{Laws for Concurrency}
     \begin{itemize}
         \item Law 1: $P \parallel Q = Q \parallel P$
@@ -1746,7 +1879,7 @@ Are the following traces possible?
     \end{itemize}
 \end{frame}
 
-% Slide 71
+% Slide 75
 \begin{frame}{Channel}
     \begin{itemize}
         \item Processes may communicate through channels.
@@ -1767,7 +1900,7 @@ Are the following traces possible?
     \end{itemize}
 \end{frame}
 
-% Slide 72
+% Slide 76
 \begin{frame}[fragile]
     \frametitle{Channel Example}
     Suppose we are given the following specification in CSP.
@@ -1787,7 +1920,7 @@ System() = Sender(5) ||| Receiver();
 
 \end{frame}
 
-% Slide 73
+% Slide 77
 \begin{frame}[fragile]
     \frametitle{Channel Example: Synchronous Buffer}
     Suppose we are given the following specification in CSP.
@@ -1806,7 +1939,7 @@ System() = Sender(5) ||| Receiver();
 
 \end{frame}
 
-% Slide 74
+% Slide 78
 \begin{frame}[fragile]
 \frametitle{CSP Model Checkers: Automatic Reasoning}
 \begin{itemize}
@@ -1828,10 +1961,10 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 \end{itemize}
 \end{frame}
 
-% Slide 75
+% Slide 79
 \section{Process Analysis Toolkit (PAT)}
 
-% Slide 76
+% Slide 80
 \begin{frame}{Introduction to Process Analysis Toolkit (PAT)}
 \begin{itemize}
     \item The \hyperlink{https://www.comp.nus.edu.sg/~pat/OnlineHelp/index.htm}{Process Analysis Toolkit} is a self-contained framework to support composing, simulating and reasoning of concurrent, real-time systems and other possible domains.    
@@ -1840,7 +1973,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 \end{itemize}
 \end{frame}
 
-% Slide 77
+% Slide 81
 \begin{frame}{Introduction to PAT's CSP\#}
     \begin{itemize}
         \item PAT's CSP\# module supports a rich modeling language named CSP\#(pronounced 'CSP sharp', short for Communicating Sequential Programs) \item CSP\# combines high-level modeling operators like (conditional or non-deterministic) choices, interrupt, (alphabetized) parallel composition, interleaving, hiding, asynchronous message passing channel, etc., with programmer-favored low-level constructs like variables, arrays, if-then-else, while, etc $\ldots$
@@ -1850,7 +1983,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{itemize}
 \end{frame}
 
-% Slide 78
+% Slide 82
 \begin{frame}{Operational Semantics}
     \begin{itemize}
         \item Earlier, we want a way to automatically reason if a model satisfies a certain property. 
@@ -1872,7 +2005,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{itemize}
 \end{frame}
 
-% Slide 79
+% Slide 83
 \begin{frame}{Operational Semantics: Primitives}
     \begin{itemize}
         \item STOP (A process that does nothing)
@@ -1891,7 +2024,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{itemize}
 \end{frame}
 
-% Slide 80
+% Slide 84
 \begin{frame}{Operational Semantics}
 \begin{columns}
     \begin{column}{0.25\textwidth}
@@ -1952,7 +2085,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
 
 \end{frame}
 
-% Slide 81
+% Slide 85
 \begin{frame}{Operational Semantics: Example \#1}
     \begin{itemize}
         \item Let $VMS = coin \then (choc \then VMS \extchoice bisc \then VMS)$ 
@@ -1966,7 +2099,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     
 \end{frame}
 
-% Slide 82
+% Slide 86
 \begin{frame}{Labelled Transition System (LTS)}
     \begin{itemize}
         \item A \textbf{Labelled Transition System} contains a set of states, an initial state (where the system starts from) and a labelled transition relation.
@@ -1982,7 +2115,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \footnotetext[1]{The Labelled Transition System is a directed graph}
 \end{frame}
 
-% Slide 83
+% Slide 87
 \begin{frame}{Operational Semantics}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -2029,7 +2162,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{columns}
 \end{frame}
 
-% Slide 84
+% Slide 88
 \begin{frame}{Operational Semantics: Example \#2}
 Given the process $a \then P \parallel[a] (c \then a \then Q)$
 \begin{enumerate}
@@ -2044,7 +2177,7 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     
 \end{frame}
 
-% Slide 85
+% Slide 89
 \begin{frame}{Operational Semantics: Example \#3}
     \begin{itemize}
         \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
@@ -2062,7 +2195,7 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     \end{center}
 \end{frame}
 
-% Slide 86
+% Slide 90
 \begin{frame}{Operational Semantics Example: \#4}
     \begin{itemize}
         \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
@@ -2082,7 +2215,7 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     \end{center}
 \end{frame}
 
-% Slide 87
+% Slide 91
 \begin{frame}[fragile]
     \frametitle{Case Study: Dining Philosophers}
     \begin{enumerate}
@@ -2104,7 +2237,7 @@ College = Alice || Bob || Fork1 || Fork2
     \end{enumerate}
 \end{frame}
 
-% Slide 88
+% Slide 92
 \begin{frame}{Case Study: Dining Philosophers}
 \begin{enumerate}
     \setcounter{enumi}{2}
@@ -2125,7 +2258,7 @@ College = Alice || Bob || Fork1 || Fork2
 \end{center}
 \end{frame}
 
-% Slide 89
+% Slide 93
 \begin{frame}{Case Study: Dining Philosophers}
     \begin{enumerate}
         \setcounter{enumi}{3}
@@ -2140,7 +2273,7 @@ College = Alice || Bob || Fork1 || Fork2
     \end{enumerate}
 \end{frame}
 
-% Slide 90
+% Slide 94
 \begin{frame}[fragile]
 \frametitle{Safety}
 \begin{itemize}
@@ -2163,7 +2296,7 @@ The savings of a bank account must always be non-negative.
 \footnotetext[2]{'$\mid =$' represents 'satisfisfaction' in Linear Temporal Logic.}
 \end{frame}
 
-% Slide 91
+% Slide 95
 \begin{frame}{Verifying Safety}
     \begin{itemize}
         \item To verify safety, perform \textbf{reachability analysis} on the \textbf{Labelled Transition System}.
@@ -2181,7 +2314,7 @@ The savings of a bank account must always be non-negative.
     \footnotetext[1]{State 4 is the bad state as there is no outgoing edges.}
 \end{frame}
 
-% Slide 92
+% Slide 96
 \begin{frame}{Applications of Safety Verification}
 Many properties can be formulated as a safety property and solved using \textbf{reachability analysis}.
 \begin{enumerate}
@@ -2202,7 +2335,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
 \end{enumerate}
 \end{frame}
 
-% Slide 93
+% Slide 97
 \begin{frame}{Liveness}
     \begin{itemize}
         \item Liveness means \textbf{something good eventually happens}.
@@ -2215,7 +2348,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
     \end{itemize}
 \end{frame}
 
-% Slide 94
+% Slide 98
 \begin{frame}[fragile]
     \frametitle{Verifying Liveness}
     \begin{itemize}
@@ -2247,7 +2380,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
    \end{itemize} 
 \end{frame}
 
-% Slide 95
+% Slide 99
 \begin{frame}{CSP\#: Extending CSP}
     \begin{itemize}
         \item The original CSP has no shared variables, arrays, etc\dots
@@ -2278,7 +2411,7 @@ Many properties can be formulated as a safety property and solved using \textbf{
     \end{block}
 \end{frame}
 
-% Slide 96
+% Slide 100
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2304,7 +2437,7 @@ enum {red, blue, green};
 \end{block}
 \end{frame}
 
-% Slide 97
+% Slide 101
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2331,7 +2464,7 @@ var matrix[3][2] // Multi-dimensional array (internally an array of 6)
 \end{block}
 \end{frame}
 
-% Slide 98
+% Slide 102
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2351,7 +2484,7 @@ var array = [1, 1, 3, 4, 5, 6, 7, 7, 7, 7, 12, 11, 10];
 \end{itemize}
 \end{frame}
 
-% Slide 99
+% Slide 103
 \begin{frame}[fragile]
 \frametitle{CSP\#: Global Definition}
 \begin{itemize}
@@ -2382,7 +2515,7 @@ If the value of x is 0 then do P else do Q.
 \end{block}
 \end{frame}
 
-% Slide 100
+% Slide 104
 \begin{frame}{CSP\#: Global Definition}
     \begin{itemize}
         \item PAT only supports integer, boolean and integer arrays for the purpose of \textbf{efficient verification}.
@@ -2395,7 +2528,7 @@ If the value of x is 0 then do P else do Q.
     \end{itemize}
 \end{frame}
 
-% Slide 101
+% Slide 105
 \begin{frame}[fragile]
 \frametitle{CSP\#: Process Definition}
 \begin{itemize}
@@ -2420,7 +2553,7 @@ Phil(i) = get.i.(i + 1) % N -> Rest();
 \end{itemize}
 \end{frame}
 
-% Slide 102
+% Slide 106
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2449,7 +2582,7 @@ P() = findmax {
 \end{block}
 \end{frame}
 
-% Slide 103
+% Slide 107
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2479,7 +2612,7 @@ System = Init;P; // Sequential composition of two processes
     \end{block}
 \end{frame}
 
-% Slide 104
+% Slide 108
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2493,7 +2626,7 @@ aSys = [x == 2] a -> Stop ||| P;
 \end{lstlisting}
 \end{frame}
 
-% Slide 105
+% Slide 109
 \begin{frame}[fragile]
     \frametitle{CSP\#: Process Definition}
     \begin{itemize}
@@ -2517,7 +2650,7 @@ System = P ||| Q ||| W;
     \end{block}
 \end{frame}
 
-% Slide 106
+% Slide 110
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions}
     \begin{itemize}
@@ -2542,7 +2675,7 @@ P() = add{x = x + 1;} -> P() [] minus{x = x - 1;} -> P();
     \end{itemize}
 \end{frame}
 
-% Slide 107
+% Slide 111
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions}
     The following coin exchanging example shows how to minimize the number of coins during reachability search.
@@ -2559,7 +2692,7 @@ P() = if (x <= 14) {
 \end{lstlisting}
 \end{frame}
 
-% Slide 108
+% Slide 112
 \begin{frame}{CSP\#: Assertions and Linear Temporal Logic}
     \begin{itemize}
         \item \textbf{Linear Temporal Logic (LTL)} is a formalism used for specifying and reasoning about the behavior of systems over time. 
@@ -2568,7 +2701,7 @@ P() = if (x <= 14) {
     \end{itemize}
 \end{frame}
 
-% Slide 109
+% Slide 113
 \begin{frame}{CSP\#: Assertions and Linear Temporal Logic}
 Let $\phi$ and $\psi$ be LTL formulaes.
 \begin{center}
@@ -2590,7 +2723,7 @@ Let $\phi$ and $\psi$ be LTL formulaes.
 \end{center}
 \end{frame}
 
-% Slide 110
+% Slide 114
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{itemize}
@@ -2614,7 +2747,7 @@ Let $\phi$ and $\psi$ be LTL formulaes.
     \end{itemize}
 \end{frame}
 
-% Slide 111
+% Slide 115
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{columns}[t]
@@ -2654,7 +2787,7 @@ P = [x < 2] a{x = x + 1} -> P
     \end{columns}
 \end{frame}
 
-% Slide 112
+% Slide 116
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{columns}[t]
@@ -2685,7 +2818,7 @@ P = [x < 2] a{x = x + 1} -> P
     \end{columns}
 \end{frame}
 
-% Slide 113
+% Slide 117
 \begin{frame}[fragile]
     \frametitle{CSP\#: Assertions and Linear Temporal Logic}
     \begin{columns}[t]
@@ -2720,7 +2853,7 @@ P = [x < 2] a{x = x + 1} -> P
     \end{columns}
 \end{frame}
 
-% Slide 114
+% Slide 118
 \begin{frame}{CSP\# Example: Alternating Bit Protocol}
     \begin{itemize}
         \item We are trying to model a simple network protocol that retransmits lost messages between a Sender (A) and Receiver (B).
@@ -2733,7 +2866,7 @@ P = [x < 2] a{x = x + 1} -> P
     \end{block}
 \end{frame}
 
-% Slide 115
+% Slide 119
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Alternating Bit Protocol}
 \begin{lstlisting}[language=C]
@@ -2758,7 +2891,7 @@ ABP = (Sender(0) ||| Receiver(0) ||| Timer);
 \end{lstlisting}
 \end{frame}
 
-% Slide 116
+% Slide 120
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Alternating Bit Protocol}
 \begin{lstlisting}
@@ -2771,7 +2904,7 @@ Is it always true, that when a Sender process writes 0 into the unreliable chann
 \end{itemize}
 \end{frame}
 
-% Slide 117
+% Slide 121
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Shunting Game}
     Modelling the game board using a 1-D array
@@ -2796,7 +2929,7 @@ var c:{0..M-1} = 0; // column
 \end{lstlisting}
 \end{frame}
 
-% Slide 118
+% Slide 122
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Shunting Game}
 \begin{itemize}
@@ -2826,7 +2959,7 @@ $\dots$
 \end{itemize}
 \end{frame}
 
-% Slide 119
+% Slide 123
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
     \begin{itemize}
@@ -2839,7 +2972,7 @@ $\dots$
 \end{lstlisting}
 \end{frame}
 
-% Slide 120
+% Slide 124
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Constants and variables
@@ -2865,7 +2998,7 @@ var fuel = 10; // energy costs, say 1 for a short drive and 5 for long driving
 \end{lstlisting}
 \end{frame}
 
-% Slide 121
+% Slide 125
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 \begin{itemize}
@@ -2891,7 +3024,7 @@ key_pos(i) =
 \end{itemize}
 \end{frame}
 
-% Slide 122
+% Slide 126
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Door Operation
@@ -2907,7 +3040,7 @@ door_op(i) =
 \end{lstlisting}
 \end{frame}
 
-% Slide 123
+% Slide 127
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Motor
@@ -2933,7 +3066,7 @@ motor(i) =
 \end{lstlisting}
 \end{frame}
 
-% Slide 124
+% Slide 128
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Reasoning
@@ -2949,7 +3082,7 @@ Reasoning
 \end{lstlisting}
 \end{frame}
 
-% Slide 125
+% Slide 129
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#)}
     In this example, we are modelling a multiple lift system in a building with multiple floors.
@@ -2971,7 +3104,7 @@ var door = [-1(NoOfLifts)];
 \end{lstlisting}
 \end{frame}
 
-% Slide 126
+% Slide 130
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#)}
     Data Operations to clear internal and external requests when the door of the lift-i is open at each level.
@@ -2987,7 +3120,7 @@ if (direction > 0) {
 \end{lstlisting}
 \end{frame}
 
-% Slide 127
+% Slide 131
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#)}
     Data Operations (using a function defined in an external C\# library) to check whether to continue travelling on the same direction or to change direction.
@@ -3007,7 +3140,7 @@ public static bool CheckIfToMove(int level, int direction, int i, int NoOfFloors
 \end{lstlisting}
 \end{frame}
 
-% Slide 128
+% Slide 132
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#) Modelling the Lift}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3034,7 +3167,7 @@ Lift(i, level, direction) = ifa(intrequests[i][level] != 0 || (direction == 1 &&
 \end{lstlisting}
 \end{frame}
 
-% Slide 129
+% Slide 133
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#) Modelling the Users}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3053,7 +3186,7 @@ UserWaiting(pos) = []i:{0..NoOfLifts - 1}@([door[i] == pos]enter.i ->
 \end{lstlisting}
 \end{frame}
 
-% Slide 130
+% Slide 134
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#) Questioning the System}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3068,7 +3201,7 @@ LiftSystem() = (||| {NoOfUsers} @ User()) |||
 \end{lstlisting}
 \end{frame}
 
-% Slide 
+% Slide 135
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: 2-phase Commit Protocol}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3096,10 +3229,10 @@ System = Coord() || (|||{N}@Part()); // Note: request is a common event between 
 \end{lstlisting}
 \end{frame}
 
-% Slide
+% Slide 136
 \section{Timed and Probability CSP}
 
-% Slide
+% Slide 137
 \begin{frame}[fragile]
     \frametitle{Real-Time System (RTS) Module}
     \begin{itemize}
@@ -3115,7 +3248,7 @@ P = P within[t] // within
 \end{lstlisting}
 \end{frame}
 
-% Slide 
+% Slide 138
 \begin{frame}[fragile]
     \frametitle{Timed Process Definition: Wait}
     \begin{itemize}
@@ -3152,7 +3285,7 @@ P = Wait[t]; P
     \end{columns}
 \end{frame}
 
-% Slide 
+% Slide 139
 \begin{frame}[fragile]
     \frametitle{Timed Process Definition: Timeout}
     
@@ -3170,7 +3303,7 @@ P = Wait[t]; P
     \end{block} 
 \end{frame}
 
-% Slide 
+% Slide 140
 \begin{frame}{Timed Process Definition: Timeout}
     \begin{small}
         \begin{itemize}
@@ -3209,7 +3342,7 @@ P = Wait[t]; P
     \end{small}
 \end{frame}
 
-% Slide
+% Slide 141
 \begin{frame}{Timed Process Definition: Timed Interrupt}
     \begin{itemize}
         \item Process \texttt{P interrupt[t] Q} behaves as P until t time unit elapse and then switches to Q
@@ -3244,7 +3377,7 @@ P = Wait[t]; P
     \end{footnotesize}
 \end{frame}
 
-% Slide
+% Slide 142
 \begin{frame}{Timed Process Definition: Deadline}
 Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units.
 
@@ -3275,7 +3408,7 @@ Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units
 \end{footnotesize}
 \end{frame}
 
-% Slide
+% Slide 143
 \begin{frame}[fragile]
     \frametitle{Timed Process Definition: Within}
     \begin{columns}
@@ -3297,7 +3430,7 @@ P = (a -> b -> Skip) within[2];
     \end{columns}
 \end{frame}
 
-% Slide
+% Slide 144
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Fischer's Protocol}
     Mutual exclusion in Fischer's Protocol is guaranteed by carefully placing bounds on the execution times of the instructions, leading to a protocol which is very simple, and relies heavily on time aspects.
@@ -3319,7 +3452,7 @@ FischersProtocol = ||| i:{0..N-1}@P(i);
 \end{lstlisting}
 \end{frame}
 
-% Slide
+% Slide 145
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Railway Crossing System}
     Control trains passing a critical point (a bridge)
@@ -3349,7 +3482,7 @@ System = (||| x:{0..N-1}@Train(x)) ||| Gate;
 \end{scriptsize}
 \end{frame}
 
-% Slide
+% Slide 146
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Light Control System (Part 1 of 2)}
     \begin{scriptsize}
@@ -3377,7 +3510,7 @@ MotionDetector = NoUser;
 \end{scriptsize}
 \end{frame}
 
-% Slide
+% Slide 147
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Light Control System (Part 2 of 2)}
     \begin{scriptsize}
@@ -3396,7 +3529,7 @@ System = MotionDetector ||| ControlledLight ||| Controller;
 \end{scriptsize}
 \end{frame}
 
-% Slide
+% Slide 148
 \begin{frame}[fragile]
     \frametitle{PCSP Module: Probability Processes}
     \begin{itemize}
@@ -3440,7 +3573,7 @@ P = pcase{
     \end{columns}
 \end{frame}
 
-% Slide
+% Slide 149
 \begin{frame}[fragile]
     \frametitle{Probabilty Processes Assertion}
 \begin{scriptsize}
@@ -3455,7 +3588,7 @@ This assertion asks the (min/max/both) probability that the process P() can reac
 \end{block}
 \end{frame}
 
-% Slide
+% Slide 150
 \begin{frame}[fragile]
     \frametitle{PCSP Example: Simple pcase}
 \begin{scriptsize}
@@ -3488,7 +3621,7 @@ State3 = e -> State3;
     
 \end{frame}
 
-% Slide
+% Slide 151
 \begin{frame}{PCSP Example: Calculating Max Reachability for Simple pcase}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -3531,7 +3664,7 @@ State3 = e -> State3;
     \end{columns}
 \end{frame}
 
-% Slide
+% Slide 152
 \begin{frame}{PCSP Example: Calculating Min Reachability for Simple pcase}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -3582,7 +3715,7 @@ State3 = e -> State3;
     \end{columns}
 \end{frame}
 
-% Slide
+% Slide 153
 \begin{frame}[fragile]
 \frametitle{PCSP Example: Monty Hall}
 \begin{scriptsize}
@@ -3613,7 +3746,7 @@ Sys_Not_Take_Offer = PlaceCar; Guest; Goat; NotTakeOffer;
 \end{scriptsize}
 \end{frame}
 
-% Slide
+% Slide 154
 \begin{frame}[fragile]
 \frametitle{PCSP Example: Monty Hall (Explanation)}
 \begin{itemize}
@@ -3634,7 +3767,7 @@ if (i != car && i != guess) { hostopen.i{goat = i} -> Skip };
 \end{itemize}
 \end{frame}
 
-% Slide
+% Slide 155
 \begin{frame}[fragile]
     \frametitle{PCSP Example: Consensus}
 \begin{scriptsize}
@@ -3665,6 +3798,7 @@ System = |||{N}@ process00;
 \end{scriptsize}
 \end{frame}
 
+% Slide 156
 \begin{frame}{PCSP Example: Consensus (Explanation)}
 \begin{itemize}
     \item In this example, $N$ processes come to a consensus by deciding whether the agreed value should be $0$ or $1$.
@@ -3680,7 +3814,7 @@ System = |||{N}@ process00;
 \end{itemize}
 \end{frame}
 
-% Slide
+% Slide 157
 \begin{frame}[fragile]
     \frametitle{PCSP Example: Consensus (Simplified)}
 \begin{scriptsize}
