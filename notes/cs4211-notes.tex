@@ -358,6 +358,9 @@ I would like to express my gratitude for their invaluable lecture notes and cont
         \item \textbf{Domain:} $\dom R$ is the set $\{a : A \mid \exists b : B \spot a R b\}$
         \item \textbf{Range:} $\ran R$ is the set $\{b : B \mid \exists a : A \spot a R b\}$
     \end{itemize}
+    \begin{center}
+        \includegraphics[scale=0.35]{../images/L1_Relations.png}
+    \end{center}
 \end{frame}
 
 % Slide 16
@@ -480,21 +483,31 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
         \\|--------------------------------------
         \\| $\forall x, y : \nat \spot x$ \underline{succ} $y \rel x + 1 = y$ 
         }
-        \item \textbf{Relational Composition ($\comp$)}
-        \begin{itemize}
-            \item Suppose $R: A \rel B$ and $S: B \rel C$ are two relations.
-            \item $R \comp S = \{(a, c) : A \cross C \mid \exists b : B \mid a R b \wedge b S c\}$
-            \item $R \comp S \in A \rel C$
-        \end{itemize}
-        \item Examples
-        \begin{itemize}
-            \item $is\_parent\_of \comp is\_parent\_of = is\_grandparent\_of$
-            \item $R^{0} = id[A]$
-            \item $R^{1} = R$
-            \item $R^{2} = R \comp R$
-            \item $R^{3} = R \comp R \comp R$
-        \end{itemize}
     \end{itemize}
+    \begin{columns}
+        \begin{column}{0.65\textwidth}
+            \begin{itemize}
+                \item \textbf{Relational Composition ($\comp$)}
+                \begin{itemize}
+                    \item Suppose $R: A \rel B$ and $S: B \rel C$ are two relations.
+                    \item $R \comp S = \{(a, c) : A \cross C \mid \exists b : B \mid a R b \wedge b S c\}$
+                    \item $R \comp S \in A \rel C$
+                \end{itemize}
+                \item Examples
+                \begin{itemize}
+                    \item $is\_parent\_of \comp is\_parent\_of = is\_grandparent\_of$
+                    \item $R^{0} = id[A]$, $R^{1} = R$ 
+                    \item $R^{2} = R \comp R$
+                    \item $R^{3} = R \comp R \comp R$
+                \end{itemize}
+            \end{itemize}   
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.225]{../images/L1_RelationalComposition.png}
+            \end{center}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % Slide 22
@@ -507,6 +520,18 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
         \item $(a, b) \in f$ is equivalent to $f(a) = b$
         \item \textbf{Total Function:} If the function $f: A \pfun B$ is a total function, then $f: A \rightarrow B$ if and only if $\dom f = A$
     \end{itemize}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.25]{../images/L1_PartialFunction.png}
+            \end{center}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.25]{../images/L1_TotalFunction.png}
+            \end{center}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % Slide 23
@@ -2854,6 +2879,69 @@ P = [x < 2] a{x = x + 1} -> P
 \end{frame}
 
 % Slide 118
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Patterson's Algorithm}
+    Patterson's Algorithm is a concurrent programming algorithm for mutual exclusion that allows two or more processes to share a single-use resource without conflict, using only shared memory for communication.
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+bool flag[2] = {false, false};
+int turn;
+\end{lstlisting}
+\begin{columns}
+\begin{column}{0.475\textwidth}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P0:      flag[0] = true;
+P0_gate: turn = 1;
+         while (flag[1] && turn == 1) {
+            // busy wait
+         }
+         // critical section
+         $\dots$
+         // end of critical section
+         flag[0] = false;
+\end{lstlisting}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P1:      flag[1] = true;
+P1_gate: turn = 0;
+         while (flag[0] && turn == 0) {
+             // busy wait
+         }
+         // critical section
+         $\dots$
+         // end of critical section
+         flag[1] = false;
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+% Slide 119
+\begin{frame}[fragile]
+    \frametitle{CSP\# Example: Patterson's Algorithm}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2;
+var pos[N]; // pos[N] is the flag[N]
+var step[N]; // step[1] is the !turn
+var counter = 0; // how many are in CS
+
+Process0() = Repeat0(1); cs.0{counter = counter + 1;} -> reset{pos[0] = 0; counter = counter - 1;} -> Process0();
+Repeat0(j) = [j < N] update.0.1{pos[0] = j;} -> update.0.2{step[j] = 0;} -> ([step[j] != 0 || (pos[1] < j)]idle.j -> Repeat0(j + 1)) 
+    [] [j == N] Skip;
+
+Process1() = Repeat1(1); cs.1{counter = counter + 1;} -> reset{pos[1] = 0; counter = counter - 1;} -> Process1();
+Repeat1(j) = [j < N] update.1.1{pos[1] = j;} -> update.1.2{step[j] = 1;} -> ([step[j] != 1 || (pos[0] < j)]idle.j -> Repeat1(j + 1)) 
+    [] [j == N] Skip;
+
+Peterson() = Process0() ||| Process1();
+#define goal counter > 1;
+#assert Peterson() reaches goal; // Should be not valid
+#assert Peterson() |= <> cs.0; // Should be not valid
+#assert Peterson() |= [] (update.0.1 -> <> cs.0) // Should be valid
+\end{lstlisting}
+\end{frame}
+
+% Slide 120
 \begin{frame}{CSP\# Example: Alternating Bit Protocol}
     \begin{itemize}
         \item We are trying to model a simple network protocol that retransmits lost messages between a Sender (A) and Receiver (B).
@@ -2866,10 +2954,10 @@ P = [x < 2] a{x = x + 1} -> P
     \end{block}
 \end{frame}
 
-% Slide 119
+% Slide 121
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Alternating Bit Protocol}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
 channel c 1; // unreliable channel.
 channel d 1; // perfect channel.
 channel tmr 0; // sender's internal timer.
@@ -2891,7 +2979,7 @@ ABP = (Sender(0) ||| Receiver(0) ||| Timer);
 \end{lstlisting}
 \end{frame}
 
-% Slide 120
+% Slide 122
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Alternating Bit Protocol}
 \begin{lstlisting}
@@ -2904,7 +2992,7 @@ Is it always true, that when a Sender process writes 0 into the unreliable chann
 \end{itemize}
 \end{frame}
 
-% Slide 121
+% Slide 123
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Shunting Game}
     Modelling the game board using a 1-D array
@@ -2929,7 +3017,7 @@ var c:{0..M-1} = 0; // column
 \end{lstlisting}
 \end{frame}
 
-% Slide 122
+% Slide 124
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Shunting Game}
 \begin{itemize}
@@ -2959,7 +3047,7 @@ $\dots$
 \end{itemize}
 \end{frame}
 
-% Slide 123
+% Slide 125
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
     \begin{itemize}
@@ -2972,7 +3060,7 @@ $\dots$
 \end{lstlisting}
 \end{frame}
 
-% Slide 124
+% Slide 126
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Constants and variables
@@ -2998,7 +3086,7 @@ var fuel = 10; // energy costs, say 1 for a short drive and 5 for long driving
 \end{lstlisting}
 \end{frame}
 
-% Slide 125
+% Slide 127
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 \begin{itemize}
@@ -3024,7 +3112,7 @@ key_pos(i) =
 \end{itemize}
 \end{frame}
 
-% Slide 126
+% Slide 128
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Door Operation
@@ -3040,7 +3128,7 @@ door_op(i) =
 \end{lstlisting}
 \end{frame}
 
-% Slide 127
+% Slide 129
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Motor
@@ -3066,7 +3154,7 @@ motor(i) =
 \end{lstlisting}
 \end{frame}
 
-% Slide 128
+% Slide 130
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Keyless System}
 Reasoning
@@ -3082,7 +3170,7 @@ Reasoning
 \end{lstlisting}
 \end{frame}
 
-% Slide 129
+% Slide 131
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#)}
     In this example, we are modelling a multiple lift system in a building with multiple floors.
@@ -3104,7 +3192,7 @@ var door = [-1(NoOfLifts)];
 \end{lstlisting}
 \end{frame}
 
-% Slide 130
+% Slide 132
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#)}
     Data Operations to clear internal and external requests when the door of the lift-i is open at each level.
@@ -3120,7 +3208,7 @@ if (direction > 0) {
 \end{lstlisting}
 \end{frame}
 
-% Slide 131
+% Slide 133
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#)}
     Data Operations (using a function defined in an external C\# library) to check whether to continue travelling on the same direction or to change direction.
@@ -3140,7 +3228,7 @@ public static bool CheckIfToMove(int level, int direction, int i, int NoOfFloors
 \end{lstlisting}
 \end{frame}
 
-% Slide 132
+% Slide 134
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#) Modelling the Lift}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3167,7 +3255,7 @@ Lift(i, level, direction) = ifa(intrequests[i][level] != 0 || (direction == 1 &&
 \end{lstlisting}
 \end{frame}
 
-% Slide 133
+% Slide 135
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#) Modelling the Users}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3186,7 +3274,7 @@ UserWaiting(pos) = []i:{0..NoOfLifts - 1}@([door[i] == pos]enter.i ->
 \end{lstlisting}
 \end{frame}
 
-% Slide 134
+% Slide 136
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Multi-lift System (using C\#) Questioning the System}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3201,7 +3289,7 @@ LiftSystem() = (||| {NoOfUsers} @ User()) |||
 \end{lstlisting}
 \end{frame}
 
-% Slide 135
+% Slide 137
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: 2-phase Commit Protocol}
 \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
@@ -3229,10 +3317,10 @@ System = Coord() || (|||{N}@Part()); // Note: request is a common event between 
 \end{lstlisting}
 \end{frame}
 
-% Slide 136
+% Slide 138
 \section{Timed and Probability CSP}
 
-% Slide 137
+% Slide 139
 \begin{frame}[fragile]
     \frametitle{Real-Time System (RTS) Module}
     \begin{itemize}
@@ -3248,7 +3336,7 @@ P = P within[t] // within
 \end{lstlisting}
 \end{frame}
 
-% Slide 138
+% Slide 140
 \begin{frame}[fragile]
     \frametitle{Timed Process Definition: Wait}
     \begin{itemize}
@@ -3285,7 +3373,28 @@ P = Wait[t]; P
     \end{columns}
 \end{frame}
 
-% Slide 139
+% Slide 141
+\begin{frame}[fragile]
+    \frametitle{Timed Process Definition: Wait (Example)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+\begin{lstlisting}[language=C]
+P = Wait[2]; (a -> b -> Skip);
+\end{lstlisting}
+            \begin{itemize}
+                \item The Wait process is active for exactly 2 time units.
+                \item In this example, the first event \textbf{a} begins only at least after 2 time units.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.475\textwidth}
+            \begin{center}
+                \includegraphics[scale=0.5]{../images/L4_WaitExample.JPG}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 142
 \begin{frame}[fragile]
     \frametitle{Timed Process Definition: Timeout}
     
@@ -3303,7 +3412,7 @@ P = Wait[t]; P
     \end{block} 
 \end{frame}
 
-% Slide 140
+% Slide 143
 \begin{frame}{Timed Process Definition: Timeout}
     \begin{small}
         \begin{itemize}
@@ -3331,7 +3440,7 @@ P = Wait[t]; P
                     (V, \text{$P$ timeout[d] $Q$}) \xrightarrow{t} (V, \text{P' timeout[d - t] $Q$})
                 \end{axdef}
             \end{footnotesize}
-            \item If no event has occure by timeout, the process transforms to Q by silent-tau transition.
+            \item If no event has occured by timeout, the process transforms to Q by silent-tau transition.
             \begin{footnotesize}
                 \begin{axdef}
                     \where
@@ -3342,7 +3451,28 @@ P = Wait[t]; P
     \end{small}
 \end{frame}
 
-% Slide 141
+% Slide 144
+\begin{frame}[fragile]
+    \frametitle{Timed Process Definition: Timeout (Example)}
+\begin{columns}
+    \begin{column}{0.6\textwidth}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) timeout[2] (e -> Skip);
+\end{lstlisting}
+        \begin{itemize}
+            \item As long as process P engages event \textbf{a} within 2 time units and before \texttt{timeout[0]} is engaged, the timeout constrained is removed and \texttt{(e -> Skip)} will never be engaged.
+            \item \texttt{(e -> Skip)} can only be engaged after \texttt{timeout[0]} is engaged.
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.375\textwidth}
+        \begin{center}
+            \includegraphics[scale=0.5]{../images/L4_TimeoutExample.JPG}
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% Slide 145
 \begin{frame}{Timed Process Definition: Timed Interrupt}
     \begin{itemize}
         \item Process \texttt{P interrupt[t] Q} behaves as P until t time unit elapse and then switches to Q
@@ -3377,38 +3507,72 @@ P = Wait[t]; P
     \end{footnotesize}
 \end{frame}
 
-% Slide 142
-\begin{frame}{Timed Process Definition: Deadline}
-Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units.
-
-\textbf{Definition 1}
-\begin{footnotesize}
-    \begin{axdef}
-        (V, P) \xrightarrow{x} (V', P')
-        \where
-        (V, \text{$P$ deadline[d]}) \xrightarrow{x} (V', \text{$P'$ deadline[d]})
-    \end{axdef}
-\end{footnotesize}
-
-\textbf{Definition 2}
-\begin{footnotesize}
-    \begin{axdef}
-        (V, P) \xrightarrow{t} (V', P'), t \leq d
-        \where
-        (V, \text{$P$ deadline[d]}) \xrightarrow{t} (V', \text{$P'$ deadline[d - t]})
-    \end{axdef}
-\end{footnotesize}
-
-\textbf{Definition 3}
-\begin{footnotesize}
-    \begin{axdef}
-        \where
-        (V, \text{$P$ interrupt[0]}) \rightarrow Skip
-    \end{axdef}
-\end{footnotesize}
+% Slide 146
+\begin{frame}[fragile]
+    \frametitle{Timed Process Definition: Timed Interrupt (Example)}
+\begin{columns}
+    \begin{column}{0.6\textwidth}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) interrupt[2] (e -> Skip);
+\end{lstlisting}
+        \begin{itemize}
+            \item Process P can engage in the events in \texttt{(a -> b -> Skip)} until 2 time unit has elapsed.
+            \item After 2 time units has elapsed, Process P can only engage in events in \texttt{(e -> Skip)}.
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.375\textwidth}
+        \begin{center}
+            \includegraphics[scale=0.4]{../images/L4_TimedInterruptExample.JPG}
+        \end{center}
+    \end{column}
+\end{columns}
 \end{frame}
 
-% Slide 143
+% Slide 147
+\begin{frame}[fragile]
+    \frametitle{Timed Process Definition: Deadline}
+Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units.
+
+\begin{columns}
+    \begin{column}{0.525\textwidth}
+        \textbf{Definition 1}
+        \begin{footnotesize}
+            \begin{axdef}
+                (V, P) \xrightarrow{x} (V', P')
+                \where
+                (V, \text{$P$ deadline[d]}) \xrightarrow{x} (V', \text{$P'$ deadline[d]})
+            \end{axdef}
+        \end{footnotesize}
+
+        \textbf{Definition 2}
+        \begin{footnotesize}
+            \begin{axdef}
+                (V, P) \xrightarrow{t} (V', P'), t \leq d
+                \where
+                (V, \text{$P$ deadline[d]}) \xrightarrow{t} (V', \text{$P'$ deadline[d - t]})
+            \end{axdef}
+        \end{footnotesize}
+
+        \textbf{Definition 3}
+        \begin{footnotesize}
+            \begin{axdef}
+                \where
+                (V, \text{$P$ interrupt[0]}) \rightarrow Skip
+            \end{axdef}
+        \end{footnotesize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+        \begin{center}
+            \includegraphics[scale=0.45]{../images/L4_DeadlineExample.JPG}
+        \end{center}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) deadline[2];
+\end{lstlisting}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% Slide 148
 \begin{frame}[fragile]
     \frametitle{Timed Process Definition: Within}
     \begin{columns}
@@ -3430,7 +3594,7 @@ P = (a -> b -> Skip) within[2];
     \end{columns}
 \end{frame}
 
-% Slide 144
+% Slide 149
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Fischer's Protocol}
     Mutual exclusion in Fischer's Protocol is guaranteed by carefully placing bounds on the execution times of the instructions, leading to a protocol which is very simple, and relies heavily on time aspects.
@@ -3452,7 +3616,7 @@ FischersProtocol = ||| i:{0..N-1}@P(i);
 \end{lstlisting}
 \end{frame}
 
-% Slide 145
+% Slide 150
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Railway Crossing System}
     Control trains passing a critical point (a bridge)
@@ -3482,7 +3646,7 @@ System = (||| x:{0..N-1}@Train(x)) ||| Gate;
 \end{scriptsize}
 \end{frame}
 
-% Slide 146
+% Slide 151
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Light Control System (Part 1 of 2)}
     \begin{scriptsize}
@@ -3510,7 +3674,7 @@ MotionDetector = NoUser;
 \end{scriptsize}
 \end{frame}
 
-% Slide 147
+% Slide 152
 \begin{frame}[fragile]
     \frametitle{CSP\# Example: Light Control System (Part 2 of 2)}
     \begin{scriptsize}
@@ -3529,7 +3693,7 @@ System = MotionDetector ||| ControlledLight ||| Controller;
 \end{scriptsize}
 \end{frame}
 
-% Slide 148
+% Slide 153
 \begin{frame}[fragile]
     \frametitle{PCSP Module: Probability Processes}
     \begin{itemize}
@@ -3573,7 +3737,7 @@ P = pcase{
     \end{columns}
 \end{frame}
 
-% Slide 149
+% Slide 154
 \begin{frame}[fragile]
     \frametitle{Probabilty Processes Assertion}
 \begin{scriptsize}
@@ -3588,7 +3752,7 @@ This assertion asks the (min/max/both) probability that the process P() can reac
 \end{block}
 \end{frame}
 
-% Slide 150
+% Slide 155
 \begin{frame}[fragile]
     \frametitle{PCSP Example: Simple pcase}
 \begin{scriptsize}
@@ -3621,7 +3785,7 @@ State3 = e -> State3;
     
 \end{frame}
 
-% Slide 151
+% Slide 156
 \begin{frame}{PCSP Example: Calculating Max Reachability for Simple pcase}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -3664,7 +3828,7 @@ State3 = e -> State3;
     \end{columns}
 \end{frame}
 
-% Slide 152
+% Slide 157
 \begin{frame}{PCSP Example: Calculating Min Reachability for Simple pcase}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -3715,7 +3879,7 @@ State3 = e -> State3;
     \end{columns}
 \end{frame}
 
-% Slide 153
+% Slide 158
 \begin{frame}[fragile]
 \frametitle{PCSP Example: Monty Hall}
 \begin{scriptsize}
@@ -3746,7 +3910,7 @@ Sys_Not_Take_Offer = PlaceCar; Guest; Goat; NotTakeOffer;
 \end{scriptsize}
 \end{frame}
 
-% Slide 154
+% Slide 159
 \begin{frame}[fragile]
 \frametitle{PCSP Example: Monty Hall (Explanation)}
 \begin{itemize}
@@ -3767,7 +3931,7 @@ if (i != car && i != guess) { hostopen.i{goat = i} -> Skip };
 \end{itemize}
 \end{frame}
 
-% Slide 155
+% Slide 160
 \begin{frame}[fragile]
     \frametitle{PCSP Example: Consensus}
 \begin{scriptsize}
@@ -3798,7 +3962,7 @@ System = |||{N}@ process00;
 \end{scriptsize}
 \end{frame}
 
-% Slide 156
+% Slide 161
 \begin{frame}{PCSP Example: Consensus (Explanation)}
 \begin{itemize}
     \item In this example, $N$ processes come to a consensus by deciding whether the agreed value should be $0$ or $1$.
@@ -3814,7 +3978,7 @@ System = |||{N}@ process00;
 \end{itemize}
 \end{frame}
 
-% Slide 157
+% Slide 162
 \begin{frame}[fragile]
     \frametitle{PCSP Example: Consensus (Simplified)}
 \begin{scriptsize}
