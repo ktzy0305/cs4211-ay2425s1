@@ -182,7 +182,7 @@ I would like to express my gratitude for their invaluable lecture notes and cont
             \item Mathematically, we would write $\forall n \in \nat, n > -1$
             \item In Z Specification, we would write $\forall n : \nat \spot n > -1$
             \item $\forall n : \nat \spot n > 0$
-            \item In general, $\exists x : X \spot P(x)$ abbreviates $P(a) \wedge P(b) \wedge P(c) \wedge \ldots$
+            \item In general, $\forall x : X \spot P(x)$ abbreviates $P(a) \wedge P(b) \wedge P(c) \wedge \ldots$
         \end{itemize}
         \item Existential Quantifier ($\exists$)
         \begin{itemize}
@@ -198,7 +198,7 @@ I would like to express my gratitude for their invaluable lecture notes and cont
             \begin{itemize}
                 \item The difference between : and $\in$ will be explained later.
             \end{itemize}
-            \item In Z Specification, $\spot$ means "such as" when writing predicates.
+            \item In Z Specification, $\spot$ means "such that" when writing predicates.
         \end{itemize}
     \end{block}
 \end{frame}
@@ -209,7 +209,7 @@ I would like to express my gratitude for their invaluable lecture notes and cont
         \item A set is a collection of elements (or members)
         \begin{itemize}
             \item Elements are not ordered: $\{a, b, c\} = \{b, a, c\}$
-            \item Elements are not repeated" $\{a, a, b\}= \{a, b\}$
+            \item Elements are not repeated" $\{a, a, b\} = \{a, b\}$
             \item Given Sets
             \begin{itemize}
                 \item $\nat = \{0, 1, 2, 3, \ldots \}$ (The set of all natural numbers)
@@ -254,7 +254,7 @@ I would like to express my gratitude for their invaluable lecture notes and cont
         \item Set Examples
         \begin{itemize}
             \item The set of even integers is $\{z : \num \mid \exists k : \num \spot z = 2k\}$
-            \item The set of natural numbers which when divided by 7 leave a remaineder of 4 is $\{n : \nat \mid \exists m : \nat \spot n = 7m + 4 \}$
+            \item The set of natural numbers which when divided by 7 leave a remainder of 4 is $\{n : \nat \mid \exists m : \nat \spot n = 7m + 4 \}$
             \item $\nat$ is the set $\{z : \num \mid z \geq 0\}$
             \item $\nat_1$ is the set $\{n : \nat \mid n \geq 1\}$
             \item If $a, b$ are any natural numbers, then $a \upto b$ is defined as the set of all natural numbers between a and b inclusive.
@@ -457,9 +457,9 @@ The relation $<=$ is the infinite subset of ordered pairs in $\nat\cross\nat$.
 % Slide 20
 \begin{frame}{Relational Image}
 \begin{itemize}
-    \item Suppose the relation $R : A \rel B$ and $S \rel A$
+    \item Suppose the relation $R : A \rel B$ and $S \subseteq A$
     \item $R \limg S \rimg = \{b : B \mid \exists a : S \spot a R b\}$
-    \item $R \limg S \rimg \rel B$
+    \item $R \limg S \rimg \subseteq B$
     \item Example
     \begin{itemize}
         \item $divides \limg \{8, 9\} \rimg = \{x : \nat \mid \exists k : \nat \spot x = 8 \cdot k \vee 9 \cdot k \} = \{0, 8, 9, 16, 18, \ldots\}$
@@ -1792,7 +1792,7 @@ We are given the following system specification in CSP
 VMC = coin -> ((choc -> VMC)[](bisc -> VMC));
 CHOCLOV = choc -> CHOCLOV [] coin -> choc -> CHOCLOV;
 #alphabet VMC{coin, choc, bisc};
-#alphabet VMC{coin, choc, bisc};
+#alphabet CHOCLOV{coin, choc, bisc};
 System = VMC || CHOCLOV;
 \end{lstlisting}
 
@@ -1899,7 +1899,7 @@ Are the following traces possible?
         \item Law 4A: $(c \then P) \parallel (c \then Q) = c \then (P \parallel Q)$
         \item Law 4B: $(c \then P) \parallel (d \then Q) = STOP$ if $c \neq d$
         \item Law 5A: $(a \then P) \parallel (c \then Q) = a \then (P \parallel (c \then Q))$
-        \item Law 5A: $(c \then P) \parallel (b \then Q) = b \then ((c \then P) \parallel Q)$
+        \item Law 5B: $(c \then P) \parallel (b \then Q) = b \then ((c \then P) \parallel Q)$
         \item Law 6: $(a \then P) \parallel (b \then Q) = a \then (P \parallel (b \then Q)) \extchoice b \then((a \then P) \parallel Q)$
     \end{itemize}
 \end{frame}
@@ -2039,7 +2039,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
             \where
             SKIP \xrightarrow{\tick} STOP
         \end{axdef}
-        SKIP can only engage the \textbf{termination event}, afterwards it becomes STOP.
+        SKIP can only engage the \textbf{termination event} ($\tick$), afterwards it becomes STOP.
         \item Prefixing
         \begin{axdef}
             \where
@@ -2086,7 +2086,7 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
         \begin{axdef}
             P \xrightarrow{\tick} P'
             \where
-            (P \extchoice Q) \xrightarrow{\tick} Q
+            (P ; Q) \xrightarrow{\tick} Q
         \end{axdef}
     \end{column}
     \begin{column}{0.35\textwidth}
@@ -2117,9 +2117,9 @@ College() = ||x:{0..N-1}@(Phil(x)||Fork(x));
     \end{itemize}
 
     \begin{block}{Operation Semantics}
-        Step 1. $VMS \xrightarrow{coin} (choc \then VMS \extchoice bisc \then VMS)$\\
-        Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{choc} VMS$\\
-        Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{bisc} VMS$
+        Step 1. $VMS \xrightarrow{coin} (choc \then VMS \extchoice bisc \then VMS)$ (by rule prefixing)\\ 
+        Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{choc} VMS$ (by rule choice 1)\\
+        Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{bisc} VMS$ (by rule choice 2)
     \end{block}
     
 \end{frame}
@@ -2231,8 +2231,8 @@ Given the process $a \then P \parallel[a] (c \then a \then Q)$
     \item How would the process $VMC \parallel[\set{coin, choc}] CHOCLOV$ or equivalently $VMC \parallel CHOCLOV$ behave?
     \begin{itemize}
         \item Step 1: $VMC \parallel CHOCLOV \xrightarrow{coin} (choc \then VMC \extchoice bisc \then VMC) \parallel (choc \then CHOCLOV)$
-        \item Step 2: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] CHOCLOV$
-        \item Step 2: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] (choc \then CHOCLOV)$
+        \item Step 2a: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] CHOCLOV$
+        \item Step 2b: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{bisc} VMC \parallel[A] (choc \then CHOCLOV)$
     \end{itemize}
     \end{enumerate}
     \begin{center}
@@ -2417,14 +2417,14 @@ Many properties can be formulated as a safety property and solved using \textbf{
             \begin{axdef}
                 (V, P) \xrightarrow{x} (V', P')
                 \where 
-                (V, P \extchoice Q) \xrightarrow{x} -> (V', P')
+                (V, P \extchoice Q) \xrightarrow{x} (V', P')
             \end{axdef}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{axdef}
                 (V, Q) \xrightarrow{x} (V', Q')
                 \where 
-                (V, P \extchoice Q) \xrightarrow{x} -> (V', Q')
+                (V, P \extchoice Q) \xrightarrow{x} (V', Q')
             \end{axdef}
         \end{column}
     \end{columns}
@@ -2935,9 +2935,9 @@ Repeat1(j) = [j < N] update.1.1{pos[1] = j;} -> update.1.2{step[j] = 1;} -> ([st
 
 Peterson() = Process0() ||| Process1();
 #define goal counter > 1;
-#assert Peterson() reaches goal; // Should be not valid
-#assert Peterson() |= <> cs.0; // Should be not valid
-#assert Peterson() |= [] (update.0.1 -> <> cs.0) // Should be valid
+#assert Patterson() reaches goal; // Should be not valid
+#assert Patterson() |= <> cs.0; // Should be not valid
+#assert Patterson() |= [] (update.0.1 -> <> cs.0) // Should be valid
 \end{lstlisting}
 \end{frame}
 
@@ -2949,9 +2949,6 @@ Peterson() = Process0() ||| Process1();
         \item B will send ACK if and only if it receives a correct bit. We assume the ACK never gets lost. B should {\color{orange} \textbf{ignore the wrong bit}} received.
         \item After finishing one bit, A and B should move on to send and ACK the alternating bit.
     \end{itemize}
-    \begin{block}{Note}
-        \texttt{ifa (cond)\{ P \} else \{ Q \};} performs the condition checking and the first operation of P or Q together.
-    \end{block}
 \end{frame}
 
 % Slide 121
@@ -3056,8 +3053,6 @@ $\dots$
         \item \color{red} However, the keyless system can also suprise you as it may allow you to drive the car without a key-fob, meaning you can drive without physically having the key.
         \item In this example, we will model such a Keyless System and use assertions to check if one can drive the car without having a key with them.
     \end{itemize}
-\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
-\end{lstlisting}
 \end{frame}
 
 % Slide 126
@@ -3557,7 +3552,7 @@ Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units
         \begin{footnotesize}
             \begin{axdef}
                 \where
-                (V, \text{$P$ interrupt[0]}) \rightarrow Skip
+                (V, \text{$P$ deadline[0]}) \rightarrow Skip
             \end{axdef}
         \end{footnotesize}
     \end{column}

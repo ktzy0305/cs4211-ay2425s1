@@ -12,6 +12,7 @@
 \usepackage{mathtools}
 \usepackage[normalem]{ulem}
 \usepackage{graphbox}
+\usepackage{zed-csp}
 \setlist{nosep}
 % for including images
 \graphicspath{ {./images/} }
@@ -92,421 +93,2383 @@
       }%
     }
   \end{center}
-  \section{01. THEORY}
-  \subsection{Keys}
+  \section{01. Z Specification}
+  \subsection{Background for Z Specification}
   \begin{itemize}
-    \item \definition{Superkey} A subset of attributes that uniquely identifies a tuple (all attributes) in a relation.
-    \item \definition{Key} A minimal \textbf{superkey}. (Cannot be made smaller)
-    \item \definition{Candidate Keys} The set of all \textbf{keys} of a given relation.
-    \item \definition{Primary Key} The selected \textbf{candidate key}.
-    \item \definition{Foreign Key} A subset of attributes of relation $R_1$ that refers to the \textbf{primary key} of relation $R_2$. It can contain \texttt{NULL} values.
+    \item $x : T$ declares a new variable $x$ of type $T$
+    \item $:$ means "belongs to"
+    \item $\spot$ refers to "such that" when defining predicates
   \end{itemize}
-
-  \section{02. ER DIAGRAMS}
-  \subsection{Cardinality Constraints}
-  \begin{itemize}
-    % \item Many to Many \includegraphics[scale=0.35, align=c]{03_many_to_many.png}
-    % \item Many to One \includegraphics[scale=0.35, align=c]{03_many_to_one.png}
-    % \item One to One \includegraphics[scale=0.35, align=c]{03_one_to_one.png}
-    \item Example item
-  \end{itemize}
-  \subsection{Participation Constraints}
-  \begin{itemize}
-    \item Example item
-    % \item Unconstrained \includegraphics[scale=0.4, align=c]{03_unconstrained.jpeg}
-    % \item At most one (Key Constraint) \includegraphics[scale=0.4, align=c]{03_key_constrain.jpeg}
-    % \item At least one (Total Participation) \includegraphics[scale=0.4, align=c]{03_total_part.jpeg}
-    % \item Exactly one (Key + Total Participation) \includegraphics[scale=0.4, align=c]{03_key_total_part.jpeg}
-    % \item Weak entity + Indentifying Relationship \includegraphics[scale=0.4, align=c]{03_weak_entity.jpeg}
-    
-  \end{itemize}
-
-  \subsection{ISA Hierachies}
-  % \includegraphics[scale=0.35]{03_isa.jpeg}
-  \subsection{Aggregation}
-  % \includegraphics[scale=0.35]{03_aggregate.png}
-  \section{03. SQL}
-  \subsection{Three-valued logic}
-  \begin{itemize}
-    \item SQL uses \texttt{True}, \texttt{False} and \texttt{NULL}.
-    \item Suppose $x$ is \texttt{NULL}
-    \begin{enumerate}
-      \item \texttt{x IS NULL} $\rightarrow$ \texttt{True}
-      \item \texttt{x IS NOT NULL} $\rightarrow$ \texttt{False}
-      \item \texttt{x IS DISTINCT FROM y}
-      \begin{itemize}
-        \item $y$ is \texttt{NULL} $\rightarrow$ \texttt{False}
-        \item $y$ is \textbf{not} \texttt{NULL} $\rightarrow$ \texttt{True}
-      \end{itemize}
-      \item \texttt{x IS NOT DISTINCT FROM y}
-    \end{enumerate}
-  \end{itemize}
-  \begin{fixedbox}[0.9]
-  Note: \texttt{NULL <> NULL} $\rightarrow$ \texttt{NULL}
-  \end{fixedbox}
-  \subsection{Constraints}
-  \definition{Unique} \texttt{r1.column <> r2.column}
-  
-  \textbf{Named constraints: } \texttt{id INT CONSTRAINT nn\_id NOT NULL}
-
-  \textbf{Foreign Key Constraints: } \texttt{ON DELETE <ACTION> / ON UPDATE <ACTION>}
-  \begin{itemize}
-    \item \texttt{NO ACTION}: Reject if it violates constraints
-    \item \texttt{RESTRICT}: Can't be deferred
-    \item \texttt{CASCADE}
-    \item \texttt{SET DEFAULT}
-    \item \texttt{SET NULL}
-  \end{itemize}
-
-  \textbf{Check Constraint}
-  \begin{itemize}
-    \item Single Column: \texttt{CHECK(hours > 0)}
-    \item Multiple Columns: \texttt{CHECK(start\_year <= end\_year)}
-  \end{itemize}
-  \subsection{Pattern Matching}
-  \begin{itemize}
-    \item \texttt{\_} matches any single character.
-    \item \texttt{\%} matches a sequence of 0 or more characters.
-  \end{itemize}
-  \subsection{Set Operations}
-  \definition{Union Compatible} Two relations $R$ and $S$ are \textbf{union compatible}
-  \begin{enumerate}
-    \item $R$ and $S$ have the same number of attributes
-    \item The corresponding attributes have the same data type / compatible domains.
-  \end{enumerate}
-  \begin{itemize}
-    \item \texttt{Q1 UNION Q2} $\implies Q_1 \cup Q_2$
-    \item \texttt{Q1 INTERSECT Q2} $\implies Q_1 \cap Q_2$
-    \item \texttt{Q1 EXCEPT Q2} $\implies Q_1 - Q_2$
-  \end{itemize}
-  \subsection{SQL Conceptual Evaluation}
-  \begin{enumerate}
-    \item \texttt{FROM}
-    \item \texttt{WHERE}
-    \item \texttt{GROUP BY}
-    \item \texttt{HAVING}
-    \item \texttt{SELECT}
-    \item \texttt{ORDER BY}
-    \item \texttt{LIMIT / OFFSET}
-  \end{enumerate}
-
-  \section{04. RELATIONAL ALGEBRA}
-  \subsection{Unary Operators}
-  \begin{itemize}
-    \item \textbf{Selection} $\sigma_{[c]}(R)$ Selects all tuples from a relation $R$ that satisfy the condition $c$ based on the \textbf{principle of acceptance}.
-    \item \textbf{Projection} $\pi_{[\ell]}(R)$ Keeps only the columns specified in the ordered list $\ell$ and in the same order.
-    \item \textbf{Renaming} $\rho_{[\mathbb{R}]}(R)$ Rename all the attributes mentioned in $\mathbb{R}$ such that for each renaming $B_i \leftarrow A_i$, the attribute $A_i$ is renamed to $B_i$.
-  \end{itemize}
-
-  \subsection{Binary Operators}
-  \begin{itemize}
-    \item \textbf{Union} $\cup$
-    \item \textbf{Intersect} $\cap$
-    \item \textbf{Except} $-$
-    \item \textbf{Cross Product} $\times$
-  \end{itemize}
-
-
-  \subsection{SQL in RA}
-  \begin{fixedbox}[0.9]
-    $\pi_{[attributes]}(\sigma_{[condition](R_1 \times R_2)})$
-  \end{fixedbox}
-  \begin{itemize}
-    \item $\pi$ Projection $\rightarrow$ \texttt{SELECT}
-    \item $\times$ Cross Product $\rightarrow$ \texttt{FROM}
-    \item $\sigma$ Selection $\rightarrow$ \texttt{WHERE}
-  \end{itemize}
-
-  \subsection{Joins}
-  \begin{itemize}
-    \item \textbf{Inner Join} $\bowtie_{[\theta]}$
-    \item \textbf{Equi Join} $\bowtie_{[=]}$
-    \item \textbf{Natural Join} $\bowtie$ If there is no common attributes then it is a cartesian join.
-    \item \textbf{Left Outer Join}
-    \item \textbf{Right Outer Join} 
-    \item \textbf{Full Outer Join} 
-  \end{itemize}
-
-
-  \section{05. FUNCTIONS, PROCEDURES, TRIGGERS}
-
-  \subsection{Functions}
-  \begin{itemize}
-    \item Function parameters can also serve as variables using the \texttt{IN} and \texttt{OUT} keyword, for example \texttt{FUNCTION swap(INOUT val1 INT, INOUT val2 INT)} and \texttt{FUNCTION sum\_to\_x(IN x INT, OUT s INT)}
-    \item The \texttt{return\_type} can be an atomic value like \texttt{INTEGER}, \texttt{CHAR(10)} or a tuple such as \texttt{RECORD} or other table's names like \texttt{Scores} or even tables like \texttt{TABLE(name TEXT, mark INT, gap INT)}
-  \end{itemize}
-\begin{lstlisting}[language=SQL]
-CREATE OR REPLACE FUNCTION func_name(val INT)
-RETURNS return_type AS $$
-  DECLARE
-  -- local variables
-  BEGIN
-  -- implementation
-  END;
-$$ LANGUAGE plpgsql;
-\end{lstlisting}
-
-  \subsection{Procedures}
-  \begin{itemize}
-    \item Procedures have no return type.
-    \item Example procedure usage: \texttt{CALL transfer('Alice', 'Bob', 100)}
-  \end{itemize}
-\begin{lstlisting}[language=SQL]
-CREATE OR REPLACE PROCEDURE p_name(val INT)
-AS $$
-  DECLARE
-  -- local variables
-  BEGIN
-  -- implementation
-  END;
-$$ LANGUAGE plpgsql;
-\end{lstlisting}
-
-  \subsection{Control Structures}
-  \begin{itemize}
-    \item \texttt{IF... THEN... ELSE... ENDIF}
-    \item \texttt{LOOP... END LOOP}
-    \item \texttt{EXIT... WHEN...}
-    \item \texttt{WHILE... LOOP... END LOOP}
-    \item \texttt{FOR... IN... LOOP... END LOOP}
-  \end{itemize}
-
-  \subsection{Cursors}
-  Cursors enable us to access each individual row returned by a \texttt{SELECT} statement.
-
-  Flow: Declare $\rightarrow$ Open $
-  \rightarrow$ Fetch $\rightarrow$ Not Found $\rightarrow$ Close
-
-  \subsubsection{Cursor Movement}
-  \begin{itemize}
-    \item \texttt{FETCH curs INTO r} $\rightarrow$ Next tuple
-    \item \texttt{FETCH PRIOR FROM curs INTO r} $\rightarrow$ Prior tuple
-    \item \texttt{FETCH FIRST FROM curs INTO r} $\rightarrow$ First tuple
-    \item \texttt{FETCH LAST FROM curs INTO r} $\rightarrow$ Last tuple
-    \item \texttt{FETCH ABSOLUTE 3 FROM curs INTO r} $\rightarrow$ 3rd tuple
-  \end{itemize}
-
-  \subsection{Triggers}
-\begin{lstlisting}[language=SQL]
-CREATE OR REPLACE TRIGGER func_name()
-RETURNS TRIGGER AS $$
-  -- implementation
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER foo_trigger AFTER INSERT ON Table
-FOR EACH ROW EXECUTE FUNCTION func_name();
-\end{lstlisting}
-\subsubsection{NEW and OLD keywords}
-
-\begin{itemize}
-  \item \texttt{NEW}: Insert and Update 
-  \item \texttt{OLD}: Update and Delete
-\end{itemize}
-
-\subsubsection{Before and After keywords}
-
-\begin{itemize}
-  \item \texttt{BEFORE}: Executed before the \texttt{TG\_OP} 
-  \item \texttt{AFTER}: Executed after the \texttt{TG\_OP} 
-  \item \texttt{INSTEAD OF}: Trigger function is executed instead of \texttt{TG\_OP}
-\end{itemize}
-
-\subsubsection{Row and Statement level Triggers}
-\begin{itemize}
-  \item \texttt{FOR EACH ROW}: Execute trigger function for every tuple encountered. 
-  \item \texttt{FOR EACH STATEMENT}: Execute trigger function once per statement. 
-\end{itemize}
-
-\subsubsection{Order of Trigger Activation}
-\begin{enumerate}
-  \item Before Statement Triggers
-  \item Before Row Triggers
-  \item After Row Triggers
-  \item After Statement Triggers
-\end{enumerate}
-
-\subsubsection{Deferred Trigger}
-\begin{lstlisting}[language=SQL]
-CREATE CONSTRAINT TRIGGER bal_check_trigger 
-AFTER INSERT OR UPDATE OR DELETE ON Account
-DEFERRABLE INITIALLY DEFERRED 
-FOR EACH ROW EXECUTE FUNCTION bal_check_func();
-\end{lstlisting}
-\begin{itemize}
-  \item Deferred triggers only work for \texttt{AFTER} and \texttt{FOR EACH ROW}.
-  \item Use \texttt{BEGIN TRANSACTION} and \texttt{COMMIT} to defer a deferrable trigger.
-\end{itemize}
-
-
-\section{06. NORMALIZATION}
-
-  \subsubsection{Functional Dependency}
-  \begin{itemize}
-    \item $\{A\} \rightarrow \{B\}$ denotes that attribute $A$ uniquely decides another attribute $B$.
-    \item Two objects that have the \textbf{same} $A$ value should have the \textbf{same} $B$ value.
-  \end{itemize}
-  
-  \subsubsection{Determining FDs from requirements}
-  \begin{itemize}
-    \item Suppose we have a requirement \textit{no two shops should sell the \textbf{same product} to the \textbf{same customer} at the \textbf{same day} at \textbf{two different prices}}.
-    \item Identify the attributes involved: \textit{ShopID}, \textit{ProductID}, \textit{CustomerID}, \textit{Date} and \textit{Price}.
-    \item Create a tuple that violates the requirements.
-    
-    \begin{tabular}{c c c c c}
-      ShopID & ProductID & CustomerID & Date & Price \\
-      $S_1$ & $P_1$ & $C_1$ & 16/4/2024 & $P_1$ \\
-      $S_1$ & $P_1$ & $C_1$ & 16/4/2024 & $P_2$ \\
-    \end{tabular}
-
-    \item The attribute that is \textbf{different} in this case the \textit{price} should be uniquely decided by the attributes that remain the \textbf{same} which are \textit{ShopID}, \textit{ProductID}, \textit{CustomerID} and \textit{Date}.
-
-
-  \end{itemize}
-
-  \subsubsection{Armstrong's Axioms}
-  \begin{enumerate}
-    \item \textbf{Reflexivity: } $\{A, B\} \rightarrow \{A\}$
-    \item \textbf{Augmentation: } $\{A\} \rightarrow \{B\} \implies \{A, C\} \rightarrow \{B, C\}$
-    \item \textbf{Transitivity: } $\{A\} \rightarrow \{B\}$ and $\{B\} \rightarrow \{C\}\implies \{A\} \rightarrow \{C\}$
-    
-  \end{enumerate}
-
-  \subsubsection{Additional Rules}
-  \begin{itemize}
-    \item \textbf{Rule of Decomposition: } 
-    
-    $\{A\} \rightarrow \{B, C\} \implies \{A\} \rightarrow \{B\}$ and $\{A\} \rightarrow \{C\}$
-    \item \textbf{Rule of Union: } $\{A\} \rightarrow \{B\}$ and $\{A\} \rightarrow \{C\}\implies \{A\} \rightarrow \{B, C\}$ 
-  \end{itemize}
-
-  \subsubsection{Computing Closures}
-  Given $\{A_1, A_2, \ldots A_n\}$, the closure $\{A_1, A_2, \ldots A_n\}^{+}$ can be computed by:
-  \begin{enumerate}
-    \item Initialize the closure to $\{A_1, A_2, \ldots A_n\}$.
-    \item If there is a FD $A_i, A_j, \ldots A_m \rightarrow B$ such that $A_i, A_j, \ldots A_m$ is in the closure, then put $B$ in the closure.
-    \item Repeat step 2 until we cannot find any new attribute to put in the closure.
-  \end{enumerate}
-  \subsubsection{Keys, Superkeys, Prime Attributes}
-  \begin{itemize}
-    \item \definition{Superkey: }A set of attribute(s) in a table that decides all other attributes.
-    \item \definition{Key: }A superkey that is minimal.
-    \item \definition{Prime Attribute: }If an attribute appears as part of a key, it is a prime attribute.
-    \begin{fixedbox}[0.95]
-      Example: $\{A, B\}$ and $\{D\}$ are keys for $R(A, B, C, D)$ then the prime attributes for the table are $A$, $B$ and $D$.
-    \end{fixedbox}
-  \end{itemize}
-  \subsubsection{Tricks to find keys}
-  \begin{enumerate}
-    \item Check small attribute sets first.
-    \item If an attribute $A_i$ does not appear on the RHS of any FD then $A_i$ must be part of a key.
-  \end{enumerate}
-
-  \subsubsection{BCNF Definitions}
-  \begin{itemize}
-    \item \definition{Decomposed FD: }An FD whose \textit{right hand side} has only \textbf{one attribute}
-    \item \definition{Trivial FD: }An FD whose attribute(s) on the \textit{RHS} appears on the \textit{LHS}.
-    \item \definition{Non-trivial FD: }An FD whose attribute(s) on \textit{RHS} \textbf{do not appear} on \textit{LHS}. 
-  \end{itemize}
-
-  \subsubsection{BCNF}
-  A table $R$ is in BCNF if \textbf{every non-trivial and decomposed FD} has a \textbf{superkey} on its \textit{left hand side}.
-
-  \subsubsection{BCNF Simplified Check}
-  Compute the closure of each attribute subset in $R$ and check if there exists a \textbf{more but not all} closure. If such a closure exists then $R$ is not in BCNF.
-
-  \subsubsection{BCNF Decomposition}
-  Input: A table $R$
-  \begin{enumerate}
-    \item Find a subset $X$ of attributes in $R$ such that its closure $\{X\}^{+}$ contains \textbf{more attributes} than $X$ but \textbf{does not contain all attributes} in $R$.
-    \item Decompose $R$ into two tables $R_1$ and $R_2$, such that
+  \subsection{Mathematical Concepts}
+  \begin{multicols}{2}
+    \subsubsection{Predicates}
+    A statement that is either true or false.
     \begin{itemize}
-      \item $R_1$ contain all attributes in $\{X\}^{+}$
-      \item $R_2$ contains all attributes in $X$ as well as the attributes not in $\{X\}^{+}$.
+      \item Let $P(x, y)$ be $x + y = 9$
+      \item $P(4, 5)$ is \textbf{true}.
+      \item $P(3, 7)$ is \textbf{false}.
     \end{itemize}
-    \item If $R_1$ is not in BCNF, further decompose $R_1$.
-    \item If $R_2$ s not in BCNF, further decompose $R_2$.
-  \end{enumerate}
-
-  \begin{fixedbox}[0.95]
-    Notes:
+    \subsubsection{Logic Operators}
+    \begin{enumerate}
+      \item Not ($\neg$)
+      \item And ($\wedge$)
+      \item Or ($\vee$)
+      \item Implies ($\implies$)
+      \item Equivalence ($\iff$)
+    \end{enumerate}
+  \end{multicols}
+  \subsubsection{Quantifiers}
+  \begin{itemize}
+    \item   $\forall x : X \spot P(x)$ abbreviates $P(a) \wedge P(b) \wedge P(c) \wedge \ldots$
+    \item $\exists x : X \spot P(x)$ abbreviates $P(a) \vee P(b) \vee P(c) \vee \ldots$
+  \end{itemize}
+  \subsubsection{Set Theory}
+  \begin{itemize}
+    \item A set is a collection of elements where elements are not ordered and not repeated. Examples: $\{a, b, c\} = \{b, a, c\}$ and $\{a, b, b\} = \{a, b\}$
+    \item Well-known sets
     \begin{itemize}
-      \item BCNF decomposition is a binary decomposition.
-      \item The BCNF decomposition of a table may not be unique.
-      \item If a table only has two attributes then it is in BCNF.
+      \item $\nat = \{0, 1, 2, 3, \ldots \}$ (The set of all natural numbers)
+      \item $\nat_{1} = \{1, 2, 3, \ldots \}$
+      \item $\num = \{0, 1, -1, 2, -2, \ldots \}$ (The set of all integers)
+      \item $\mathbb{R}$ (The set of all real numbers)
+      \item $\emptyset$ (Empty Set: The set with no elements) 
     \end{itemize}
-  \end{fixedbox}
-
-  \subsubsection{Checking if a Decomposed Table is in BCNF}
-  \begin{itemize}
-    \item Suppose we decomposed a table $R$ into $R_1$ and $R_2$. If we want to check of the decomposition $\delta$ is in BCNF, then we need to individually check that both $R_1$ and $R_2$ are in BCNF.
-    \item Here is how to check if one decomposed table $R_i$ is in BCNF.
-    
-    \begin{enumerate}
-      \item Enumerate the attribute subsets of $R_i$.
-      \item Derive the closures of these attribute subsets on $R$, \item Project these closures onto $R_i$ by removing attributes not in $R_i$.
-    \end{enumerate}
-  \end{itemize}
-
-  \subsubsection{Lossless Join Decomposition}
-  \begin{itemize}
-    \item When we decompose a table $R$ into $R_1$ and $R_2$, it is a \textbf{lossless-join decomposition} if the common attributes $R_1 \cap R_2$ constitute a \textbf{superkey} for either $R_1$ or $R_2$.
-    \item To determine if the relations $R_i, R_j$ in a decomposition $\delta$ is a \textbf{lossless-join decomposition}, give an example, where for all $R_i, R_j \in \delta$, $R_i \cap R_j$ constitute a \textbf{superkey} for either $R_i$ or $R_j$.
-    \item BCNF guarantees lossless-join decomposition.
-  \end{itemize}
-
-  \subsubsection{3NF}
-  A table satisifies 3NF if and only if for every non-trivial and decomposed FD, either the \textbf{left hand side is a superkey} or the \textbf{right hand side is a prime attribute}.
-
-  \subsubsection{Dependency Preservation}
-  \begin{itemize}
-    \item Let $S$ be the given set of FDs on the original table.
-    \item Let $S'$ be the given set of FDs on the decomposed tables.
-    \item The decomposition preserves all FDs if and only if $S$ and $S'$ are equivalent.
-  \end{itemize}
-
-  \subsubsection{Dependency Preserving Decomposition}
-  Given a set of FDs $\sum$ and decomposition $\delta$:
-  \begin{enumerate}
-    \item Enumerate the attribute subsets of each decomposed table $R_i$ in $\delta$.
-    \item Derive the closures of these attribute subsets on $R$, \item Project these closures onto $R_i$ by removing attributes not in $R_i$.
-    \item Convert the closures in step 3 into non-trivial FDs and combine all the FDs for each $R_i$ into a set $S$.
-    \item Check if $\sum$ and $S$ are equivalent, if not identify the FDs that are not preserved.
-  \end{enumerate}
-
-
-  \subsubsection{Minimal Basis}
-  \begin{itemize}
-    \item Let $S$ be a set of FDs
-    \item The minimal basis $M$ is a set of FDs such that
-    \begin{enumerate}
-      \item Every FD in $S$ can be derived from $M$ and vice versa.
-      \item Every FD in $M$ is a non-trivial and decomposed FD.
-      \item If any FD is removed from $M$, then some FD in $S$ cannot be derived from $M$.
-      \item For any FD in $M$, if we remove an attribute from its left hand side, the FD cannot be derived by $S$.
-    \end{enumerate}
-    \item \textbf{Minimal Basis Algorithm}
-    \begin{enumerate}
-      \item Transform the FDs such that each RHS \textbf{only contains one attribute.}
-      \item Examine FDs which have more than one attribute on the LHS and remove redundant attributes on the LHS.
-      \item Remove redundant FDs.
+    \item Set Expressions
+    \begin{itemize}
+      \item The set of natural numbers which when divided by 7 leave a remainder of 4 is $\{n : \nat \mid \exists m : \nat \spot n = 7m + 4 \}$
+      \item $\nat$ is the set $\{z : \num \mid z \geq 0\}$
+      \item If $a, b$ are any natural numbers, then $a \upto b$ is defined as the set of all natural numbers between a and b inclusive.
+    \end{itemize}
+    \item Set Relations
+    \begin{itemize}
+      \item Membership: $x \in \mathbb{X}$
+      \item Subset ($\subseteq$): Let $S$ and $T$ be sets, $\forall s : S \spot s \in T$.
+      \item Proper Subset ($\subset$): Let $S$ and $T$ be sets, $S \subseteq T \wedge S \neq T$.
+    \item Power Set ($\power$)
+    \begin{itemize}
+      \item If $X$ is a set, $\power$ $X$ (the power set of $X$) is the set of all subsets of $X$.
+      \item $A \in$ $\power$ $B \iff A \subseteq B$ 
+    \end{itemize}
+    \item Set Operations
+    \begin{itemize}
+      \item Set Union: Suppose $S, T : \power X$ or $S \subseteq X, T \subseteq X$, then $S \cup T = \{x : X \mid x \in S \vee x \in T\}$
+      \item Set Intersection: Suppose $S, T : \power X$, then $S \cap T = \{x : X \mid x \in S \wedge x \in T\}$ 
+      \item Set Difference: Suppose $S, T : \power X$, then $S - T = \{x : X \mid x \in S \wedge x \not \in T\}$ 
+      \item Cardinality: $\#X$ is a natural number denoting the cardinality of (number of elements in) a finite set $X$.
       \begin{itemize}
-        \item Pretending to remove one FD at a time from the remaining FDs in $S$. Compute the closure of the LHS and check if the RHS is still in the closure.
-        \item Check for transitivity in the existing FDs.
+          \item $\#\{a, b, c\} = 3$
       \end{itemize}
-    \end{enumerate}
+    \end{itemize}
+    \end{itemize}
   \end{itemize}
-  \begin{fixedbox}[0.95]
-    A \textbf{canonical cover} is formed by using the rule of union on FDs in the minimal basis that have the same LHS.
-  \end{fixedbox}
-  \subsubsection{3NF Decomposition}
-  Input: A table $R$ with a set of FDs.
+  \subsubsection{Cartesian Product and Tuples}
+  \begin{itemize}
+    \item \textbf{Cartesian Product:} If $A$ and $B$ are sets, then $A \cross B$ is the set of all ordered pairs $(a, b)$ with $a \in A$ and $b \in B$.
+    \begin{itemize}
+      \item $\{a, b\} \cross \{a, c\} = \{(a, a), (a, c), (b, a), (b, c)\}$
+    \end{itemize}
+    \item An \textbf{n-tuple} $(x_1, \ldots, x_n)$ is present in the Cartesian Product $\mathbf{A_1 \times \cdots \times A_n}$ if and only if each element $x_i$ is an element of the corresponding set $\mathbf{A_i}$.
+    \item To refer to a particular component of a tuple $t$, we use the projection notation $(.)$
+    \item Suppose we have $t = (x_1, x_2, \ldots, x_n)$
+    \begin{itemize}
+        \item The first component of the tuple $t$ is written as $t.1$ which is the value $\mathbf{x_1}$.
+        \item The second component of the tuple $t$ is written as $t.2$ which is the value $\mathbf{x_2}$.
+        \item The n-th component of the tuple $t$ is written as $t.n$ which is the value $\mathbf{x_n}$
+    \end{itemize}
+  \end{itemize}
+  \subsubsection{Relations}
+  \begin{center}
+    \includegraphics[scale=0.225]{./images/L1_Relations.png}
+    \begin{itemize}
+      \item A relation $R$ from sets $A$ to $B$, is declared as $R : A \rel B$ is a subset of $A \cross B$
+      \item Example: $R = \{(c, x), (c, z), (d, x), (d, y), (d, z)\}$
+      \begin{itemize}
+          \item The following predicates are equivalent
+          \begin{enumerate}
+              \item $(c, z) \in R$
+              \item $c \fun z \in R$ : A function that maps $c$ to $z$
+              \item $cRz$
+          \end{enumerate}
+      \end{itemize}
+      \item \textbf{Domain:} $\dom R$ is the set $\{a : A \mid \exists b : B \spot a R b\}$
+      \begin{itemize}
+        \item The elements in $A$ that are related to element(s) in $B$
+      \end{itemize}
+      \item \textbf{Range:} $\ran R$ is the set $\{b : B \mid \exists a : A \spot a R b\}$
+      \begin{itemize}
+        \item The elements in $B$ that are related to element(s) in $A$
+      \end{itemize}
+      \item \textbf{Domain and Range Restriction}
+      \begin{itemize}
+        \item Let $A$ is the domain set, $B$ is the range set and $R$ is the relation set.
+        \item Suppose $R: A \rel B, S \subseteq A$ and $T \subseteq B$.
+        \item \textbf{Domain Restriction:} $S \dres R$ is the set $\{(a, b): R \mid a \in S\}$
+        \item \textbf{Range Restriction:} $R \rres T$ is the set $\{(a, b): R \mid b \in T\}$
+        \item Basically, we define a new set, either $S \subseteq A$ or $T \subseteq B$, then choose the relations $(a, b) \in R$ that \textbf{contain} elements from the new set. 
+      \end{itemize}
+      \item \textbf{Domain and Range Subtraction}
+      \begin{itemize}
+        \item Let $A$ is the domain set, $B$ is the range set and $R$ is the relation set.
+        \item Suppose $R: A \rel B, S \subseteq A$ and $T \subseteq B$.
+        \item \textbf{Domain Subtraction:} $S \ndres R$ is the set $\{(a, b): R \mid a \not \in S\}$
+        \item \textbf{Range Subtraction:} $R \nrres T$ is the set $\{(a, b): R \mid b \not \in T\}$
+        \item Basically, we define a new set, either $S \subseteq A$ or $T \subseteq B$, then choose the relations $(a, b) \in R$ that \textbf{do not contain} elements from the new set. 
+        \item Note: $(S \ndres R) \cup (S \dres R) = R$ and $(R \nrres T) \cup (R \rres T) = T$
+      \end{itemize}
+      \item \textbf{Relational Image}
+      \begin{itemize}
+        \item Suppose the relation $R : A \rel B$ and $S \subseteq A$
+        \item $R \limg S \rimg = \{b : B \mid \exists a : S \spot a R b\}$ or $R \limg S \rimg \subseteq B$
+        \item The relational image returns the set of all elements $b \in B$ such that there exists an $a \in S$ with $(a, b) \in R$.
+        \item Example: $divides \limg \{8, 9\} \rimg = \{x : \nat \mid \exists k : \nat \spot x = 8 \cdot k \vee 9 \cdot k \} = \{0, 8, 9, 16, 18, \ldots\}$
+      \end{itemize}
+      \item \textbf{Inverse:} $R^{-1}$ is the set $\{(b, a) : B \cross A \mid a R b \}$ or $R^{-1} \in B \rel A$
+      \item \textbf{Relational Composition}
+      \begin{itemize}
+        \item Suppose $R: A \rel B$ and $S: B \rel C$ are two relations.
+        \item $R \comp S = \{(a, c) : A \cross C \mid \exists b : B \mid a R b \wedge b S c\}$
+        \item $R \comp S \in A \rel C$
+      \end{itemize}
+    \begin{center}
+      \includegraphics[scale=0.2]{../images/L1_RelationalComposition.png}
+    \end{center}
+    \end{itemize}
+  \end{center}
+  \subsubsection{Functions}
+  \begin{multicols}{2}
+    \begin{center}
+      \includegraphics[scale=0.25]{../images/L1_PartialFunction.png}
+    \end{center}
+    \begin{center}
+      \includegraphics[scale=0.25]{../images/L1_TotalFunction.png}
+    \end{center}
+  \end{multicols}
+  \begin{itemize}
+    \item A function from a set $A$ to a set $B$, denoted by $f: A \pfun B$ is a subset $f$ of $A \cross B$ with the property that for each $a \in A$, there is \textbf{at most one} $b \in B$ with $(a, b) \in f$.
+    \item \textbf{$\dom f$} is the set $\{a : A \mid \exists b : B \spot (a, b) \in f\}$
+    \item \textbf{$\ran f$} is the set $\{b : B \mid \exists a : A \spot (a, b) \in f\}$
+    \item Suppose $f: A \pfun B$ and $a \in \dom f$, then $f(a)$ denotes the unique image $b \in B$ that $a$ is mapped to by $f$.
+    \item $(a, b) \in f$ is equivalent to $f(a) = b$
+    \item \textbf{Total Function:} $f: A \rightarrow B$ if and only if $\dom f = A$
+    \item \textbf{Partial Function:} $f: A \pfun B$ if and only if $\dom f \neq A$
+    \item \textbf{Function Overriding}
+    \begin{itemize}
+      \item Suppose $f, g: A \pfun B$, then $f \oplus g$ is the function $(\dom(g) \ndres f) \cup g$.
+      \item The following predicates are true:
+      \begin{enumerate}
+          \item $\dom(f \oplus g) = \dom f \cup \dom g$
+          \item $a : \dom g$ $\spot (f \oplus g)(a) = g(a)$
+          \item $\forall a : \dom f - \dom g \spot (f \oplus g)(a) = f(a)$
+          \item f $\oplus$ g $\in a \pfun b$
+      \end{enumerate}
+      \item Example: $\{a \rightarrow x, b \rightarrow y, c \rightarrow x\} \oplus \{a \rightarrow y\} = \{a \rightarrow y, b \rightarrow y, c \rightarrow x\}$
+  \end{itemize}
+  \end{itemize}
+  \subsubsection{Sequences}
+  \begin{itemize}
+    \item A sequence s of elements of a set $A$, denoted $s : \seq A$, is a function $s:\nat \pfun A$ where $\dom s = 1 \upto n$ for some natural number $n$.
+    \item \textbf{Example}
+    \begin{itemize}
+        \item $<b, c, a, b>$ denotes the sequence (function) $\{1 \fun b, 2 \fun c, 3 \fun a, 4 \fun b\} = \{(1, b), (2, c), (3, a), (4, b)\}$
+        \item The empty sequence is denoted by $<>$
+    \end{itemize}
+    \item Since sequences are ordered mapping, $<a, b, a> \neq <a, a, b> \neq <a, b>$
+    \item The set of all sequences of elements from $A$ is denoted as $\seq A$ and is defined to be $\seq A = \{s : \nat \pfun A \mid \exists n:\nat$ $\spot$ $\dom s = 1 \upto n\}$
+    \item $\seq_1 A = \seq A - \{<>\}$ is defined as the set of non-empty sequences.
+  \end{itemize}
+  \subsubsection{Special Functions for Sequences}
   \begin{enumerate}
-    \item Find a minimal basis of the FDs.
-    \item Combine the FDs whose left hand sides are the same.
-    \item For each FD, construct a table that contains all atributes in the FD.
-    \item Check if any table contains a key for $R$. If not create a table that contains a key for $R$.
-    \item Remove subsumed tables.
+    \item Concatenation 
+    \begin{itemize}
+        \item $<a, b> \cat <b, a, c> = <a, b, b, a, c>$
+    \end{itemize}
+    \item Head
+    \begin{itemize}
+        \item \texttt{| head: $\seq_1 A \fun A$
+        \\|---------------------------------
+        \\|$\forall s : \seq_1 A \spot head(s) = s(1)$}
+        \item $head<c, b, b> = c$
+    \end{itemize}
+    \item Tail
+    \begin{itemize}
+        \item \texttt{| tail: $\seq_1 A \fun \seq A$
+        \\|---------------------------------
+        \\|$\forall s : \seq_1 A \spot <head(s)>$ $\cat$ $tail(s) = s$}
+        \item $tail<c, b, b> = <b, b>$
+    \end{itemize}
+    \item Filter
+    \begin{itemize}
+        \item $<a, b, c, d, e, d, c, b, a> \filter \{a, d\} = <a, d, d, a>$
+        \item Filter only keeps the element in the specified set, preserves order in the original sequence and outputs a new sequence.
+    \end{itemize}
+  \end{enumerate}
+  \subsection{Background for Z Specification}
+  \begin{itemize}
+    \item Z specification language is \textbf{strongly typed}.
+    \item Every expression is given a type.
+    \item Any set can be used as a type.
+    \item The following are equivalent declarations of variables $x$ and $y$ of types $A$ and $B$ respectively. 
+    \begin{itemize}
+        \item $(x, y) : A \cross B$
+        \item $x: A, y: B$
+        \item $x, y : A$ (only when $B = A$)
+    \end{itemize}
+  \end{itemize}
+  \subsection{Schemas}
+  \subsubsection{Schema Definition Conventions}
+  \begin{center}
+    \fbox{%
+      \parbox{0.95\linewidth}{\centering \textcolor{black}{
+          {Let \texttt{MSG} be the set of all possible messages that can be transmitted.}
+      }%
+    }}
+  \end{center}
+  \begin{itemize}
+    \item \textbf{Variables} are declared and typed in the \textbf{top part of the schema}.
+    \item A \textbf{predicate (axiom)} restraining the possible values of the declared variables are given in the \textbf{bottom part of the schema.}
+    \item The value of the state variables before the operation are denoted by \textbf{unprimed identifiers}.
+    \begin{itemize}
+      \item Example: \texttt{items : seq MSG}
+    \end{itemize}
+    \item Values after the operation are denoted by \textbf{primed identifiers}.
+    \begin{itemize}
+      \item Example: \texttt{items' : seq MSG}
+    \end{itemize}
+    \item Hidden state values are denoted by \textbf{double primed identifiers.}
+    \begin{itemize}
+      \item Example: \texttt{items'' : seq MSG}
+    \end{itemize}
+    \item The decoration \texttt{?} denotes an \textbf{input}
+    \begin{itemize}
+      \item Example: \texttt{msg? : MSG}
+    \end{itemize}
+    \item The decoration \texttt{!} denotes an \textbf{output}
+    \begin{itemize}
+      \item Example: \texttt{msg! : MSG}
+    \end{itemize}
+    \item There is an implicit $\wedge$ between each line (predicate) in the predicate section
+  \end{itemize}
+
+  \subsubsection{State Schema}
+  \begin{itemize}
+      \item A \textbf{state schema} specifies a relationship between variable values
+      \item It specifies a \underline{snapshot} or a static view of the system.
+      \item An instance of a schema is an assignment of values to variables consistent with their type declaration and satisfying the predicate.
+  \end{itemize}
+  \begin{schema}{Buffer}
+    items: \seq MSG
+    \where
+    \#items \leq max
+  \end{schema} 
+  \subsubsection{Operation Schema}
+  \begin{itemize}
+      \item Used to specify how the system can change
+      \item An operation can be thought as taking an instance of the state schema and producing a new instance.
+      \item To specify such an operation, we express as a predicate the relationship between the \textbf{instance of the state before the operation} and the \textbf{instance after the operation.}
+  \end{itemize}
+  \begin{multicols}{2}
+    \begin{schema}{Join}
+      items, items': \seq MSG \\
+      msg?: MSG
+      \where
+      \#items \leq max \\
+      \#items' \leq max \\
+      \#items < max \\
+      items' = items \cat <msg?>
+    \end{schema}
+
+    \begin{schema}{Leave}
+      items, items': \seq MSG \\
+      msg!: MSG
+      \where
+      \#items \leq max \\
+      \#items' \leq max \\
+      \#items \neq \emptyset \\
+      items = <msg!> \cat items'
+    \end{schema}
+  \end{multicols}
+  \subsubsection{Delta ($\delta$) and Initial State($_{INIT}$)}
+  \begin{enumerate}
+    \item Delta ($\Delta$): To specify a \textbf{before} and \textbf{after} instance of the state schema for any operation.
+    \item Initial State ($_{INIT}$): To specify a state when an instance of a state is first initialized.
+  \end{enumerate} 
+  \begin{multicols}{2}
+    \begin{schema}{\Delta Buffer}
+      items, items': \seq MSG
+      \where
+      \#items \leq max\\
+      \#items' \leq max
+    \end{schema} 
+    \begin{schema}{Buffer_{INIT}}
+      Buffer
+      \where
+      items = <>
+    \end{schema}
+  \end{multicols}
+  \begin{itemize}
+      \item Initially the buffer would be empty.
+      \item Then, the operations of \textbf{Join} and \textbf{Leave} can occur whenever they are enabled.
+      \item Operations are assumed to be atomic.
+      \item At all times, an observer will notice that the state schema is satisfied.
+  \end{itemize}
+  \subsubsection{Schema Inclusion}
+  \begin{itemize}
+    \item Schema Inclusion is the act of including a schema in the declaration of another schema.
+    \item It means the included schema has its declaration added to the new schema, and its predicate cojoined to the predicate of the new schema.
+    \item The first "S" Schema is the \textbf{short form}, while the second "S" Schema is the \textbf{long form}.
+  \end{itemize}
+  \begin{multicols}{2}
+    \begin{schema}{A}
+      x: T_1\\
+      y: T_2
+      \where
+      P(x, y)
+    \end{schema}
+    \begin{schema}{S}
+      A\\
+      z: T_3
+      \where
+      Q(x, y, z)
+    \end{schema}
+    \begin{schema}{S}
+      x: T_1\\
+      y: T_2\\
+      z: T_3
+      \where
+      P(x, y) \wedge Q(x, y, z)
+    \end{schema}
+  \end{multicols}
+  \subsubsection{Merging Schemas}
+  \begin{itemize}
+    \item \textbf{Type Compatability} is needed to merge schemas.
+    \item In this case, the variable $y$ is common between states $A$ and $B$.
+    \item We can simply merge the two types into a new state $C$ without further specifying any new predicates.
+    \item The full form of state $C$ is also provided.
+  \end{itemize}
+  \begin{multicols}{2}
+    \begin{schema}{A}
+      x: T_1\\
+      y: T_2
+      \where
+      P(x, y)
+    \end{schema}
+    \begin{schema}{B}
+        y: T_2\\
+        z: T_3
+        \where
+        Q(y, z)
+    \end{schema}
+    \begin{schema}{C}
+        A\\
+        B
+    \end{schema}
+    \begin{schema}{C}
+        x: T_1\\
+        y: T_2\\
+        z: T_3
+        \where
+        P(x, y) \wedge Q(y, z)
+    \end{schema}
+  \end{multicols}
+  \subsubsection{Conjunction and Disjunction of Schemas}
+  \begin{itemize}
+    \item Suppose $A$ and $B$ are schemas
+    \item When using the conjunction ($\wedge$) operator on two schemas, it is equivalent to merging the two schemas.
+    \begin{itemize}
+        \item The declaration of $A \wedge B$ is the \textbf{union} of the declarations of $A$ and $B$
+        \item The predicate of $A \wedge B$ is the \textbf{conjunction} of the predicates of $A$ and $B$
+    \end{itemize}
+    \item The disjunction ($\vee$) operator on two schemas yields a different result.
+    \begin{itemize}
+      \item The declaration of $A \vee B$ is the \textbf{union} of the declarations of $A$ and $B$
+      \item The predicate of $A \vee B$ is the \textbf{disjunction} of the predicates of $A$ and $B$
+    \end{itemize}
+  \end{itemize}
+  \begin{multicols}{2}
+    \begin{schema}{A}
+      x: T_1\\
+      y: T_2
+      \where
+      P(x, y)
+    \end{schema}
+    \begin{schema}{B}
+      y: T_2\\
+      z: T_3
+      \where
+      Q(y, z)
+    \end{schema}
+    \begin{schema}{A \wedge B}
+      x: T_1\\
+      y: T_2\\
+      z: T_3
+      \where
+      P(x, y) \wedge Q(y, z)
+    \end{schema}
+    \begin{schema}{A \vee B}
+      x: T_1\\
+      y: T_2\\
+      z: T_3
+      \where
+      P(x, y) \vee Q(y, z)
+  \end{schema}
+  \end{multicols}
+  \subsubsection{Composition of Schemas}
+  \begin{itemize}
+    \item Using the composition operator ($\comp$) on two schemas is typically used to combine the effects of two operations.
+  \end{itemize}
+  \begin{multicols}{2}
+    \begin{schema}{A}
+        x: T_1\\
+        y: T_2
+        \where
+        P(x, y)
+    \end{schema}
+    \begin{schema}{AOP_{1}}
+        \delta A\\
+        t_{3}?: T_3; t_{4}!: T_4
+        \where
+        Q_{1}(x, x', y, y', t_{3}?, t_{4}!)
+    \end{schema}
+    \begin{schema}{AOP_{2}}
+        \delta A\\
+        t_{5}?: T_5; t_{6}!: T_6
+        \where
+        Q_{2}(x, x', y, y', t_{5}?, t_{6}!)
+    \end{schema}
+  \end{multicols}
+  \begin{schema}{AOP_{1} \comp AOP_{2}}
+    \delta A\\
+    t_{3}?: T_3; t_{4}!: T_4; t_{5}?: T_5; t_{6}!: T_6
+    \where
+    \exists x'': T_1; y'': T_2 \spot Q_{1}(x, x', y, y', t_{3}?, t_{4}!) \wedge Q_{2}(x, x', y, y', t_{5}?, t_{6}!)
+  \end{schema}
+  \begin{itemize}
+    \item Example: $JoinLeave = Join \comp Leave$
+        \begin{itemize}
+            \item The pre-state of $Join$ is the pre-state of $Join \comp Leave$.
+            \item The post-state of $Join$ is identified with the pre-state of $Leave$ hidden within $Join \comp Leave$.
+            \item The consequent post-state of $Leave$ is the post-state of $Join \comp Leave$.
+        \end{itemize}
+  \end{itemize}
+  \begin{schema}{JoinLeave}
+      \Delta Buffer\\
+      msg?, msg!: MSG
+      \where
+      \#items < max\\
+      \exists items'': \seq MSG \spot items'' = 
+      \\ items \cat <msg?> \wedge items'' = <msg!> \cat items'
+  \end{schema}
+
+
+  \section{02. CSP}
+  \subsection{Background}
+  \begin{itemize}
+    \item CSP is a formal language for describing patterns of interactions in concurrent systems.
+    \item We are mainly concerned with specifying the interaction between a system and its environment which is also the \textbf{external or visible behaviour}.
+    \item The perceived behaviour of a process will depend on the observer.
+  \end{itemize}
+  \subsection{Concepts}
+  \begin{itemize}
+    \item \textbf{Process} is defined by what it can do (visible behaviour or observable events)
+    \item \textbf{Events} are communication or interactions between processes.
+    \begin{itemize}
+      \item A process engages in \textbf{events}.
+      \item Each event is an atomic action.
+    \end{itemize}
+    \item \textbf{Alphabet of a process}: The \textbf{set of events} a process can possibly engage in.
+    \begin{itemize}
+      \item Example: A Chocolate Vending Machine has the following events:
+      \begin{enumerate}
+        \item coin - insert a coin
+        \item choc - extract a chocolate
+      \end{enumerate}
+      \item The alphabet of a chocolate vending machine is $\{coin, choc\}$
+    \end{itemize}
+  \end{itemize}
+  \subsection{Notation and Convention}
+  \begin{itemize}
+    \item \textbf{Events} are denoted in \textbf{lower case}
+    \begin{itemize}
+        \item Example: $x, y, z$ are variables that denote events.
+    \end{itemize}
+    \item \textbf{Processes} are denoted in \textbf{upper case}
+    \begin{itemize}
+        \item Example: $X, Y, Z$ are variables that denote processes.
+    \end{itemize}
+      \item The \textbf{alphabet} of a process $P$ is denoted by $\alpha P$
+      \item The set of traces of $P$ is denoted by \texttt{traces(P)}
+      \item \textbf{Trace Notation}
+      \begin{itemize}
+        \item If $A$ is a set of events, then $\seq A$ denotes the set of all finite sequences of events from $A$.
+        \item In this scenario, \texttt{$\alpha$ P = A} and \texttt{trace(P) = $\seq A$}
+        \item Let $s, t : \seq A$, $s \cat t$ be the concatenation of $s$ with $t$.
+        \item We define the relation $\leq$ to be the \textbf{sequence prefix} of two sequences.
+        \begin{axdef}
+            \leq : \seq A \rel \seq A
+            \where
+            s \leq t \Leftrightarrow \exists u : \seq A \spot s \cat u = t
+        \end{axdef}
+        \item $s^n = s \cat s \cat s \cat \ldots \cat s$ denotes the event s concatenated with itself $n$ times.
+      \end{itemize}
+  \end{itemize}
+  \subsection{CSP Primitives}
+  \subsubsection{Primitive Processes}
+  \begin{itemize}
+    \item $STOP$: A process that communicates nothing, often the result of a deadlock.
+    \item $SKIP$: A process that represents successful termination.
+  \end{itemize}
+  \subsubsection{Algebraic Operators}
+  \begin{enumerate}
+    \item Prefix: $a \then P$
+    \item Sequential Composition: $P;Q$
+    \item Parallel Composition (Synchronous): $P \parallel[X] Q$
+    \item Interleaving (Asynchronous): $P \interleave Q$
+    \item Choice: $a \then P \extchoice b \then Q$
+    \item Interrupt Process: $P$ $\nabla$ $e \then Q$ 
   \end{enumerate}
 
+  \subsubsection{Prefix}
+  \begin{itemize}
+    \item A process which may participate in \textbf{event a} then act according to \textbf{process description P} is written as: \texttt{a -> P}.
+    \item \textbf{a} is the event prefix to \textbf{P}.
+    \item Examples
+    \begin{enumerate}
+        \item $VMU = coin \then STOP$
+        \item $SHORTLIFE = (beat \then (beat \then STOP)) = beat \then beat \then STOP$
+        \item $VMS = coin \then choc \then STOP$
+    \end{enumerate}
+  \end{itemize}
+
+  \subsubsection{Sequential Composition ($P;Q$)}
+  \begin{itemize}
+    \item Let $\tick$ be the Termination event.
+    \item The process which may only terminate is written as $SKIP$.
+    \item Let $SKIP = \tick \then STOP$.
+    \item The sequential composition of processes P and Q, written as $P;Q$, acts as P until P terminates by communicating $\tick$ and then proceeds to act as Q.
+  \end{itemize}
+
+  \subsubsection{Parallel Composition}
+  \begin{itemize}
+    \item The parallel composition of \textbf{processes P and Q} synchronised on the \textbf{event set X} is written as $P \parallel[X] Q$.
+    \item No event from $X$ may occur in $P \parallel[X] Q$ unless \textbf{jointly enabled} by both P and Q.
+    \item When events from $X$ occur, they occur in both P and Q simultaneously, and are referred to as \textbf{synchronisations}. 
+    \item Events \textbf{not from X} may occur in either P or Q seperately \textbf{but not jointly}.
+    \item Example: $(a \then P) \parallel[a] (c \then a \then Q)$
+    \begin{itemize}
+        \item All \textbf{a} events must be Synchronous between the two processes.
+    \end{itemize}
+    \item Often, it is simply written as $P \parallel Q$ where the common event set $X = \alpha P \cap \alpha Q$ is omitted.
+    \begin{itemize}
+        \item When $P \parallel Q$ is given, we still know that all common events in $X = \alpha P \cap \alpha Q$ must be synchronous between P and Q.
+    \end{itemize}
+  \end{itemize}
+
+  \subsubsection{Interleaving}
+  \begin{itemize}
+    \item $P \interleave Q$ denotes an asynchronous parallel composition between two processes \textbf{P} and \textbf{Q}.
+    \item Both components \textbf{P} and \textbf{Q} \textbf{execute concurrently} without any synchronisation.
+    \item Example: $((a \then P) \interleave (c \then a \then Q))$
+    \begin{itemize}
+      \item One possible trace is $\trace{c, a, a}$, after which the process acts as $P \interleave Q$
+      \begin{enumerate}
+        \item $c$ from $c \then a \then Q$ is engaged, leaving us with $((a \then P) \interleave (a \then Q))$
+        \item $a$ from $a \then P$ is engaged, leaving us with $(P \interleave (a \then Q))$
+        \item $a$ from $a \then Q$ is engaged, leaving us with $P \interleave Q$
+      \end{enumerate}
+      \item Another possible trace is $\trace{a, c, a}$, after which the process acts as $P \interleave Q$
+      \begin{enumerate}
+        \item $a$ from $a \then P$ is engaged, leaving us with $(P \interleave (c \then a \then Q))$
+        \item $c$ from $c \then a \then Q$ is engaged, leaving us with $(P \interleave (a \then Q))$
+        \item $a$ from $a \then Q$ is engaged, leaving us with $P \interleave Q$
+      \end{enumerate}
+    \end{itemize}
+  \end{itemize}
+
+  \subsubsection{Choice}
+  \begin{itemize}
+      \item In a general choice, $(a \then P) \extchoice (b \then Q)$, the process begins with both events \textbf{a} and \textbf{b} enabled.
+      \item The subsequent behaviour depends on the event which occured.
+      \begin{itemize}
+          \item If the event which occured is \textbf{a}, the process will act as \textbf{P} afterwards.
+          \item If the event which occured is \textbf{b}, the process will act as \textbf{Q} afterwards.
+      \end{itemize}
+      \item Example: $(a \then P) \extchoice (c \then a \then Q)$
+      \begin{itemize}
+          \item If the first event is \textbf{a}, after which the process acts as $P$.
+          \item If the first event is \textbf{c}, after which the process acts as $a \then Q$.
+      \end{itemize}
+  \end{itemize}
+
+  \subsubsection{Interrupt}
+  \begin{itemize}
+      \item The interrupt process $P$ $\nabla$ $e \then Q$ behaves as \textbf{process P} until the first occurrence of \textbf{event e} which then the control passes to \textbf{process Q}. 
+      \item When coding the specification, the keyword \textbf{interrupt} is used instead of the symbol $\nabla$. 
+      \item For the System process, the first event can be a routine or an exception.
+      \item After that, it still behaves as a System process.      
+  \end{itemize}
+
+\begin{lstlisting}
+Err() = exception -> Err();
+Routine() = routine -> Routine();
+ExceptionHandling() = Routine() interrupt exception -> ExceptionHandling();
+System = Err() || ExceptionHandling();
+\end{lstlisting}
+
+  \subsubsection{Laws for Concurrency}
+  \begin{itemize}
+      \item Law 1: $P \parallel Q = Q \parallel P$
+      \item Law 2: $P \parallel (Q \parallel R) = (P \parallel Q) \parallel R$
+      \item Law 3: $P \parallel STOP_{\alpha P} = STOP_{\alpha P}$
+  \end{itemize}
+  Let...
+  \begin{enumerate}
+      \item $a \in (\alpha P - \alpha Q)$
+      \item $b \in (\alpha Q - \alpha P)$
+      \item $\{c, d\} \subseteq (\alpha P \cap \alpha Q)$
+  \end{enumerate}
+  \begin{itemize}
+      \item Law 4A: $(c \then P) \parallel (c \then Q) = c \then (P \parallel Q)$
+      \item Law 4B: $(c \then P) \parallel (d \then Q) = STOP$ if $c \neq d$
+      \item Law 5A: $(a \then P) \parallel (c \then Q) = a \then (P \parallel (c \then Q))$
+      \item Law 5B: $(c \then P) \parallel (b \then Q) = b \then ((c \then P) \parallel Q)$
+      \item Law 6: $(a \then P) \parallel (b \then Q) = a \then (P \parallel (b \then Q)) \extchoice b \then((a \then P) \parallel Q)$
+  \end{itemize}
+  
+  \subsubsection{Channel}
+  \begin{itemize}
+      \item Processes may communicate through channels.
+      \item A channel is like a message buffer for one process to send a value to another process.
+      \item A channel event is written as one of the following forms:
+      
+      \begin{tabular}{|l|l|}
+          \hline
+              \textbf{Form} & \textbf{Description} \\ 
+          \hline
+              $c!n$ & Channel Output. This event occurs when a process writes \\ & $n$ (a value) to the tail of channel c's buffer\\
+          \hline
+              $c?n$ & Channel Input. This event occurs when a process reads a \\ & value from the head of channel c's buffer to a local variable $n$\\
+          \hline
+              $c.n$ & Channel output and its matching channel input are engaged \\ & together by two processes.\\
+          \hline
+      \end{tabular}
+  \end{itemize}
+  
+  \subsubsection{Channel Example}
+  Suppose we are given the following specification in CSP.
+\begin{lstlisting}[language=C]
+channel c 1; // Channel with buffer size = 1
+Sender(i) = c!i -> Sender(i);
+Receiver() = c?x -> a.x -> Receiver();
+System() = Sender(5) ||| Receiver();
+\end{lstlisting}
+  
+  \begin{itemize}
+    \item Note: A process can have optional parameters, eg: Sender(i)
+    \item The first event must be c!5 since c's buffer is empty.
+    \item The second event must be c?5 since c's buffer size is 1.
+    \item The third event can either be c!5 or a.5
+  \end{itemize}
+  
+  \subsubsection{Channel Example: Synchronous Buffer}
+  Suppose we are given the following specification in CSP.
+\begin{lstlisting}[language=C]
+channel c 0; // Synchronous Buffer
+Sender(i) = c!i -> Sender(i);
+Receiver() = c?x -> a.x -> Receiver();
+System() = Sender(5) ||| Receiver();
+\end{lstlisting}
+  
+  \begin{itemize}
+      \item Note: A synchronous buffer is defined by setting the buffer size to 0.
+      \item The first event must be c.5, since the sender must write to the c's buffer and the reciever must read from c's buffer simultaneously.
+      \item The second event must be a.5
+  \end{itemize}
+
+  \section{03. PAT CSP\#}
+  \subsection{Operational Semantics: Primitives}
+  \begin{itemize}
+      \item STOP (A process that does nothing)
+      \item SKIP
+      \begin{axdef}
+          \where
+          SKIP \xrightarrow{\tick} STOP
+      \end{axdef}
+      SKIP can only engage the \textbf{termination event} ($\tick$), afterwards it becomes STOP.
+      \item Prefixing
+      \begin{axdef}
+          \where
+          (a \then P) \xrightarrow{a} P
+      \end{axdef}
+      $a \then P$ can only engage event \textbf{a}, afterwards it becomes process \textbf{P}.
+  \end{itemize}
+
+  \subsection{Operational Semantics}
+  \subsubsection{General Choice}
+  \begin{itemize}
+    \item If P is choosen
+    \begin{axdef}
+      P \xrightarrow{a} P'
+      \where
+      (P \extchoice Q) \xrightarrow{a} P'
+    \end{axdef}
+    \item If Q is chosen
+    \begin{axdef}
+      Q \xrightarrow{a} Q'
+      \where
+      (P \extchoice Q) \xrightarrow{a} Q'
+    \end{axdef}
+  \end{itemize}
+  \subsubsection{Sequential Composition}
+  \begin{itemize}
+    \item In process P;Q, P takes control first and Q starts only when P has finished.
+    \item Let $\tick$ be the termination event.
+  \end{itemize}
+  \begin{axdef}
+      P \xrightarrow{a} P'
+      \where
+      (P ; Q) \xrightarrow{a} (P' ; Q)
+  \end{axdef}
+          
+  \begin{axdef}
+      P \xrightarrow{\tick} P'
+      \where
+      (P ; Q) \xrightarrow{\tick} Q
+  \end{axdef}
+
+  \subsubsection{Interrupt}
+  \begin{itemize}
+      \item In process P $\nabla$ Q, whenever an event is engaged by Q, P is interrupted and the control is transferred to Q.
+  \end{itemize}
+  \begin{axdef}
+      P \xrightarrow{a} P'
+      \where
+      (P \nabla Q) \xrightarrow{a} (P' \nabla Q)
+  \end{axdef}
+
+  \begin{axdef}
+      Q \xrightarrow{a} Q'
+      \where
+      (P \nabla Q) \xrightarrow{a} Q
+  \end{axdef}
+
+  \subsubsection{Operational Semantics: Example \#1}
+  \begin{itemize}
+      \item Let $VMS = coin \then (choc \then VMS \extchoice bisc \then VMS)$
+      \begin{itemize}
+        \item Step 1. $VMS \xrightarrow{coin} (choc \then VMS \extchoice bisc \then VMS)$ (by rule prefixing)\\ 
+        \item Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{choc} VMS$ (by rule choice 1)\\
+        \item Step 2. $(choc \then VMS \extchoice bisc \then VMS) \xrightarrow{bisc} VMS$ (by rule choice 2)
+      \end{itemize}
+  \end{itemize}
+
+  \subsubsection{Labelled Transition System (LTS)}
+  \begin{itemize}
+      \item A \textbf{Labelled Transition System} contains a set of states, an initial state (where the system starts from) and a labelled transition relation.
+      \item The Labelled Transition System is a directed graph
+  \end{itemize}
+  \begin{center}
+      \includegraphics[scale=0.05]{./images/LTS.jpeg}
+  \end{center}
+  \begin{itemize}
+      \item Let $VMS = coin \then (choc \then VMS \extchoice bisc \then VMS)$ 
+      \item State 1 represents the process VMS.
+      \item State 2 represents the process $(choc \then VMS \extchoice bisc \then VMS)$
+  \end{itemize}
+  
+  % Slide 87
+  \subsection{Operational Semantics Continued}
+  \subsubsection{Interleaving}
+  \begin{itemize}
+      \item In process $P \interleave Q$, P and Q behaves independently.
+      \item The exception is the termination, hence assume a is not $\tick$.
+  \end{itemize}
+  \begin{axdef}
+      P \xrightarrow{a} P'
+      \where
+      (P \interleave Q) \xrightarrow{a} (P' \interleave Q)
+  \end{axdef}
+  \begin{axdef}
+      Q \xrightarrow{a} Q'
+      \where
+      (P \interleave Q) \xrightarrow{a} (P \interleave Q')
+  \end{axdef}
+  \subsubsection{Synchronization}
+  \begin{itemize}
+      \item In process $P \parallel[X] Q$, no event from X may occur unless jointly by both P and Q.
+      \item When events from X do occur, they occur in P and Q simultaneously.
+  \end{itemize}
+  \begin{footnotesize}
+      \begin{axdef}
+          P \xrightarrow{a} P' , a \not \in X
+          \where
+          (P \parallel[X] Q) \xrightarrow{a} (P' \parallel[X] Q)
+      \end{axdef}
+      \begin{axdef}
+          Q \xrightarrow{a} Q' , a \not \in X
+          \where
+          (P \parallel[X] Q) \xrightarrow{a} (P \parallel[X] Q')
+      \end{axdef}
+      \begin{axdef}
+          P \xrightarrow{a} P', Q \xrightarrow{a} Q' , a \in X
+          \where
+          (P \parallel[X] Q) \xrightarrow{a}  (P' \parallel[X] Q')
+  \end{axdef}
+  \end{footnotesize}
+  
+  \subsubsection{Operational Semantics: Example \#2}
+  Given the process $a \then P \parallel[a] (c \then a \then Q)$
+  \begin{enumerate}
+      \item $(a \then P \parallel[a] (c \then a \then Q)) \xrightarrow{c} (a \then P \parallel[a] (a \then Q))$
+      
+      Only event \textbf{c} can be engaged at first as \textbf{a} is a common event in both $a \then P$ and $c \then a \then Q$.
+  
+      \item $(a \then P \parallel[a] (a \then Q)) \xrightarrow{a} (P \parallel[a] Q)$
+      
+      Engage the common event \textbf{a} on both $a \then P$ and $a \then Q$.
+  \end{enumerate}
+    
+  \subsubsection{Operational Semantics: Example \#3}
+  \begin{itemize}
+      \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
+      \item $CHOCLOV = choc \then CHOCLOV \extchoice coin \then choc \then CHOCLOV$
+  \end{itemize}
+  \begin{enumerate}
+      \item How would the process $VMC \parallel[A] CHOCLOV$ behave when $A = \set{coin, choc, bisc}$
+      \begin{itemize}
+          \item Step 1: $VMC \parallel[A] CHOCLOV \xrightarrow{coin} (choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV)$
+          \item Step 2: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] CHOCLOV$
+      \end{itemize}
+  \end{enumerate}
+  \begin{center}
+      \includegraphics[scale=0.05]{./images/L3E3.jpeg}
+  \end{center}
+
+  \subsubsection{Operational Semantics Example: \#4}
+  \begin{itemize}
+      \item $VMC = coin \then (choc \then VMC \extchoice bisc \then VMC)$
+      \item $CHOCLOV = choc \then CHOCLOV \extchoice coin \then choc \then CHOCLOV$
+  \end{itemize}
+  \begin{enumerate}
+  \setcounter{enumi}{1}
+  \item How would the process $VMC \parallel[\set{coin, choc}] CHOCLOV$ or equivalently $VMC \parallel CHOCLOV$ behave?
+  \begin{itemize}
+      \item Step 1: $VMC \parallel CHOCLOV \xrightarrow{coin} (choc \then VMC \extchoice bisc \then VMC) \parallel (choc \then CHOCLOV)$
+      \item Step 2a: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{choc} VMC \parallel[A] CHOCLOV$
+      \item Step 2b: $(choc \then VMC \extchoice bisc \then VMC) \parallel[A] (choc \then CHOCLOV) \xrightarrow{bisc} VMC \parallel[A] (choc \then CHOCLOV)$
+  \end{itemize}
+  \end{enumerate}
+  \begin{center}
+      \includegraphics[scale=0.05]{./images/L3E4.jpeg}
+  \end{center}
+
+  \subsection{Case Study: Dining Philosophers}
+  \begin{enumerate}
+      \item Specify the dining philosophers 
+\begin{lstlisting}
+Alice = Alice.get.fork1 -> Alice.get.fork2 -> Alice.eat -> Alice.put.fork1 -> Alice.put.fork2 -> Alice
+Bob = Bob.get.fork1 -> Bob.get.fork2 -> Bob.eat -> Bob.put.fork1 -> Bob.put.fork2 -> Bob
+Fork1 = (Alice.get.fork1 -> Alice.put.fork1 -> Fork1) [] (Bob.get.fork1 -> Bob.put.fork1 -> Fork1)
+Fork2 = (Alice.get.fork2 -> Alice.put.fork2 -> Fork2) [] (Bob.get.fork2 -> Bob.put.fork2 -> Fork2)
+College = Alice || Bob || Fork1 || Fork2
+\end{lstlisting}
+      \item Get the alphabets of each process
+      \begin{itemize}
+          \item $\alpha Alice = \set{Alice.get.fork1, Alice.get.fork2, Alice.eat, Alice.put.fork1, Alice.put.fork2}$
+          \item $\alpha Bob = \set{Bob.get.fork1, Bob.get.fork2, Bob.eat, Bob.put.fork1, Bob.put.fork2}$
+          \item $\alpha Fork1 = \set{Alice.get.fork1, Alice.put.fork1, Bob.get.fork1, Bob.put.fork1}$
+          \item $\alpha Fork2 = \set{Alice.get.fork2, Alice.put.fork2, Bob.get.fork2, Bob.put.fork2}$
+      \end{itemize}
+      \item Apply the operational semantics rule (one at a time) to build the Labelled Transition System.
+      \begin{itemize}
+          \item Alice can perform Alice.get.fork1
+          \item Bob can perform Bob.get.Fork2
+          \item Fork1 can perform Alice.get.fork1 or Bob.get.fork1
+          \item Fork2 can perform Alice.get.fork2 or Bob.get.Fork2
+          \item By rule syn3, College can perform either Alice.get.fork1 or Bob.get.fork2, and then a state of the form.
+          \begin{center}
+              $\cdots \parallel \cdots \parallel \cdots \parallel \cdots$
+          \end{center}
+      \end{itemize}
+      \item Analyze the Labelled Transition system
+      \begin{itemize}
+          \item Is the system deadlock-free?
+          \item Will Alice or Bob starve to death?
+      \end{itemize}
+  \end{enumerate}
+  \begin{center}
+    \includegraphics[scale=0.2]{./images/DiningPhilosophers.png}   
+  \end{center}
+
+
+  \subsection{Safety}
+  \begin{itemize}
+  \item Safety means \textbf{something bad never happens}.
+  \item Examples
+  \begin{enumerate}
+  \item deadlock-freeness
+  \begin{lstlisting}
+  #assert College() deadlockfree;
+  \end{lstlisting}
+  The system never deadlocks
+  \item invariant
+  \begin{lstlisting}
+  #assert Bank() |= [] Value >= Debit;
+  \end{lstlisting}
+  The savings of a bank account must always be non-negative.
+  \end{enumerate}
+  \item \textbf{Note:}
+  \begin{itemize}
+    \item '[]' signifies 'always' in Linear Temporal Logic.
+    \item '$\mid =$' represents 'satisfisfaction' in Linear Temporal Logic.
+  \end{itemize}
+  \end{itemize}
+
+  \subsubsection{Verifying Safety}
+  \begin{itemize}
+    \item To verify safety, perform \textbf{reachability analysis} on the \textbf{Labelled Transition System}.
+    \item A counterexample to the safety property is a finite execution which leads to a bad state.
+    \item Perform either \textbf{Depth First Search (DFS)} or \textbf{Breadth First Search (BFS)} to search all reachable states for a 'bad' one.
+    \item Example (using the LTS of Dining Philosophers):
+    \begin{enumerate}
+        \item Depth First Search: $1 \then 2 \then 5 \then 7 \then 1 \then$ backtrack $\then 4 \then$ FOUND! 
+        \item Breadth First Search: $1 \then 2 \then 3 \then 5 \then 4 \then$ FOUND!
+    \end{enumerate}
+  \end{itemize}
+
+  \subsubsection{Applications of Safety Verification}
+  Many properties can be formulated as a safety property and solved using \textbf{reachability analysis}.
+  \begin{enumerate}
+      \item Mutual Exclusion: []!(more than one process accessing the critical section)
+      \begin{itemize}
+          \item There will never be more than one process accessing the critical section.
+      \end{itemize}
+      \item Security: [](only the authorized user can access the information)
+      \begin{itemize}
+          \item It is always the case that only the authorized user can access the information.
+      \end{itemize}
+      \item Program Analysis
+      \begin{itemize}
+          \item Arrays are always bounded.
+          \item Pointers are always non-null
+          \item etc...
+      \end{itemize}
+  \end{enumerate}
+
+  \subsection{Liveness}
+  \begin{itemize}
+      \item Liveness means \textbf{something good eventually happens}.
+      \item Examples
+      \begin{enumerate}
+          \item A program is eventually terminating.
+          \item A file writer is eventually closed.
+          \item Both Alice and Bob eventually get to eat.
+      \end{enumerate}
+  \end{itemize}
+
+  \subsubsection{Verifying Liveness}
+  \begin{itemize}
+    \item To verify liveness, perform \textbf{loop searching} on the \textbf{Labelled Transition System}.
+    \item A counterexample to a liveness property is an infinite system execution during which the 'good' thing never happens.
+    \begin{itemize}
+        \item Example: An infinite loop fails the property that the program is eventually terminating.
+    \end{itemize}
+    \item We can search through the Labelled Transition System for a bad loop using \textbf{Nested Depth First Search} or \textbf{Strongly Connected Component based Search}
+    \item Example
+    \begin{center}
+        \includegraphics[scale=0.18]{../images/DiningPhilosophers.png}
+    \end{center}
+    Assertion: Alice will always eventually eat. (\textbf{False})
+\begin{lstlisting}
+#assert College() |= Alice.eat
+\end{lstlisting}
+    \textbf{Counterexamples}
+    \begin{itemize}
+        \item $\trace{Alice.get.fork1, Bob.get.fork2}$
+        \item $<Bob.get.fork2 \then Bob.get.fork1 \then Bob.eat \then Bob.put.fork2, \then Bob.put.fork1>^{*}$
+    \end{itemize}
+  \end{itemize} 
+
+  % CSP# Syntax and Features
+  \subsection{CSP\# Features}
+  \subsubsection{Global Definition}
+  \begin{itemize}
+    \item \textbf{Constants}
+\begin{lstlisting}[language=C]
+#define max 5;
+\end{lstlisting}
+    \item \textbf{Enumerations}
+\begin{lstlisting}[language=C]
+enum {red, blue, green};
+// Syntactic Sugar for the following
+#define red 0;
+#define blue 1;
+#define green 2;
+\end{lstlisting}
+    \item \textbf{Variables}
+\begin{lstlisting}[language=C]
+var knight = 0;
+\end{lstlisting}
+    \item \textbf{Arrays}
+\begin{lstlisting}[language=C]
+// A fixed sized array may be defined as follows:
+var board = [3, 5, 6, 0, 2, 7, 8, 4, 1];
+// If we do not specify the elements in an array, 
+// all elements in array are initialized to 0
+var leader[3]; // Array of size 3. 
+var matrix[3][2] // Multi-dimensional array (internally an array of 6)
+\end{lstlisting}
+    \item Often, it is desirable to provide the range of the variables / arrays explicity by giving the lower bound or upper bound or both.
+\begin{lstlisting}[language=C]
+var knight:{0..} = 0;
+var board:{0..10} = [3, 5, 6, 0, 2, 7, 8, 4, 1]; 
+\end{lstlisting}
+    \item \textbf{Array Initialization}: To ease modelling, PAT supports fast array initialization using the following syntax
+\begin{lstlisting}[language=C]
+#define N 2;
+// Initialized array with syntax shortcuts
+var array = [1(2), 3..6, 7(N * 2), 12..10];
+// The above is the same as the following
+var array = [1, 1, 3, 4, 5, 6, 7, 7, 7, 7, 12, 11, 10];
+\end{lstlisting}
+    \item \textbf{Macro}
+    \begin{itemize}
+      \item Macros are used to define system properties and processes.
+      \item The keyword \textbf{\#define} may be used to define macros.
+\begin{lstlisting}[language=C]
+#define goal x == 0;
+#assert System() reaches goal;
+// If the value of x is 0 then do P else do Q.
+if (goal) { P } else { Q }; 
+\end{lstlisting}
+\item \textbf{Explanation}
+\begin{itemize}
+  \item goal is the name of the macro
+  \item x == 0 is what the goal means.
+\end{itemize}
+    \end{itemize}
+    \item \textbf{Note:}
+    \begin{itemize}
+      \item The constant value can only be of \textbf{integer} or \textbf{boolean} value.
+      \item \textbf{\#define} is a keyword used for multiple purposes. Here it defines a global constant.
+      \item (;) \textbf{semi-colon} marks the end of the 'sentence'.
+      \item Multi-dimensional arrays are internally converted to one-dimension.
+      \item The \textbf{var} keyword is used to defined variables.
+      \item The scope of these variables are global if they are not within an event or process.
+      \item PAT only supports integer, boolean and integer arrays for the purpose of \textbf{efficient verification}.
+      \item However, advanced data structures (eg: Stack, Queue, Hashtable, etc\dots) are necessary for some models which PAT provides an interface to create user defined data types by inheriting an \textbf{abstract class} \texttt{ExpressionValue} using the \textbf{C\# library}.
+    \end{itemize}
+  \end{itemize}
+
+  \subsection{CSP\#: Process Definition}
+  \begin{itemize}
+  \item Event Prefixing
+  \begin{enumerate}
+  \item Basic Form
+  \begin{lstlisting}[language=C]
+  e -> p;
+  VM() = coin -> coffee -> VM();
+  \end{lstlisting}
+  \item Compound Form
+  \begin{itemize}
+      \item For example in \texttt{x.exp1.exp2}, \texttt{x} is the event name and \texttt{exp1} and \texttt{exp2} are expressions.
+      \item Each expression corresponds to a variable (eg: process parameters, channel input variables or global variables).
+  \end{itemize}
+  \begin{lstlisting}[language=C]
+  #define N 2;
+  // Dining Philosophers Example
+  Phil(i) = get.i.(i + 1) % N -> Rest();
+  \end{lstlisting}
+  \end{enumerate}
+  \end{itemize}
+  
+  \begin{itemize}
+      \item Statement Block inside Events (aka Data Operations)
+      \begin{itemize}
+          \item An event can be attached with assignments which update global or local variables.
+          \item Process arguments and channel inputs can only used without being updated.
+          \item Semi-colons (;) mark the end of a statement in C\# or end of a sentence in CSP\#.
+      \end{itemize}
+  \end{itemize}
+  \begin{lstlisting}[language=C]
+  var array = [0, 2, 4, 7, 1, 3];
+  var maxi = -1;
+  P() = findmax {
+      var index = 0;
+      while (index < 6) {
+          if (maxi < array[index]) { maxi = array[index]; }
+          index = index + 1;
+      };
+  } -> Skip;
+  \end{lstlisting}
+
+  \begin{center}
+    \fbox{%
+      \parbox{0.95\linewidth}{\centering \textcolor{black}{
+        {
+          P() = $\dots$ is equivalent to defining process P without any process parameters.
+        }
+      }%
+    }}
+  \end{center}
+
+
+  \begin{itemize}
+    \item \textbf{Conditional Choice:} A choice may depend on a Boolean expression which in turn depends on the valuation of the variables.
+\begin{lstlisting}[language=C]
+var x = 1;
+Init = []i{1,2}@set.i{x = i} -> Skip;
+P = if (x == 1) { a -> Stop } else { b -> Stop };
+System = Init;P; // Sequential composition of two processes
+\end{lstlisting}
+    \item \textbf{Guarded Process:} A guarded process only executes when its guard condition is satisfied.
+\begin{lstlisting}[language=C]
+var x = 1;
+Init = []i{1,2}@set.i{x = i} -> Skip;
+P = [x == 1] a -> Stop [] [x != 1] b -> Stop;
+System = Init;P; // Sequential composition of two processes
+\end{lstlisting}
+  \begin{center}
+    \fbox{%
+      \parbox{0.95\linewidth}{\centering \textcolor{black}{
+        {
+          \begin{itemize}
+            \item \texttt{[]i:\set{1, 2}} means choice for variable i which can be either 1 or 2.
+            \item In both examples, Process P behaves differently depending of the value of variable x.
+            \item Both conditional choice and guarded process can produce the same effect.
+          \end{itemize}
+        }
+      }%
+    }}
+  \end{center}
+\begin{lstlisting}[language=C]
+var x = 0;
+P = [x < 4] b{x = x + 1;} -> P;
+aSys = [x == 2] a -> Stop ||| P;
+\end{lstlisting}
+  \begin{center}
+    \fbox{%
+      \parbox{0.95\linewidth}{\textcolor{black}{
+        {In the example above, the trace $\trace{b, b, a}$ is possible but $\trace{b, b, b, a}$ is not possible.}
+      }%
+    }}
+  \end{center}
+  \end{itemize}
+
+  \begin{itemize}
+    \item \textbf{Atomic Process:}
+    \begin{itemize}
+      \item The keyword \textbf{atomic} is used to indicate that a process is of \textbf{higher priority}.
+      \item This means if the atomic process has an enabled event, the event will execute before any events from non-atomic processes.
+\begin{lstlisting}[language=C]
+channel ch 0;
+P = atomic { a -> ch!0 -> b -> Skip };
+Q = atomic { d -> ch?0 -> e -> f -> Skip };
+W = g -> Skip;
+System = P ||| Q ||| W;
+\end{lstlisting}
+      \item In the example above, processes P and Q are both atomic processes, while process W is not.
+      \item The expected behaviour is that processes P and Q will interleave each other (only synchronised on ch.0), whereas W will execute only after event b and f have occured.
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \fbox{%
+      \parbox{0.95\linewidth}{\textcolor{black}{
+        {Since the channel size is 0, processes P and Q have to synchronise at the channel events.}
+      }%
+    }}
+  \end{center}
+
+  \subsection{CSP\#: Assertions}
+  \begin{itemize}
+    \item \textbf{Deadlock-freeness:} The following assertion asks if process P() is deadlock-free or not.
+    \begin{itemize}
+        \item A deadlock state is a state with no further move, except for successfully terminated state.
+    \end{itemize}
+\begin{lstlisting}[language=C]
+P = a -> Skip;
+#assert P deadlockfree; // True
+\end{lstlisting}
+  \item \textbf{Reachability:} The following assertion asks whether process P() can reach a state at which \textit{some given condition is satisified.}
+  \begin{itemize}
+    \item In this example, the assertion is True because it can reach a state where \texttt{x < 0}.
+  \end{itemize}
+\begin{lstlisting}[language=C]
+var x = 0;
+P() = add{x = x + 1;} -> P() [] minus{x = x - 1;} -> P();
+#define goal x < 0;
+#assert P() reaches goal; // Note: goal condition must be a macro
+\end{lstlisting}
+  \item The following coin exchanging example shows how to minimize the number of coins during reachability search.
+\begin{lstlisting}[language=C]
+var x = 0;
+var weight = 0;
+P() = if (x <= 14) {
+    coin1{x = x + 1; weight = weight + 1;} -> P();
+    [] coin2{x = x + 2; weight = weight + 1;} -> P();
+    [] coin5{x = x + 5; weight = weight + 1;} -> P();
+};
+#define goal x == 14;
+#assert P() reaches goal with min(weight);
+\end{lstlisting}
+  \end{itemize}
+  
+  \subsection{CSP\#: Assertions and Linear Temporal Logic}
+  \begin{itemize}
+    \item \textbf{Linear Temporal Logic (LTL)} is a formalism used for specifying and reasoning about the behavior of systems over time. 
+    \item It extends propositional logic by introducing temporal operators that describe how properties of a system evolve over time, making it suitable for reasoning about sequences of states in a system. 
+    \item In LTL, time is viewed as a linear sequence of discrete points, and temporal operators allow the expression of future and current behaviors in a system.
+    \item Let $\phi$ and $\psi$ be LTL formulaes.
+    \begin{center}
+      \begin{tabular}{|l|l|l|l|}
+        \hline
+        \textbf{Operator} & \textbf{Usage} & \textbf{Name} & \textbf{Explanation} \\
+        \hline
+        \textbf{X} & \textbf{X} $\phi$ & Next & $\phi$ has to hold at the next state\\
+        \hline
+        \textbf{G} & \textbf{G} $\phi$ & Globally & $\phi$ has to hold on the entire subsequent \\ & & & path \\
+        \hline
+        \textbf{F} & \textbf{F} $\phi$ & Finally & $\phi$ eventually has to hold somewhere on \\ & & & the subsequent path\\ 
+        \hline
+        \textbf{U} & $\psi$ \textbf{U} $\phi$ & Until & $\phi$ holds at the current or a future position, \\ & & & and $\psi$ has to hold until that position. At \\ & & &  that position $\psi$ does not have to hold \\ & & & anymore.\\
+        \hline
+        \textbf{R} & $\psi$ \textbf{R} $\phi$ & Release & $\phi$ is true until the first position in which $\psi$ \\ & & & is true, or forever if such a position does \\ & & & not exist.\\
+        \hline
+      \end{tabular}
+    \end{center}
+    \item The LTL assertion is true if and only if every execution (\textbf{trace}) of the system satisfies the formula $F$, where F is an LTL formula whose syntax is defined as the following rules.
+    \begin{itemize}
+      \item F = e $\mid$ prop $\mid$ [] F $\mid$ $<>$ F $\mid$ X F $\mid$ F1 U F2 $\mid$ F1 R F2
+      \item Notations
+      \begin{enumerate}
+          \item e is an event
+          \item prop is a predefined propositional
+          \item $[]$ reads as "always" (or 'G' in CSP\#)
+          \item $<>$ reads as "eventually" (or 'F' in CSP\#)
+          \item X reads as "next"
+          \item U reads as "until"
+          \item R reads as "release" 
+      \end{enumerate} 
+    \end{itemize}
+\begin{lstlisting}[language=C]
+#assert P() |= F;
+\end{lstlisting}
+  \end{itemize}
+
+  \subsubsection{CSP\#: Assertions and Linear Temporal Logic (Examples)}
+\begin{lstlisting}[language=C]
+var x = 0;
+P = [x < 2] a{x = x + 1} -> P
+    [][x < 4] b {x = x + 2} -> P
+    [][x >= 4] c -> P;
+#define ge2 x >= 2;
+#define lt2 x < 2;
+\end{lstlisting}
+\begin{center}
+    \includegraphics[scale=0.0375]{../images/PAT_Assertions.jpg}
+\end{center}
+\begin{lstlisting}[language=C]
+#assert P deadlockfree; // Valid
+
+#assert P |= lt2; // First state, x < 2? 
+                  // Yes
+
+#assert P |= !c; // Init event is not c? 
+                  // Yes
+
+#assert P |= X (a || b); 
+// Next event a or b? Yes!
+
+#assert P |= [] ge2; // Always x >= 2? No
+// Counter Example: Initial State (x = 0)
+
+#assert P |= <> ge2; // Eventually x >= 2? 
+// Yes. Traces: <a, b>, <a, a>, <b>
+
+#assert P |= [] (lt2 -> X ge2);
+// It is always true that if the current state is x < 2, it implies the next state is x >= 2?
+// No. For example, <a>, init state x = 0 (lt2), next state x = 1(!ge2)
+
+#assert P |= [] (lt2 -> X(Xge2));
+// It is always true that if the current state is x < 2, then the next next state is x >= 2?
+// Yes. Traces: <a, a>, <a, b>, <b>
+
+#assert P |= (lt2 U ge2); 
+// Is it always x < 2 until x >= 2? Yes
+
+#assert P |= (ge2 R le3); 
+// x <= 3 until the first position 
+// where x >= 2? Yes
+
+#assert P |= (ge2 R lt2); 
+// x < 2 until the first position 
+// where x >= 2? No
+// Counter Examples: <a, b>, <b>
+\end{lstlisting}
+  \newpage
+  % 4. Timed and Probability CSP
+  \section{04. Timed and Probability CSP}
+  \subsection{Real-Time System Module}
+  Let $P$ and $Q$ be processes, while $d$ represents a duration of $d$ time units.
+  \begin{lstlisting}[language=C]
+  P = Wait[t] // delay
+  P = P timeout[t] Q // timeout
+  P = P interrupt[t] Q // timed interrupt
+  P = P deadline [t] // deadline
+  P = P within[t] // within
+  \end{lstlisting}
+
+  \subsubsection{Timed Process Definition: Wait}
+  \begin{itemize}
+      \item A wait process \texttt{Wait[t]} delays the system execution for a period of t time units then terminates.
+      \item Each (V, P) is an ordered pair of values and processes.
+  \end{itemize}
+  \textbf{Definition 1}
+  \begin{axdef}
+    t \leq d
+    \where
+    (V, Wait[d]) \xrightarrow{t} (V, Wait[d - t])
+  \end{axdef}
+
+  \textbf{Definition 2}
+  \begin{axdef}
+    \where
+    (V, Wait[0]) \xrightarrow{\tau} (V, Skip)
+  \end{axdef}
+  \begin{lstlisting}[language=C]
+  P = Wait[t]; P
+  \end{lstlisting}
+  \begin{itemize}
+    \item The starting time of process P is delayed by exactly t time units.
+    \item If the amount of time elapsed is less than the specified duration, then the Wait process will be still active.
+  \end{itemize}
+ 
+  \subsubsection{Timed Process Definition: Timeout}
+  \begin{itemize}
+    \item The process \texttt{P timeout[t] Q} passes control to process \texttt{Q} if no event has occured in process \texttt{P} before t time units have elapsed.
+    \item For instance if process \texttt{a -> P timeout [t] Q} engages in event \texttt{a} before $t$ time units have elapsed since the process is enabled, then the process is transformed to P.
+    \item If event \texttt{a} has not occured by time $t$, the process transforms to Q (by silent tau-transition).
+    \item \textbf{Invisible Events}
+    \begin{enumerate}
+      \item Let $\tau$ (tau) be an invisible event. Example: \texttt{tau\{pv = x\}}
+      \item \texttt\{ pv = x \} (Event with no name is also an invisible event)
+      \item \textbf{Note:} Invisible events are not observable.
+    \end{enumerate}
+    \item The timeout constraint is removed if an event in P is engaged before $d$ time units has elapsed.
+    \begin{footnotesize}
+        \begin{axdef}
+            (V, P) \xrightarrow{x} (V', P')
+            \where
+            (V, \text{$P$ timeout[d] $Q$}) \xrightarrow{x} (V', P')
+        \end{axdef}
+    \end{footnotesize}
+    \item If P engages in an invisible event $\tau$, the timeout constraint is not removed, but the process becomes \texttt{P' timeout[d] Q}
+    \begin{footnotesize}
+    \begin{axdef}
+        (V, P) \xrightarrow{\tau} (V, P')
+        \where
+        (V, \text{$P$ timeout[d] $Q$}) \xrightarrow{\tau} (V', \text{P' timeout[d] $Q$})
+    \end{axdef}
+    \end{footnotesize}
+    \item If time has not passed d units, the timeout constraint remains.
+    \begin{footnotesize}
+        \begin{axdef}
+            (V, P) \xrightarrow{t} (V, P'), t \leq d
+            \where
+            (V, \text{$P$ timeout[d] $Q$}) \xrightarrow{t} (V, \text{P' timeout[d - t] $Q$})
+        \end{axdef}
+    \end{footnotesize}
+    \item If no event has occured by timeout, the process transforms to Q by silent-tau transition.
+    \begin{footnotesize}
+        \begin{axdef}
+            \where
+            (V, \text{$P$ timeout[0] $Q$}) \xrightarrow{\tau} (V, Q)
+        \end{axdef}
+    \end{footnotesize}
+  \end{itemize}
+
+  \subsubsection{Timed Process Definition: Timed Interrupt}
+  \begin{itemize}
+      \item Process \texttt{P interrupt[t] Q} behaves as P until t time unit elapse and then switches to Q
+      \item For example process \texttt{(a -> b -> c -> \dots) interrupt[t] Q} may engage in events a, b, c, \dots as long as $t$ time units has not elapsed.
+      \item Once t time units have elapse, then the process transforms to Q by silent-tau transition.
+  \end{itemize}
+
+  \textbf{Definition 1}
+  \begin{footnotesize}
+      \begin{axdef}
+          (V, P) \xrightarrow{x} (V', P')
+          \where
+          (V, \text{$P$ interrupt[d] $Q$}) \xrightarrow{x} (V', \text{$P'$ interrupt[d] $Q$})
+      \end{axdef}
+  \end{footnotesize}
+
+  \textbf{Definition 2}
+  \begin{footnotesize}
+      \begin{axdef}
+          (V, P) \xrightarrow{t} (V', P'), t \leq d
+          \where
+          (V, \text{$P$ interrupt[d] $Q$}) \xrightarrow{t} (V', \text{$P'$ interrupt[d - t] $Q$})
+      \end{axdef}
+  \end{footnotesize}
+
+  \textbf{Definition 3}
+  \begin{footnotesize}
+      \begin{axdef}
+          \where
+          (V, \text{$P$ interrupt[0] $Q$}) \xrightarrow{\tau} (V', Q)
+      \end{axdef}
+  \end{footnotesize}
+
+  \subsubsection{Timed Process Definition: Deadline}
+  Process \texttt{P deadline[t]} is constrained to terminate within $t$ time units.
+
+  \textbf{Definition 1}
+  \begin{axdef}
+      (V, P) \xrightarrow{x} (V', P')
+      \where
+      (V, \text{$P$ deadline[d]}) \xrightarrow{x} (V', \text{$P'$ deadline[d]})
+  \end{axdef}
+
+  \textbf{Definition 2}
+  \begin{axdef}
+      (V, P) \xrightarrow{t} (V', P'), t \leq d
+      \where
+      (V, \text{$P$ deadline[d]}) \xrightarrow{t} (V', \text{$P'$ deadline[d - t]})
+  \end{axdef}
+
+  \textbf{Definition 3}
+  \begin{axdef}
+      \where
+      (V, \text{$P$ deadline[0]}) \rightarrow Skip
+  \end{axdef}
+
+  \subsubsection{Timed Process Definition: Within}
+  \begin{itemize}
+    \item The within operator forces the process to make an observable move within the given time frame.
+    \item In \texttt{P within[t]} says the first event of P must engage within $t$ time units.
+  \end{itemize}
+
+  \subsection{Probability CSP Module: Probability Processes}
+  \begin{itemize}
+    \item The PCSP module adds \textbf{probability processes} to existing process definitions in the CSP\# module.
+    \item \textbf{Probability processes} are a special kind of process with probabilistic characteristic defined using the keyword \texttt{pcase}.
+    \item It is a compositional process made up of probabilistic branches.
+  \end{itemize}
+  \begin{multicols*}{2}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P = pcase{
+  [prob1] : Q1
+  [prob2] : Q2
+  $\dots$
+  default : Qn
+}
+\end{lstlisting}
+    \begin{itemize}
+      \item \texttt{prob1} and \texttt{prob2} are floating point probability values.
+      \item \texttt{default = 1 - prob1 - prob2 - ...}
+    \end{itemize}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P = pcase{
+  weight1 : Q1
+  weight2 : Q2
+  $\dots$
+  weightn : Qn
+}
+\end{lstlisting}
+    \begin{itemize}
+      \item PAT will add up and normalize the weights.
+      \item For example, the probability of P to Q1 is $\frac{weight1}{weight1 + weight2 + \dots + weightn}$
+    \end{itemize}
+  \end{multicols*}
+
+  \subsection{Probabilty Processes Assertion}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#assert P reaches cond with prob/pmin/pmax
+\end{lstlisting}
+  \begin{itemize}
+    \item This assertion asks the (min/max/both) probability that the process \texttt{P()} can reach a state at which some given condition is satisifed.
+    \item The keyword \texttt{prob} provides both the minimum and maximum probability a process \texttt{P()} can reach a certain state. It provides a range of probabilities.
+  \end{itemize}
+
+  \subsubsection{PCSP Example: Simple pcase}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+var current = 0;
+aSystem = State0;
+
+State0 = pcase{
+  [0.5] : e05{current = 1} -> State1
+  default : e05{current = 2} -> State2 
+} [] pcase{
+  [0.25] : e025{current = 3} -> State3
+  default : e075{current = 2} -> State2
+};
+
+State1 = pcase{
+  [0.5] : e05{current = 0} -> State0
+  default : e05{current = 3} -> State3
+}
+
+State2 = e -> State2;
+State3 = e -> State3;
+
+#define predicate current == 2;
+#assert aSystem reaches predicate with pmax; // 0.75
+#assert aSystem reaches predicate with pmin; // 0.67
+
+\end{lstlisting}
+
+    \subsubsection{PCSP Example: Calculating Max Reachability for Simple pcase}
+    \begin{center}
+        \includegraphics[scale=0.325]{../images/L4_Simple_Pcase_LTD.png} 
+    \end{center}
+    Let $x_i$ be the max reachability from $S_i$ to $S_2$:
+    \begin{itemize}
+        \item $x_0 = max(0.5x_1 + 0.5x_2, 0.75x_2 + 0.25x_3)$
+        \item $x_1 = 0.5x_0 + 0.5x_3$
+        \item $x_2 = 1$
+        \item $x_2 = 0$
+    \end{itemize}
+    \begin{itemize}
+        \item $x_0, x_1$ dependent on other reachability values.
+        \item Initially, assume $x_0, x_1 = 0$.
+        \item When calculating each current iteration, use the previous iteration's $x_0$ value when calculating $x_1$. That is why in the table below, we start from iteration 0.
+        \item Stop iterating only when the values are stabilized.
+    \end{itemize}
+    \begin{center}
+        \begin{scriptsize}
+            \begin{tabular}{|l|l|l|}
+                \hline
+                Iteration & $x_0$ & $x_1$ \\
+                \hline
+                0 & 0 & 0 \\
+                \hline
+                1 & 0.75 & 0 \\
+                \hline
+                2 & 0.75 & 0.375 \\
+                \hline
+                3 & 0.75 & 0.375 \\
+                \hline
+            \end{tabular}
+        \end{scriptsize}
+    \end{center}
+
+
+    \subsubsection{PCSP Example: Calculating Min Reachability for Simple pcase}
+    \begin{center}
+        \includegraphics[scale=0.325]{../images/L4_Simple_Pcase_LTD.png} 
+    \end{center}
+    Let $x_i$ be the min reachability from $S_i$ to $S_2$:
+    \begin{itemize}
+        \item $x_0 = min(0.5x_1 + 0.5x_2, 0.75x_2 + 0.25x_3)$
+        \item $x_1 = 0.5x_0 + 0.5x_3$
+        \item $x_2 = 1$
+        \item $x_2 = 0$
+    \end{itemize}
+    \begin{itemize}
+        \item $x_0, x_1$ dependent on other reachability values.
+        \item Initially, assume $x_0, x_1 = 1$.
+        \item Use the previous iteration's $x_0$ value when calculating $x_1$.
+        \item Stop iterating only when the values are stabilized.
+    \end{itemize}
+    \begin{center}
+        \begin{scriptsize}
+            \begin{tabular}{|l|l|l|}
+                \hline
+                Iteration & $x_0$ & $x_1$ \\
+                \hline
+                0 & 1 & 1 \\
+                \hline
+                1 & 0.75 & 0.5 \\
+                \hline
+                2 & 0.75 & 0.375 \\
+                \hline
+                3 & 0.6875 & 0.375 \\
+                \hline
+                4 & 0.6875 & 0.3438 \\
+                \hline
+                5 & 0.6719 & 0.3438 \\
+                \hline
+                $\dots$ &  &  \\
+                \hline
+                  & 0.6667 & 0.3333 \\
+                \hline
+            \end{tabular}
+        \end{scriptsize}
+    \end{center}
+\end{multicols*}
+\newpage
+
+% Examples
+\begin{multicols*}{2}
+  \section{Z Specification Example(s)}
+
+  \subsection{Z Specification Case Study: Shunting Game}
+  \begin{itemize}
+    \item The diagram illustrates the board and the starting state for a shunting game.
+    \item The black piece is the shunter.
+    \item A move consists of the black piece (the shunter) moving one position either vertically or horizontally provided either:
+    \begin{itemize}
+        \item The position moved to is empty, or
+        \item The position moved to is occupied by a white piece but the position beyond the white piece is empty, in which case the white piece is pushed into the empty position.
+    \end{itemize}
+    \item The shunter cannot push two white pieces at the same time.
+    \item At each stage, a score is kept of the number of moves made so far.
+    \item The game ends when the white pieces occupy the four positions marked with a cross.
+  \end{itemize}
+ \begin{center}
+    \includegraphics[scale=0.3]{../images/L1_ShuntingGame.png} 
+  \end{center}
+  \begin{itemize}
+      \item $Board == (1..7 \cross 3..4) \cup (3..4 \cross 1..6)$
+      \item $over == \set{(3, 3), (4, 3), (3, 4), (4, 4)}$
+  \end{itemize}
+  \begin{axdef}
+      next: Board \rel Board
+      \where
+      \forall(i, j),(k, l) : Board \spot (i, j) \text{ \underline{next} } (k, l) \iff (i = k \wedge (j = l + 1 \vee j = l - 1)) \vee (j = 1 \wedge (i = k + 1 \vee i = k - 1))    
+  \end{axdef}
+  \begin{axdef}
+      beyond: Board \cross Board \pfun \nat \cross \nat
+      \where
+      \dom beyond = {b, w: Board \mid b \text{ \underline{next} } w}\\
+      \forall b, w : \dom beyond \spot beyond(b, w) = 2w - b
+  \end{axdef}
+  \begin{multicols}{3}
+    \begin{schema}{Shunting}
+      bposn : Board\\
+      wposn : \power Board\\
+      score : \nat
+      \where
+      bposn \not \in wposn \wedge \#wposn = 4
+    \end{schema}
+    \begin{schema}{ShuntingInit}
+      bposn = (1, 4)\\
+      wposn = \set{(2, 4), (4, 3), (4, 5), (6, 4)}\\
+      score = 0
+    \end{schema}
+    \begin{schema}{Over}
+      \Xi Shunting \\
+      score! : \nat \\
+      \where
+      wposn = over \\
+      score! = score
+    \end{schema}
+  \end{multicols}
+  \begin{schema}{Move}
+    \Delta Shunting
+    \where
+    wposn \neq over \\
+    bposn' \underline{ next } bposn \\
+    bposn' \not \in wposn \implies wposn' = wposn \\
+    bposn' \in wposn \implies wposn' = (wposn - {bposn'}) \cup {beyond(bposn, bposn')} \\
+    score' = score + 1
+  \end{schema}
+
+  % PAT Examples 
+  \section{PAT CSP\# Examples}
+  \subsection{Concurrency Example \#1}
+  We are given the following system specification in CSP
+\begin{lstlisting}
+VMC = coin -> ((choc -> VMC)[](bisc -> VMC));
+CHOCLOV = choc -> CHOCLOV [] coin -> choc -> CHOCLOV;
+#alphabet VMC{coin, choc, bisc};
+#alphabet CHOCLOV{coin, choc, bisc};
+System = VMC || CHOCLOV;
+\end{lstlisting}
+  
+  \begin{itemize}
+  \item When coding process specifications in CSP, we use the keyword \textbf{\#alphabet}, instead of the symbol $\alpha$.
+  \item The only possible trace for this example is $\trace{coin, choc}^{n}$ for $n : \nat_1$ after which the system acts as $VMC \parallel CHOCLOV$.
+  \begin{itemize}
+      \item As defined in lines 3 and 4 of the specification, the common events are the alphabets of VMC and CHOCLOV which are \textbf{coin}, \textbf{choc} and \textbf{bisc}.
+      \item However, the process \textbf{CHOCLOV} does not have the event \textbf{bisc}.
+      \item In VMC, the \textbf{coin} event has to be engaged first before we can engage $choc \then VMC$
+      \item Hence, both VMC and CHOCLOV engages in the \textbf{coin} event first then the \textbf{choc} event before acting as $VMC \parallel CHOCLOV$ again.
+  \end{itemize}
+  \end{itemize}
+  
+  \subsection{Concurrency Example \#2}
+  We are given the same specification as the previous slide in CSP except that we now do not define the alphabet for the \textbf{VMC} and \textbf{CHOCLOV} processes.
+\begin{lstlisting}
+VMC = coin -> ((choc -> VMC)[](bisc -> VMC));
+CHOCLOV = choc -> CHOCLOV [] coin -> choc -> CHOCLOV;
+System = VMC || CHOCLOV;
+\end{lstlisting}
+  \begin{itemize}
+  \item If we did not explicity define the alphabet for each process, it can be \textbf{auto inferred}.
+  \begin{itemize}
+    \item $\alpha VMC = \{coin, choc, bisc\}$
+    \item $\alpha CHOCLOV = \{coin, choc\}$
+  \end{itemize}
+  \item In this specification the system may deadlock with the following trace $\trace{coin, bisc}$.
+  \begin{itemize}
+    \item After $\trace{coin, bisc}$, no event is possible.
+    \item This is because now the \textbf{bisc} event is not common to both \textbf{VMC} and \textbf{CHOCLOV} processes.
+    \item Hence, the \textbf{bisc} event can occur seperately.
+    \item After $\trace{coin, bisc}$ has occurred, the system would be stuck at $VMC \parallel choc \then CHOCLOV$.
+    \item Since \textbf{coin} and \textbf{choc} are common events, neither events can be engaged synchronously as \textbf{coin} is a prefix for \textbf{choc}.
+  \end{itemize}
+  \end{itemize}
+  
+  \subsection{Concurrency Example \#3}
+  We are given the following system specification in CSP
+\begin{lstlisting}[language=C]
+VMH = on -> coin -> choc -> off -> VMH;
+CUST = on -> ((coin -> bisc -> CUST) [] (curse -> coin -> choc -> CUST));
+System = VMH || CUST;
+\end{lstlisting}
+  \begin{itemize}
+      \item The common events between \textbf{VMH} and \textbf{CUST} are \textbf{on}, \textbf{coin} and \textbf{choc} and they must occur synchronously in the two processes.
+      \item $\trace{on, curse, coin, choc, off}$ is a possible trace.
+      \begin{itemize}
+          \item After the trace, the process will still behave as a System process.
+      \end{itemize}
+      \item Deadlocks can occur with the following trace $\trace{on, coin, bisc}$
+      \begin{itemize}
+          \item The system will be stuck at $choc \then off \then VMH \parallel CUST$ and no event can be engaged.
+      \end{itemize}
+  \end{itemize}
+  
+  \subsection{Concurrency Example \#4}
+  We are given the following system specification in CSP
+\begin{lstlisting}
+SLOWALK = left -> rest -> SLOWALK [] right -> rest -> SLOWALK;
+SLOCLIMB = up -> rest -> SLOCLIMB [] down -> SLOCLIMB;
+System = SLOWALK || SLOCLIMB;
+\end{lstlisting}
+  
+  Are the following traces possible?
+  \begin{enumerate}
+    \item $\trace{up, rest}$
+    \begin{itemize}
+        \item No. The common event between \textbf{SLOWALK} and \textbf{SLOCLIMB} is \textbf{rest}.
+        \item $\trace{up, left, rest}$ and $\trace{up, right, rest}$ are possible traces.
+    \end{itemize}
+    \item $\trace{\ldots, up, rest}$ where up may not the first event.
+    \begin{itemize}
+        \item Yes. For example $\trace{left, up, rest}$ and $\trace{right, up, rest}$.
+    \end{itemize}
+  \end{enumerate}
+
+  \subsection{CSP\# Example: Patterson's Algorithm}
+  Patterson's Algorithm is a concurrent programming algorithm for mutual exclusion that allows two or more processes to share a single-use resource without conflict, using only shared memory for communication.
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+bool flag[2] = {false, false};
+int turn;
+\end{lstlisting}
+  \begin{multicols}{2}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P0:      flag[0] = true;
+P0_gate: turn = 1;
+        while (flag[1] && turn == 1) {
+          // busy wait
+        }
+        // critical section
+        $\dots$
+        // end of critical section
+        flag[0] = false;
+\end{lstlisting}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+P1:      flag[1] = true;
+P1_gate: turn = 0;
+        while (flag[0] && turn == 0) {
+            // busy wait
+        }
+        // critical section
+        $\dots$
+        // end of critical section
+        flag[1] = false;
+\end{lstlisting}
+  \end{multicols}
+
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2;
+var pos[N]; // pos[N] is the flag[N]
+var step[N]; // step[1] is the !turn
+var counter = 0; // how many are in CS
+
+Process0() = Repeat0(1); cs.0{counter = counter + 1;} -> reset{pos[0] = 0; counter = counter - 1;} -> Process0();
+Repeat0(j) = [j < N] update.0.1{pos[0] = j;} -> update.0.2{step[j] = 0;} -> ([step[j] != 0 || (pos[1] < j)]idle.j -> Repeat0(j + 1)) 
+  [] [j == N] Skip;
+
+Process1() = Repeat1(1); cs.1{counter = counter + 1;} -> reset{pos[1] = 0; counter = counter - 1;} -> Process1();
+Repeat1(j) = [j < N] update.1.1{pos[1] = j;} -> update.1.2{step[j] = 1;} -> ([step[j] != 1 || (pos[0] < j)]idle.j -> Repeat1(j + 1)) 
+  [] [j == N] Skip;
+
+Peterson() = Process0() ||| Process1();
+#define goal counter > 1;
+#assert Peterson() reaches goal; // Should be not valid
+#assert Peterson() |= <> cs.0; // Should be not valid
+#assert Peterson() |= [] (update.0.1 -> <> cs.0) // Should be valid
+\end{lstlisting}
+
+  \subsection{CSP\# Example: Alternating Bit Protocol}
+  \begin{itemize}
+      \item We are trying to model a simple network protocol that retransmits lost messages between a Sender (A) and Receiver (B).
+      \item A sends a bit to B and message may get lost. Using an internal timer, A should retransmit if there is no ACK when {\color{red} \textbf{the time is out}.} A should {\color{orange} \textbf{continue to listen}} for the correct ACK if it receives a wrong one.
+      \item B will send ACK if and only if it receives a correct bit. We assume the ACK never gets lost. B should {\color{orange} \textbf{ignore the wrong bit}} received.
+      \item After finishing one bit, A and B should move on to send and ACK the alternating bit.
+  \end{itemize}
+
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+channel c 1; // unreliable channel.
+channel d 1; // perfect channel.
+channel tmr 0; // sender's internal timer.
+
+Sender(alterbit) = (c!alterbit -> Skip [] lost -> Skip); tmr!1 -> Wait4Response(alterbit);
+
+Wait4Response(alterbit) = (d?x -> ifa (x == alterbit) {
+  tmr!0 -> Sender(1 - alterbit)
+} else { Wait4Response(alterbit) }) // Time not out, wait
+[] tmr?2 -> Sender(alterbit); // Time is out, retransmit
+
+Timer = tmr?1 -> (tmr?0 -> Timer [] tmr!2 -> Timer);
+
+Receiver(alterbit) = c?x -> ifa (x == alterbit) {
+  d!alterbit -> Receiver(1 - alterbit)
+} else { Receiver(alterbit) }; // Wait to receive
+
+ABP = (Sender(0) ||| Receiver(0) ||| Timer);
+
+#assert ABP |= [](c!0 -> <>d?0);
+\end{lstlisting}
+
+  Is it always true, that when a Sender process writes 0 into the unreliable channel $c$, a Receiver process will read the value 0 from the perfect channel $d$?
+  \begin{itemize}
+    \item Not valid
+    \item Counter Example: $\trace{c!0, c?0, d!0, tmr.1, tmr.2, c!0, c?0, tmr.1, tmr.2, c!0, (c!0, c?0, tmr.1, tmr.2, c!0)^{*}}$
+  \end{itemize}
+
+
+  \subsection{CSP\# Example: Shunting Game}
+  Modelling the game board using a 1-D array
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define M 7;
+#define N 6;
+#define o -1;
+#define a 1;
+#define w 0;
+  // col number: 0 1 2 3 4 5 6
+var board[N][M] = [o,o,a,a,o,o,o, // 0 row number starting from 0
+                 o,o,a,a,o,o,o, // 1
+                 a,a,a,w,a,a,a, // 2
+                 a,w,a,a,a,w,a, // 3
+                 a,w,a,a,a,w,a, // 4
+                 o,o,a,w,o,o,o, // 5
+                 o,o,a,a,o,o,o];// 6
+
+// Black Position
+var r:{0..N-1} = 3; // row
+var c:{0..M-1} = 0; // column
+\end{lstlisting}
+
+  \begin{itemize}
+    \item Modelling the moves
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+Game = [r - 1 >= 0] MoveUp [] [r - 2 >= 0] PushUp
+  [] [r + 1 < N] MoveDown [] [r + 2 < N] PushDown
+  [] [c - 1 >= 0] MoveLeft [] [c - 2 >= 0] PushLeft
+  [] [c + 1 < M] MoveRight [] [c + 2 < M] PushRight;
+
+MoveUp = [board[r - 1][c] == a] go_up{r = r - 1} -> Game;
+PushUp = [board[r - 2][c] == a && board[r - 1][c] == w] push_up{
+  board[r - 2][c] = w;
+  board[r - 1][c] = a;
+  r = r - 1;
+} -> Game
+$\dots$
+\end{lstlisting}
+    \item Modelling goal and trouble state.
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define goal board[2][2] == w && board[2][3] == w && board[3][2] == w && board[3][3] == w;
+#assert Game reaches goal;
+#define trouble board[0][3] == w;
+#assert Game reaches trouble;
+#assert Game |= [](trouble -> ! <> goal); // trouble prevents reaching goal
+\end{lstlisting}
+  \end{itemize}
+
+  \subsection{CSP\# Example: Keyless System}
+  \begin{itemize}
+      \item One of the latest automotive technologies, a push-button keyless system, allows you to start your car's engine without the hassle of key insertion and offers great convenience.
+      \item These systems are designed so it is possible to start the engine without the owner's key-fob and it cannot lock your key fob inside the car because the system will sense it and prevent the user from locking them in.
+      \item \color{red} However, the keyless system can also suprise you as it may allow you to drive the car without a key-fob, meaning you can drive without physically having the key.
+      \item In this example, we will model such a Keyless System and use assertions to check if one can drive the car without having a key with them.
+  \end{itemize}
+
+  Constants and variables
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2; // number of owners
+#define far 0; // owner is out and far away from the car
+#define near 1; // owner is close enough to open / lock the car if he has the keyfob
+#define in 2; // owner is in the car
+#define off 0; // engine is off
+#define on 1; // engine is on
+#define unlock 0; // door is unlocked but closed
+#define lock 1; // door is locked (and must be closed)
+#define open 2; // door is open
+#define incar -1; // keyfob is put inside car
+#define faralone -2; // keyfob is put outside and far
+
+var owner[N]; // owners' position, initially all users are far away from the car
+var engine = off; // engine status, intially off
+var door = lock; // door status, initally locked
+var key = 0; // key fob position, initially with its first owner
+var moving = 0; // car moving status, 0 for stop and 1 for moving
+var fuel = 10; // energy costs, say 1 for a short drive and 5 for long driving
+\end{lstlisting}
+
+
+  \begin{itemize}
+    \item Owner positions
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+car = (||i:{0..N-1} @ (owner_pos(i) || motor(i) || door_op(i) || key_pos(i)));
+
+owner_pos(i) = [owner[i] == far] towards.i{owner[i] = near} -> owner_pos(i)
+          [] [owner[i] == near] goaway.i{owner[i] = far} -> owner_pos(i)
+          [] [owner[i] == near && door == open && moving == 0] 
+              getin.i{owner[i] = in} -> owner_pos(i)
+          [] [owner[i] == in && door == open && moving == 0] 
+          goout.i{owner[i] = near} -> owner_pos(i);
+\end{lstlisting}
+    \item Key-fob positions
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+key_pos(i) = 
+  [key == i && owner[i] == in] putincar.i{key = incar} -> key_pos(i)
+[] [key == i && owner[i] == far] putaway.i{key = faralone} -> key_pos(i)
+[] [(key == faralone && owner[i] == far) || (key == incar && owner[i] == in)] getkey.i{key = i} -> key_pos(i);
+\end{lstlisting}
+  \end{itemize}
+
+  Door Operation
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+door_op(i) =
+  [key == i && owner[i] == near && door == lock && moving == 0] 
+  unlockopen.i{door = open} -> door_op(i)
+[] [owner[i] == near && door == unlock && moving == 0] justopen.i{door = open} -> door_op(i)
+[] [door != open && owner[i] == in] insideopen.i{door = open} -> door_op(i)
+[] [door == open] close.i{door = unlock} -> door_op(i)
+[] [door == unlock && owner[i] == in] insidelock.i{door = lock} -> door_op(i)
+[] [door == unlock && owner[i] == near && key == i] outsidelock.i{door = lock} -> door_op(i);
+\end{lstlisting}
+
+  Motor
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+motor(i) =
+  [owner[i] == in && (key == i || key == incar) && engine == off && fuel != 0] turnon.i{engine = on} -> motor(i)
+[] [engine == on && owner[i] == in && moving == 0] startdrive.i{
+      moving = 1;
+  } -> motor(i)
+[] [moving == 1 && fuel != 0] shortdrive.i{
+      fuel = fuel - 1; 
+      if (fuel == 0) {engine = off; moving = 0;}
+  } -> motor(i)
+[] [moving == 1 && fuel > 5] longdrive.i{
+      fuel = fuel - 5; 
+      if (fuel == 0) { engine = off; moving = 0; }
+  } -> motor(i)
+[] [engine == on && moving == 1 && owner[i] == in] stop.i{moving = 0;} -> motor(i)
+[] [fuel == 0 && engine == off] refill{fuel = 10} -> motor(i)
+[] [engine == on && moving == 0 && owner[i] == in] turnoff.i{
+      engine = off;
+  } -> motor(i);
+\end{lstlisting}
+
+  Reasoning
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define keylockinside (key == incar && door == lock && owner[0] != in && owner[1] != in);
+#define drivewithoutengineon (moving == 1 && engine == off);
+#define drivewithoutkeyholdbyother (moving == 1 && owner[1] == in && owner[0] == far && key == 0);
+
+#assert car deadlockfree;
+#assert car reaches keylockinside; // False
+#assert car reaches drivewithoutengineon; // False
+#assert car reaches drivewithoutkeyholdbyother; // True
+\end{lstlisting}
+
+  \subsection{CSP\# Example: Multi-lift System (using C\#)}
+  In this example, we are modelling a multiple lift system in a building with multiple floors.
+
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define NoOfFloors 2; // floor-0, floor-1
+#define NoOfLifts 2; // lift-0, lift-1
+#define NoOfUsers 2; // user-0, user-1
+
+// this array models the external requests; extrequestsUP[i] = 1 denotes there is an upward floor request at floor-i; 0 for no request;
+var extrequestsUP[NoOfFloors];
+var extrequestsDOWN[NoOfFloors];
+// this array models the internal requests;
+// intrequests[i][j] = 1 if there is a request for floor-i for lift-j; 0 for no request;
+var intrequests[NoOfLifts][NoOfFloors]; // [-1, -1]
+
+// the level of the lift door opens at. -1 means the door is closed
+var door = [-1(NoOfLifts)];
+\end{lstlisting}
+
+  Data Operations to clear internal and external requests when the door of the lift-i is open at each level.
+
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+door[i] = level;
+intrequests[i][level] = 0;
+if (direction > 0) {
+  extrequestsUP[level] = 0;
+} else {
+  extrequestsDOWN[level] = 0;
+}
+\end{lstlisting}
+
+  Data Operations (using a function defined in an external C\# library) to check whether to continue travelling on the same direction or to change direction.
+
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+public static bool CheckIfToMove(int level, int direction, int i, int NoOfFloors, int[] intrequests, int[] extrequestsUP, int[] extrequestsDOWN) {
+  int Counter = level + direction;
+  while (Counter >= 0 && Counter < NoOfFloors) {
+      if (extrequestsUP[Counter] != 0 || extrequestsDOWN[Counter] != 0 || intrequests[i * NoOfFloors + Counter] != 0) {
+          return true;
+      } else {
+          Counter = Counter + direction;
+      }
+  }
+  return false;
+}
+\end{lstlisting}
+
+  Modelling the Lift
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+Lift(i, level, direction) = ifa(intrequests[i][level] != 0 || (direction == 1 && extrequestsUP[level] == 1) || (direction == -1 && extrequestsDOWN[level] == 1)) {
+  opendoor.i.level{ *data operations to clear request* } -> close.i.level{door[i] = -1;} -> Lift(i, level direction)
+} else {
+  checkIfToMove.i.level -> ifa(call(CheckIfToMove, level, direction, i, 
+  NoOfFloors, intrequests, extrequestsUP, extrequestsDOWN)) {
+      moving.i.level.direction -> 
+      ifa (level + direction == 0 || level + direction == NoOfFloors - 1) {
+          Lift(i, level + direction, -1 * direction)
+      } else {
+          Lift(i, level + direction, direction)
+      }
+  } else {
+      ifa ((level == 0 && direction == 1) || 
+           (level == NoOfFloors - 1 && direction == -1)) {
+          Lift(i, level, direction)
+      } else {
+          changedir.i.level -> Lift(i, level, -1 * direction)
+      }
+  }
+}
+\end{lstlisting}
+  \pagebreak
+  Modelling the Users
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+User() = []pos:{0..NoOfFloors - 1}@ (ExternalPush(pos); UserWaiting(pos));
+
+// The following models the behaviours of the user pushing external buttons
+ExternalPush(pos) = ifa(pos != 0) {pushdown.pos{extrequestsDOWN[pos] = 1;} -> Skip} 
+                  else {pushup.pos{extrequestsUP[pos] = 1;} -> Skip} 
+[] ifa(pos != NoOfFloors - 1) {pushup.pos{extrequestsUP[pos] = 1;} -> Skip} 
+  else {pushdown.pos{extrequestsDOWN[pos] = 1;} -> Skip};
+
+// The following models the behaviours of the user waiting and entering the lift
+UserWaiting(pos) = []i:{0..NoOfLifts - 1}@([door[i] == pos]enter.i -> 
+  ([]y:{0..NoOfFloors - 1}@push.y{intrequests[i][y] = 1;} -> 
+      ([door[i] == y]exit.i -> User())));
+\end{lstlisting}
+
+  Questioning the System
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+// A Lift System consisting of multiple users and lifts running in parallel
+LiftSystem() = (||| {NoOfUsers} @ User()) ||| 
+  (||| x:{0..NoOfLifts - 1} @ Lift(x, 0, 1));
+
+// If there is an external request at the first floor, it will eventually be served.
+#define on extrequestsUP[0] == 1;
+#define off extrequestsUP[0] == 0;
+#assert LiftSystem() |= [](on -> <>off);
+\end{lstlisting}
+
+  \subsection{CSP\# Example: 2-phase Commit Protocol}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2; // number of participants
+enum {Yes, No, Commit, Abort}; // constants
+channel vote 0;
+var hasNo = false;
+
+// The following models the coordinator
+Coord() = (|||{N}@ request -> Skip); 
+        (|||{N}@ vote?vo{if (vo == No) {hasNo = true;}} -> Skip);
+        decide -> (([hasNo == false] (|||{N}@inform.Commit -> Skip); 
+        CoordPhaseTwo(Commit))
+        [] ([hasNo == true] (|||{N}@inform.Abort -> Skip); CoordPhaseTwo(Abort)));
+CoordPhaseTwo(decC) = |||{N}@acknowledge -> Skip;
+
+// The following models a participant
+Part() = request -> execute -> (vote!Yes -> PhaseTwo() [] vote!No -> PhaseTwo());
+PhaseTwo() = inform.Commit -> complete -> result.Commit -> acknowledge -> Skip 
+         [] inform.Abort -> undo -> result.Abort -> acknowledge -> Skip;
+
+#alphabet Coord {request, inform.Commit, inform.Abort, acknowledge};
+#alphabet Part {request, inform.Commit, inform.Abort, acknowledge};
+System = Coord() || (|||{N}@Part()); // Note: request is a common event between Coord and Part and has to be synchronised.
+\end{lstlisting}
+  \vspace*{\fill}
+  \columnbreak
+
+  \section{Timed CSP\# Examples}
+  \subsection{Timed Process Definition: Wait (Example)}
+  \begin{multicols}{2}
+\begin{lstlisting}[language=C]
+P = Wait[2]; (a -> b -> Skip);
+\end{lstlisting}
+  \begin{itemize}
+    \item The Wait process is active for exactly 2 time units.
+    \item In this example, the first event \textbf{a} begins only at least after 2 time units.
+  \end{itemize} 
+  \vspace*{\fill}
+  \begin{center}
+    \includegraphics[scale=0.4]{../images/L4_WaitExample.JPG}
+  \end{center}
+  \end{multicols} 
+
+  \subsubsection{Timed Process Definition: Timeout (Example)}
+  \begin{multicols}{2}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) timeout[2] (e -> Skip);
+\end{lstlisting}
+    \begin{itemize}
+      \item As long as process P engages event \textbf{a} within 2 time units and before \texttt{timeout[0]} is engaged, the timeout constrained is removed and \texttt{(e -> Skip)} will never be engaged.
+      \item \texttt{(e -> Skip)} can only be engaged after \texttt{timeout[0]} is engaged.
+    \end{itemize}
+    \vspace*{\fill}
+    \begin{center}
+      \includegraphics[scale=0.4]{../images/L4_TimeoutExample.JPG}
+    \end{center}
+  \end{multicols}
+
+  \subsection{Timed Process Definition: Timed Interrupt (Example)}
+  \begin{multicols}{2}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) interrupt[2] (e -> Skip);
+\end{lstlisting}
+  \begin{itemize}
+    \item Process P can engage in the events in \texttt{(a -> b -> Skip)} until 2 time unit has elapsed.
+    \item After 2 time units has elapsed, Process P can only engage in events in \texttt{(e -> Skip)}.
+  \end{itemize}
+  \vspace*{\fill}
+  \begin{center}
+    \includegraphics[scale=0.35]{../images/L4_TimedInterruptExample.JPG}
+  \end{center}
+  \end{multicols}
+
+  \subsection{Timed Process Definition: Deadline (Example)}
+  \begin{multicols}{2}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) deadline[2];
+\end{lstlisting}
+  \begin{itemize}
+    \item Process P must engage in the events in \texttt{(a -> b -> Skip)} before 2 time unit has elapsed.
+    \item After 2 time units has elapsed, Process P should terminate.
+  \end{itemize}
+  \vspace*{\fill}
+  \begin{center}
+    \includegraphics[scale=0.4]{../images/L4_DeadlineExample.JPG}
+  \end{center}
+  \end{multicols}
+\subsection{Timed Process Definition: Within (Example)}
+\begin{multicols}{2}
+\begin{lstlisting}[language=C]
+P = (a -> b -> Skip) within[2];
+\end{lstlisting}
+  \begin{itemize}
+    \item In the example below, event a has to be engaged by latest $t = 2$ which is at \textbf{State 4}.
+  \end{itemize}
+  \vspace*{\fill}
+  \begin{center}
+    \includegraphics[scale=0.4]{../images/within_operator.JPG}
+  \end{center}
+\end{multicols}
+
+
+  \subsection{CSP\# Example: Fischer's Protocol}
+  Mutual exclusion in Fischer's Protocol is guaranteed by carefully placing bounds on the execution times of the instructions, leading to a protocol which is very simple, and relies heavily on time aspects.
+\begin{lstlisting}[language=C]
+#define N 2;
+#define Delta 3;
+#define Epsilon 4;
+#define Idle -1;
+var x = Idle;
+var counter;
+
+P(i) = ifb(x == Idle) {
+  ((update.i{x = i} -> Wait[Epsilon]) within[Delta]);
+  ([x == i](cs.i{counter++} -> exit.i{counter--; x=Idle} -> P(i))
+  [] [x != i]P(i))
+};
+
+FischersProtocol = ||| i:{0..N-1}@P(i);
+\end{lstlisting}
+
+  \columnbreak
+
+  \subsection{CSP\# Example: Railway Crossing System}
+  Control trains passing a critical point (a bridge)
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily]
+#import "PAT.Lib.Queue";
+#define N 2;
+channel appr 0;
+channel go 0;
+channel leave 0;
+channel stop 0;
+var<Queue> queue;
+
+Train(i) = appr!i -> ((stop?i -> StopS(i) within[10]) timeout[10] Cross(i));
+Cross(i) = Wait[4]; (leave!i -> Train(i)) within[11];
+StopS(i) = go?i -> Start(i);
+Start(i) = Wait[10]; (leave!i -> Train(i)) within[10];
+Gate = if (queue.Count() ==0) {
+  appr?i -> atomic{tau{queue.Enqueue(i)} -> Skip}; Occ 
+} else {
+  (go!queue.First() -> Occ) within[10] 
+};
+
+Occ = (leave?[i == queue.First()]i -> atomic{tau{queue.Dequeue()} -> Skip}; Gate) [] (appr?i -> atomic{tau{queue.Enqueue(i)} -> stop!queue.Last() -> Skip}; Occ);
+System = (||| x:{0..N-1}@Train(x)) ||| Gate;
+\end{lstlisting}
+
+  \subsection{CSP\# Example: Light Control System}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily]
+var dim : {0..100};
+var on = false;
+channel button 0;
+channel dimmer 0;
+channel motion 0;
+
+TurningOn = turnOn{ on = true; dim = 100;} -> Skip;
+TurningOff = turnOff{ on = false; dim = 0; } -> Skip;
+
+ButtonPushing = button?1 -> atomic{if (dim > 0) { TurningOff } else { TurningOn }};
+DimChange = dimmer?n -> atomic{setdim{dim = n} -> Skip};
+ControlledLight = (ButtonPushing [] DimChange); ControlledLight;
+
+// The motion detector
+NoUser = move -> motion!1 -> User [] nomove -> Wait[1]; NoUser;
+User = nomove -> motion!0 -> NoUser [] move -> Wait[1]; User;
+MotionDetector = NoUser;
+
+// The room controller
+Ready = motion?1 -> button!1 -> On;
+Regular = adjust -> dimmer!50 -> Regular;
+On = Regular interrupt motion?0 -> OnAgain;
+OnAgain = (motion?1 -> On) timeout[20] Off;
+Off = button!1 ->> Ready; // Note: ->> is shortcut for atomic
+Controller = Ready;
+
+System = MotionDetector ||| ControlledLight ||| Controller;
+\end{lstlisting}
+
+  \newpage
+
+  \section{Probability CSP\# Examples}
+  \subsection{PCSP Example: Monty Hall}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+enum{Door1, Door2, Door3};;
+var car = -1;
+var guess = -1;
+var goat = -1;
+var final = false;
+
+#define goal guess == car && final;
+
+PlaceCar = []i:{Door1, Door2, Door3}@ placecar.i{car = i} -> Skip;
+Goat = []i:{Door1, Door2, Door3}@ 
+    ifb (i != car && i != guess) { hostopen.i{goat = i} -> Skip };
+
+TakeOffer = []i:{Door1, Door2, Door3}@
+    ifb (i != guess && i != goat) { changeguess{guess = i; final = true} -> Stop };
+NotTakeOffer = keepguess{final = true} -> Stop;
+
+Sys_Take_Offer = PlaceCar; Guest; Goat; TakeOffer;
+#assert Sys_Take_Offer reaches goal with prob; // Max Prob = 2/3
+
+Sys_Not_Take_Offer = PlaceCar; Guest; Goat; NotTakeOffer;
+#assert Sys_Not_Take_Offer reaches goal with prob; // Max Prob = 1/3
+\end{lstlisting}
+
+  \subsubsection{PCSP Example: Monty Hall (Explanation)}
+\begin{itemize}
+    \item What happens if we changed \textbf{line 14} to
+\begin{lstlisting}{language=C}
+if (i != car && i != guess) { hostopen.i{goat = i} -> Skip };
+\end{lstlisting}
+    \begin{itemize}
+        \item \text{goat} will remain as \texttt{-1}
+        \item In the original code, \texttt{ifb} was used. The process will wait at the \texttt{ifb} block when the condition is not true.
+        \item However for \texttt{if}, the process will terminate if the condition is not true.
+        \item Alternatively, we can change \texttt{ifb} to a guard condition.
+    \end{itemize}
+    \item The code above \textbf{can deadlock}.
+    \begin{itemize}
+        \item The \texttt{TakeOffer} and \texttt{NotTakeOffer} processes have a \texttt{STOP} process inside its definition.
+    \end{itemize}
+\end{itemize}
+
+\subsection{PCSP Example: Consensus}
+\begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+#define N 2;
+#define K 2;
+#define range 12; // Range
+#define counter_init 6; // Middle
+#define left 2; // Left Target
+#define right 10; // Right Target
+var counter : {0..range} = counter_init; // shared coin
+var Pcounter; // record the process number
+var coin0counter = N; // number of coints which are 0;
+var coin1counter; // number of coints which are 1;
+// local variable: 0 - flip, 1 - write, 2 - check, 3 - finished
+// processij means this process's coin is i and its local variable is j
+process00 = pcase{ [0.5] : process01
+                    default : tau {coin0counter--; coin1counter++;} -> process11 };
+process01 = [counter > 0] tau {counter--;} -> process02;
+process02 = [(counter <= left)] tau {Pcounter++;} -> process03
+  [] [(counter >= right)] {Pcounter++; coin0counter--; coin1counter++;} -> process13 
+  [] [(counter > left) && (counter < right)] process00;
+process03 = [Pcounter==N] done -> process03;
+process13 = [Pcounter==N] done -> process13;
+
+System = |||{N}@ process00;
+\end{lstlisting}
+  \subsubsection{PCSP Example: Consensus (Explanation)}
+  \begin{itemize}
+      \item In this example, $N$ processes come to a consensus by deciding whether the agreed value should be $0$ or $1$.
+      \item In \texttt{process00}, there is a $50\%$ chance that the process gets coin 0 in the coin flip which goes to \texttt{process01}. In the remaining $50\%$ chance, the process gets coin 1 in the coin flip and proceeds to \texttt{process11}.
+      \item If a process flips coin 0, the counter's value is reduced by 1.
+      \item If a process flips coin 1, the counter's value is increased by 1.
+      \item If the counter's value is below the left boundary of 2, then the agreed value is 0.
+      \item If the counter's value is below the above boundary of 10, then the agreed value is 1.
+      \item Note that in this system, all $N$ processes are \textbf{executing concurrently} without synchronisation. Hence, it is possible that the majority decision on the coin value, may differ from the counter value.
+      \begin{center}
+          \includegraphics[scale=0.35]{../images/L4Consensus.png}
+      \end{center}
+  \end{itemize}
+  \subsubsection{PCSP Example: Consensus (Simplified)}
+  \begin{lstlisting}[language=C, basicstyle=\scriptsize\selectfont\ttfamily, mathescape]
+  #define N 2;
+  #define K 2;
+  #define range 12;
+  #define counter_init 6;
+  #define left 2;
+  #define right 6;
+  var counter: {0..range} = counter_init;
+  Var Pcounter;
+  
+  process00 = pcase{ 
+      [0.5] : tau{counter--;} -> process02 
+       default: tau{counter++;} -> process02
+  };
+  process02 = [(counter <= left)] tau{Pcounter++} -> process03;
+              [] [(counter >= right)] tau{Pcounter++} -> process13;
+              [] [(counter > left) && (counter < right)] process00;
+  process03 = [Pcounter == N] done -> process03;
+  Process13 = [Pcounter == N] done -> process13;
+  System = |||{N}@ process00;    
+  \end{lstlisting}
 \end{multicols*}
 \end{document}
